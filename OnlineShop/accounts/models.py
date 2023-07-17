@@ -15,7 +15,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True)
     USERNAME_FIELD = "phone_number"
     REQUIRED_FIELDS = []
-    objects = CustomUserManager()
+    objects = UserManager()
 
     def __str__(self):
         return self.full_name
