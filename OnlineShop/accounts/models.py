@@ -20,8 +20,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def __str__(self):
-        return self.full_name
+        return self.phone_number
 
     @property
-    def full_name(self):
-        return self.first_name + self.last_name
+    def fullname(self):
+        return self.first_name + " " + self.last_name
