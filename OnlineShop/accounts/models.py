@@ -29,6 +29,9 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     def get_absolute_url(self):
         return reverse("profile", args=(self.id,))
 
+    class Meta:
+        verbose_name_plural = "Users"
+
 
 class Profile(BaseModel):
     class GenderChoices(models.IntegerChoices):
@@ -38,6 +41,12 @@ class Profile(BaseModel):
     birthday = models.DateField(null=True, blank=True)
     national_code = models.IntegerField(null=True, blank=True)
     user = models.OneToOneField("User", on_delete=models.CASCADE, related_name="profile")
+
+    def __str__(self):
+        return self.user
+
+    class Meta:
+        verbose_name_plural = "Profiles"
 
 
 class Address(BaseModel):
@@ -50,4 +59,7 @@ class Address(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.street}, {self.city}, {self.state}, {self.country}"
+        return f"{self.street}, {self.city}, {self.province}, {self.country}"
+
+    class Meta:
+        verbose_name_plural = "Addresses"
