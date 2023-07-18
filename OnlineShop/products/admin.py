@@ -26,3 +26,12 @@ class CategoryAdmin(admin.ModelAdmin):
     list_filter = ("parent_category",)
     inlines = [CategoryInline,]
     list_per_page = 10
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ("product", "user", "status", "rate")
+    search_fields = ("product",)
+    list_filter = ("product", )
+    list_editable = ("status",)
+    list_per_page = 10
