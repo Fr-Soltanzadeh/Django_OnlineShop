@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, HttpResponse
 from django.views import View
 from django.http import  HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
@@ -39,3 +39,8 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect("login")
+
+
+class ProfileView(View):
+    def get(self, request, id):
+        return HttpResponse("customer profile")
