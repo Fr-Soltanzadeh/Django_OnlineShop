@@ -7,7 +7,6 @@ from core.models import BaseModel
 from django_countries.fields import CountryField
 
 
-
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     phone_number = models.CharField(
         _("phone number"), max_length=14, unique=True, validators=[get_phonenumber_regex()]
@@ -31,14 +30,11 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         return reverse("profile", args=(self.id,))
 
 
-
 class Profile(BaseModel):
     class GenderChoices(models.IntegerChoices):
         MALE = 1, "MALE"
         FEMALE = 2, "FEMALE"
-    gender = models.IntegerField(
-        choices=GenderChoices.choices, default=1, null=True, blank=True
-    )
+    gender = models.IntegerField(choices=GenderChoices.choices, default=1)
     birthday = models.DateField(null=True, blank=True)
     national_code = models.IntegerField(null=True, blank=True)
     user = models.OneToOneField("User", on_delete=models.CASCADE, related_name="profile")
