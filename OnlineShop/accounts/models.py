@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from .managers import UserManager
 from core.utils import get_phonenumber_regex
 from core.models import BaseModel
+from django_countries.fields import CountryField
 
 
 
@@ -26,6 +27,10 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     def fullname(self):
         return self.first_name + " " + self.last_name
 
+    def get_absolute_url(self):
+        return reverse("profile", args=(self.id,))
+
+
 
 class Profile(BaseModel):
     class GenderChoices(models.IntegerChoices):
@@ -39,3 +44,14 @@ class Profile(BaseModel):
     user = models.OneToOneField("User", on_delete=models.CASCADE, related_name="profile")
 
 
+class Address(BaseModel):
+    country = CountryField(blank_label="(select country)")
+    province = models.CharField(max_length=50)
+    city = models.CharField(max_length=50)
+    street = models.CharField(max_length=50)
+    detail = models.CharField(max_length=300)
+    postal_code = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.street}, {self.city}, {self.state}, {self.country}"
