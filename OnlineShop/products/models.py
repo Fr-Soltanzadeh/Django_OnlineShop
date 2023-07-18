@@ -37,9 +37,38 @@ class Product(BaseModel):
     info = RichTextField()
     discount = models.ForeignKey("Discount", on_delete=models.SET_DEFAULT, default=0, related_name="products")
     slug = models.SlugField()
-    
+
     class Meta:
         verbose_name_plural = "Products"
 
     def __str__(self):
         return self.title
+
+
+class Comment(BaseModel):
+
+    class StatusChoices(models.IntegerChoices):
+        PENDING = 1, "PENDING"
+        APPROVED = 2, "APPROVED"
+        REJECTED = 3, "REJECTED"
+
+    class RateChoices(models.IntegerChoices):
+        star1 = 1, "1 STAR"
+        star2 = 2, "2 STAR"
+        star3 = 3, "3 STAR"
+        star4 = 4, "4 STAR"
+        star5 = 5, "5 STAR"
+
+
+    product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name="comments")
+    user = models.OneToOneField("User", on_delete=models.SET_DEFAULT, default="anonymous", related_name="comments")
+    content = models.CharField(max_length=500)
+    parent_comment = models.ForeignKey(
+        "Comment",
+        on_delete=models.SET_NULL,
+        related_name="comments",
+        null=True,
+        blank=True,
+    )
+    status = models.IntegerField(choices=StatusChoices.choices, default=1)
+    rate = models.IntegerField(choices=RateChoices.choices)
