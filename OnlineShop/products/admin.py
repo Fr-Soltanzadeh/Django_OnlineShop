@@ -7,6 +7,11 @@ class CategoryInline(admin.TabularInline):
     extra = 3
 
 
+class DiscountInline(admin.TabularInline):
+    model = Discount
+    extra = 1
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
@@ -16,6 +21,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ("title", "category")
     autocomplete_fields("category")
     list_filter = ("category", "is_active")
+    inlines = [DiscountInline,]
     list_per_page = 10
 
 
@@ -34,4 +40,13 @@ class CommentAdmin(admin.ModelAdmin):
     search_fields = ("product",)
     list_filter = ("product", )
     list_editable = ("status",)
+    list_per_page = 10
+
+
+@admin.register(Discount)
+class DiscountAdmin(admin.ModelAdmin):
+    list_display = ("title", "percent", "start_time", "end_time", "is_active")
+    search_fields = ("title",)
+    list_filter = ("is_active",)
+    list_editable = ("is_active",)
     list_per_page = 10
