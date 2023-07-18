@@ -59,7 +59,6 @@ class Comment(BaseModel):
         star4 = 4, "4 STAR"
         star5 = 5, "5 STAR"
 
-
     product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name="comments")
     user = models.OneToOneField("User", on_delete=models.SET_DEFAULT, default="anonymous", related_name="comments")
     content = models.CharField(max_length=500)
@@ -72,3 +71,25 @@ class Comment(BaseModel):
     )
     status = models.IntegerField(choices=StatusChoices.choices, default=1)
     rate = models.IntegerField(choices=RateChoices.choices)
+
+    class Meta:
+        verbose_name_plural = "Comments"
+
+    def __str__(self):
+        return f"{self.product}: {self.rate} star"
+
+
+class Discount(BaseModel):
+    
+    percent = models.PositiveIntegerField(max=100)
+    quantity = models.PositiveIntegerField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    title = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name_plural = "Discounts"
+
+    def __str__(self):
+        return f"{self.title} {self.percent}%"
