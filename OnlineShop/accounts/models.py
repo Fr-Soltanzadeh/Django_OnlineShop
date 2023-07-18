@@ -5,6 +5,7 @@ from .managers import UserManager
 from core.utils import get_phonenumber_regex
 from core.models import BaseModel
 from django_countries.fields import CountryField
+from django.urls import reverse
 
 
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
@@ -43,7 +44,7 @@ class Profile(BaseModel):
     user = models.OneToOneField("User", on_delete=models.CASCADE, related_name="profile")
 
     def __str__(self):
-        return self.user
+        return str(self.user)
 
     class Meta:
         verbose_name_plural = "Profiles"
@@ -71,7 +72,7 @@ class OtpCode(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return f"{self.phone_number} - {self.code} - {self.created_at}"
+        return f"{self.phone_number} - {self.code}"
 
     class Meta:
         verbose_name_plural = "OTP Codes"
