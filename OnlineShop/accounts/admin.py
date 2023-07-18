@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import User, Profile, Address
+from .models import User, Profile, Address, OtpCode
 
 
 class ProfileInline(admin.TabularInline):
@@ -88,4 +88,12 @@ class AddressAdmin(admin.ModelAdmin):
     )
     search_fields = ("city","street")
     list_filter = ("city", "street")
+    list_per_page = 10
+
+
+@admin.register(OtpCode)
+class OtpCodeAdmin(admin.ModelAdmin):
+    list_display = ('phone_number', 'code', 'created_at',)
+    search_fields = ("phone_number",)
+    list_filter = ("created_at",)
     list_per_page = 10
