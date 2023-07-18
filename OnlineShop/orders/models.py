@@ -10,7 +10,7 @@ class Order(BaseModel):
         PENDING = 1, "PENDING"
         CONFIRMED = 2, "CONFIRMED"
         SENDING = 3, "SENDING"
-        RECIEVED = 4, "RECIEVED"
+        DELIVERED = 4, "DELIVERED"
         CANCEL = 5, "CANCEL"
 
     status = models.IntegerField(choices=StatusChoice.choices, default=1)
