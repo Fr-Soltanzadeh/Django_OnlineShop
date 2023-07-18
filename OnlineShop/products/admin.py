@@ -7,11 +7,6 @@ class CategoryInline(admin.TabularInline):
     extra = 3
 
 
-class DiscountInline(admin.TabularInline):
-    model = Discount
-    extra = 1
-
-
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
@@ -19,9 +14,8 @@ class ProductAdmin(admin.ModelAdmin):
         "price",
     )
     search_fields = ("title", "category")
-    autocomplete_fields("category")
+    autocomplete_fields = ("category",)
     list_filter = ("category", "is_active")
-    inlines = [DiscountInline,]
     list_per_page = 10
 
 
