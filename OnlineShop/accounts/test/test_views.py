@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate
 class TestLoginView(TestCase):
     def setUp(self):
         self.client = Client()
-        user = User.objects.create_user(phone_number="09102098929", password="123")
+        self.user = User.objects.create_user(phone_number="09102098929", password="123")
 
     def test_login_GET(self):
         response = self.client.get(reverse('login'))
@@ -52,3 +52,11 @@ class TestLogoutView(TestCase):
         self.assertRedirects(response, reverse('login'))
 
         
+class TestProfileView(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(phone_number="09102098929", password="123")
+
+    def test_profile_GET(self):
+        response = self.client.get(reverse('profile', args=(self.user.id,)))
+        self.assertEqual(response.status_code, 200)
