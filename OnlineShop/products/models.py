@@ -1,8 +1,10 @@
 from django.db import models
 from core.models import BaseModel
+from ckeditor.fields import RichTextField
+from accounts.models import User
 
 
-class Category(ModelInfo):
+class Category(BaseModel):
     name = models.CharField(max_length=100)
     parent_category = models.ForeignKey(
         "Category",
@@ -24,7 +26,7 @@ class Category(ModelInfo):
 class Product(BaseModel):
 
     title = models.CharField(max_length=150)
-    price = models.DecimalField(max_digits=2)
+    price = models.DecimalField(max_digits=2, decimal_places=2)
     category = models.ForeignKey(
         "Category",
         on_delete=models.SET_NULL,
@@ -60,7 +62,7 @@ class Comment(BaseModel):
         star5 = 5, "5 STAR"
 
     product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name="comments")
-    user = models.OneToOneField("User", on_delete=models.SET_DEFAULT, default="anonymous", related_name="comments")
+    user = models.OneToOneField(User, on_delete=models.SET_DEFAULT, default="anonymous", related_name="comments")
     content = models.CharField(max_length=500)
     parent_comment = models.ForeignKey(
         "Comment",
@@ -81,7 +83,7 @@ class Comment(BaseModel):
 
 class Discount(BaseModel):
     
-    percent = models.PositiveIntegerField(max=100)
+    percent = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
