@@ -3,6 +3,8 @@ from django.views import View
 from django.http import  HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm
+from django.utils.translation import gettext_lazy as _
+
 
 
 class LoginView(View):
@@ -27,7 +29,7 @@ class LoginView(View):
                     return HttpResponseRedirect(redirect_to)
                 return redirect("login")
 
-        error_message = "Invalid phone number or password. Please try again."
+        error_message = _("Invalid phone number or password. Please try again.")
         return render(
             request, self.template_name, {"form": form, "error_message": error_message}
         )
