@@ -1,0 +1,34 @@
+from django.contrib import admin
+from .models import Order, Receipt, OrderItem
+
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 3
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ("user", "status",)
+    search_fields = ("user",)
+    list_filter = ("status",)
+    list_editable = ("status",)
+    inlines = [
+        OrderItemInline,
+    ]
+    list_per_page = 10
+
+
+@admin.register(Receipt)
+class ReceiptAdmin(admin.ModelAdmin):
+    list_display = ("order", "final_price")
+    search_fields = ("order",)
+    list_per_page = 10
+
+
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ("product", "quantity")
+    list_filter = ("updated_at", "product")
+    autocomplete_fields = ("product",)
+    list_per_page = 10
