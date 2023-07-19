@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from os import getenv
 from dotenv import load_dotenv
+from django.contrib.messages import constants as messages
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -147,3 +148,13 @@ AUTH_USER_MODEL = "accounts.User"
 AUTHENTICATION_BACKENDS = [
     "accounts.backends.PhoneNumberBackend",
 ]
+
+API_KEY_KAVENEGAR = getenv("API_KEY_KAVENEGAR")
+
+MESSAGE_TAGS = {
+    messages.DEBUG: "alert-secondary",
+    messages.INFO: "alert-info",
+    messages.SUCCESS: "alert-success",
+    messages.WARNING: "alert-warning",
+    messages.ERROR: "alert-warning",
+}
