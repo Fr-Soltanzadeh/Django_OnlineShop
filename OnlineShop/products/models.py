@@ -39,6 +39,7 @@ class Product(BaseModel):
     info = RichTextField()
     discount = models.ForeignKey("Discount", on_delete=models.SET_DEFAULT, default=0, related_name="products")
     slug = models.SlugField()
+    quantity = models.PositiveIntegerField()
 
     class Meta:
         verbose_name_plural = "Products"

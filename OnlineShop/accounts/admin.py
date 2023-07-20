@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import User, Profile, Address, OtpCode
+from .models import User, CustomerProfile, Address, OtpCode, Customer
 
 
 class ProfileInline(admin.TabularInline):
-    model = Profile
+    model = CustomerProfile
     extra = 1
 
 
@@ -62,16 +62,19 @@ class CustomUserAdmin(UserAdmin):
     )
     search_fields = ("phone_number",)
     ordering = ("first_name","last_name")
-    inlines = [ProfileInline, AddressInline]
+    inlines = [AddressInline]
 
 
 admin.site.register(User, CustomUserAdmin)
 
+@admin.register(Customer)
+class CustomerAdmin(CustomUserAdmin):
+    inlines=[ProfileInline, AddressInline]
 
-@admin.register(Profile)
+@admin.register(CustomerProfile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = (
-        "user",
+        "customer",
         "gender",
     )
     search_fields = ("phone_number",)

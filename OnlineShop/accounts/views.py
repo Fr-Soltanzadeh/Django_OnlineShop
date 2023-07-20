@@ -6,7 +6,7 @@ from .forms import LoginForm, VerifyCodeForm
 from django.utils.translation import gettext_lazy as _
 from .utils import send_otp_code
 import random
-from .models import User, OtpCode, Profile
+from .models import User, OtpCode, CustomerProfile
 from django.contrib import messages
 
 

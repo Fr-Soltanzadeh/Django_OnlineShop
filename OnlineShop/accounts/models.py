@@ -14,6 +14,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     )
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    national_code = models.IntegerField(null=True, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     USERNAME_FIELD = "phone_number"
@@ -34,14 +35,21 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         verbose_name_plural = "Users"
 
 
-class Profile(BaseModel):
+class Customer(User):
+
+    class Meta:
+        proxy = True
+
+
+class CustomerProfile(BaseModel):
+
     class GenderChoices(models.IntegerChoices):
         MALE = 1, "MALE"
         FEMALE = 2, "FEMALE"
     gender = models.IntegerField(choices=GenderChoices.choices, default=1)
     birthday = models.DateField(null=True, blank=True)
-    national_code = models.IntegerField(null=True, blank=True)
-    user = models.OneToOneField("User", on_delete=models.CASCADE, related_name="profile")
+    customer = models.OneToOneField("Customer", on_delete=models.CASCADE, related_name="profile")
+    Shaba_number = models.CharField(max_length=26, null=True, blank=True)
 
     def __str__(self):
         return str(self.user)
