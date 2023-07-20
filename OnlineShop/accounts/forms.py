@@ -17,7 +17,9 @@ class CustomUserChangeForm(UserChangeForm):
 
 
 class LoginForm(forms.Form):
-    phone_number = forms.CharField(label="Phone Number", validators=[get_phonenumber_regex()])
+    phone_number = forms.CharField(
+        label="Phone Number", validators=[get_phonenumber_regex()]
+    )
 
 
 class VerifyCodeForm(forms.Form):

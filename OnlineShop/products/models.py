@@ -13,7 +13,9 @@ class Category(BaseModel):
         null=True,
         blank=True,
     )
-    image = models.ImageField(upload_to="images/", default="static/images/category_default.png")
+    image = models.ImageField(
+        upload_to="images/", default="static/images/category_default.png"
+    )
     slug = models.SlugField()
 
     class Meta:
@@ -34,10 +36,11 @@ class Product(BaseModel):
         null=True,
         blank=True,
     )
-    image = models.ImageField(upload_to="images/", default="static/images/product_default.png")
     is_active = models.BooleanField(default=True)
     info = RichTextField()
-    discount = models.ForeignKey("Discount", on_delete=models.SET_DEFAULT, default=0, related_name="products")
+    discount = models.ForeignKey(
+        "Discount", on_delete=models.SET_DEFAULT, default=0, related_name="products"
+    )
     slug = models.SlugField()
     quantity = models.PositiveIntegerField()
 
@@ -51,8 +54,16 @@ class Product(BaseModel):
     #     return reverse("product_detail", args=(self.id,))
 
 
-class Comment(BaseModel):
+class ProductImage(BaseModel):
+    image = models.ImageField(
+        upload_to="images/", default="static/images/product_default.png"
+    )
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="images"
+    )
 
+
+class Comment(BaseModel):
     class StatusChoices(models.IntegerChoices):
         PENDING = 1, "PENDING"
         APPROVED = 2, "APPROVED"
@@ -65,8 +76,12 @@ class Comment(BaseModel):
         star4 = 4, "4 STAR"
         star5 = 5, "5 STAR"
 
-    product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name="comments")
-    user = models.OneToOneField(User, on_delete=models.SET_DEFAULT, default="anonymous", related_name="comments")
+    product = models.ForeignKey(
+        "Product", on_delete=models.CASCADE, related_name="comments"
+    )
+    user = models.OneToOneField(
+        User, on_delete=models.SET_DEFAULT, default="anonymous", related_name="comments"
+    )
     content = models.CharField(max_length=500)
     parent_comment = models.ForeignKey(
         "Comment",
@@ -86,7 +101,7 @@ class Comment(BaseModel):
 
 
 class Discount(BaseModel):
-    
+
     percent = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
     start_time = models.DateTimeField()

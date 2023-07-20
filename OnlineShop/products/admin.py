@@ -24,7 +24,9 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
     list_filter = ("parent_category",)
-    inlines = [CategoryInline,]
+    inlines = [
+        CategoryInline,
+    ]
     list_per_page = 10
 
 
@@ -32,7 +34,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = ("product", "user", "status", "rate")
     search_fields = ("product",)
-    list_filter = ("product", )
+    list_filter = ("product",)
     list_editable = ("status",)
     list_per_page = 10
 

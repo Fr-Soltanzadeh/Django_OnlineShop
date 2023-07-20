@@ -13,6 +13,7 @@ class AddressInline(admin.TabularInline):
     model = Address
     extra = 1
 
+
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
@@ -61,15 +62,17 @@ class CustomUserAdmin(UserAdmin):
         ),
     )
     search_fields = ("phone_number",)
-    ordering = ("first_name","last_name")
+    ordering = ("first_name", "last_name")
     inlines = [AddressInline]
 
 
 admin.site.register(User, CustomUserAdmin)
 
+
 @admin.register(Customer)
 class CustomerAdmin(CustomUserAdmin):
-    inlines=[ProfileInline, AddressInline]
+    inlines = [ProfileInline, AddressInline]
+
 
 @admin.register(CustomerProfile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -89,14 +92,18 @@ class AddressAdmin(admin.ModelAdmin):
         "city",
         "street",
     )
-    search_fields = ("city","street")
+    search_fields = ("city", "street")
     list_filter = ("city", "street")
     list_per_page = 10
 
 
 @admin.register(OtpCode)
 class OtpCodeAdmin(admin.ModelAdmin):
-    list_display = ('phone_number', 'code', 'created_at',)
+    list_display = (
+        "phone_number",
+        "code",
+        "created_at",
+    )
     search_fields = ("phone_number",)
     list_filter = ("created_at",)
     list_per_page = 10

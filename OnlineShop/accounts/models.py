@@ -10,7 +10,10 @@ from django.urls import reverse
 
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     phone_number = models.CharField(
-        _("phone number"), max_length=14, unique=True, validators=[get_phonenumber_regex()]
+        _("phone number"),
+        max_length=14,
+        unique=True,
+        validators=[get_phonenumber_regex()],
     )
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -36,19 +39,20 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
 
 
 class Customer(User):
-
     class Meta:
         proxy = True
 
 
 class CustomerProfile(BaseModel):
-
     class GenderChoices(models.IntegerChoices):
         MALE = 1, "MALE"
         FEMALE = 2, "FEMALE"
+
     gender = models.IntegerField(choices=GenderChoices.choices, default=1)
     birthday = models.DateField(null=True, blank=True)
-    customer = models.OneToOneField("Customer", on_delete=models.CASCADE, related_name="profile")
+    customer = models.OneToOneField(
+        "Customer", on_delete=models.CASCADE, related_name="profile"
+    )
     Shaba_number = models.CharField(max_length=26, null=True, blank=True)
 
     def __str__(self):
@@ -75,7 +79,9 @@ class Address(BaseModel):
 
 
 class OtpCode(models.Model):
-    phone_number = models.CharField(max_length=14, validators=[get_phonenumber_regex()], unique=True)
+    phone_number = models.CharField(
+        max_length=14, validators=[get_phonenumber_regex()], unique=True
+    )
     code = models.PositiveSmallIntegerField()
     created_at = models.DateTimeField(auto_now=True)
 
@@ -84,4 +90,3 @@ class OtpCode(models.Model):
 
     class Meta:
         verbose_name_plural = "OTP Codes"
-
