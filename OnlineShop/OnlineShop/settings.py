@@ -43,10 +43,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "ckeditor",
     # apps
     "accounts.apps.AccountsConfig",
     "core.apps.CoreConfig",
-    "ckeditor",
     "products.apps.ProductsConfig",
     "orders.apps.OrdersConfig",
     "home.apps.HomeConfig",
