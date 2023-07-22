@@ -80,7 +80,7 @@ class Comment(BaseModel):
         "Product", on_delete=models.CASCADE, related_name="comments"
     )
     customer = models.ForeignKey(
-        Customer, on_delete=models.SET_DEFAULT, default="anonymous", related_name="comments"
+        Customer, on_delete=models.SET_NULL, null=True, blank=True, related_name="comments"
     )
     content = models.CharField(max_length=500)
     parent_comment = models.ForeignKey(
@@ -114,4 +114,5 @@ class Discount(BaseModel):
 
     def __str__(self):
         return f"{self.title} {self.percent}%"
+
 

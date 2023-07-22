@@ -1,10 +1,9 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from .managers import UserManager
+from .managers import UserManager, CustomerManager
 from core.utils import get_phonenumber_regex
 from core.models import BaseModel
-from django_countries.fields import CountryField
 from django.urls import reverse
 # from products.models import Product
 
@@ -43,6 +42,8 @@ class Customer(User):
     class Meta:
         proxy = True
 
+    objects = CustomerManager()
+
 
 class CustomerProfile(BaseModel):
     class GenderChoices(models.IntegerChoices):
@@ -65,7 +66,6 @@ class CustomerProfile(BaseModel):
 
 
 class Address(BaseModel):
-    country = CountryField(blank_label="(select country)")
     province = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
     street = models.CharField(max_length=50)

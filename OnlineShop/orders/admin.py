@@ -10,10 +10,10 @@ class OrderItemInline(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
-        "user",
+        "customer",
         "status",
     )
-    search_fields = ("user",)
+    search_fields = ("customer",)
     list_filter = ("status",)
     list_editable = ("status",)
     inlines = [

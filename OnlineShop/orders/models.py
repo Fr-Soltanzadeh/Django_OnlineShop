@@ -1,8 +1,7 @@
 from django.db import models
 from core.models import BaseModel
-from accounts.models import User
+from accounts.models import Customer
 from products.models import Product
-from django_countries.fields import CountryField
 from core.utils import get_phonenumber_regex
 
 
@@ -15,8 +14,7 @@ class Order(BaseModel):
         CANCEL = 5, "CANCEL"
 
     status = models.IntegerField(choices=StatusChoice.choices, default=1)
-    user = models.ForeignKey(User, on_delete=models.RESTRICT, related_name="orders")
-    country = CountryField(blank_label="(select country)", null=True, blank=True)
+    customer = models.ForeignKey(Customer, on_delete=models.RESTRICT, related_name="orders",null=True)
     province = models.CharField(max_length=50, null=True, blank=True)
     city = models.CharField(max_length=50, null=True, blank=True)
     street = models.CharField(max_length=50, null=True, blank=True)

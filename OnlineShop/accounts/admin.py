@@ -64,14 +64,38 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ("phone_number",)
     ordering = ("first_name", "last_name")
     inlines = [AddressInline]
-
+    list_per_page = 10
 
 admin.site.register(User, CustomUserAdmin)
 
 
 @admin.register(Customer)
 class CustomerAdmin(CustomUserAdmin):
+    fieldsets = (
+        (None, {"fields": ("phone_number",)}),
+        (
+            "Permissions",
+            {
+                "fields": (
+                    "is_active",
+                )
+            },
+        ),
+    )
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "phone_number",
+                    "is_active",
+                ),
+            },
+        ),
+    )
     inlines = [ProfileInline, AddressInline]
+    list_per_page = 10
 
 
 @admin.register(CustomerProfile)
