@@ -16,6 +16,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ("title", "category")
     autocomplete_fields = ("category",)
     list_filter = ("category", "is_active")
+    prepopulated_fields = {'slug': ('title',)}
     list_per_page = 10
 
 
@@ -24,6 +25,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
     list_filter = ("parent_category",)
+    prepopulated_fields = {'slug': ('name',)}
     inlines = [
         CategoryInline,
     ]

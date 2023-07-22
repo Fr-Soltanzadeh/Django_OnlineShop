@@ -16,7 +16,7 @@ class Category(BaseModel):
     image = models.ImageField(
         upload_to="images/", default="static/images/category_default.png"
     )
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
 
     class Meta:
         verbose_name_plural = "Categories"
@@ -28,7 +28,7 @@ class Category(BaseModel):
 class Product(BaseModel):
 
     title = models.CharField(max_length=150)
-    price = models.DecimalField(max_digits=2, decimal_places=2)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
     category = models.ForeignKey(
         "Category",
         on_delete=models.SET_NULL,
@@ -39,9 +39,9 @@ class Product(BaseModel):
     is_active = models.BooleanField(default=True)
     info = RichTextField()
     discount = models.ForeignKey(
-        "Discount", on_delete=models.SET_DEFAULT, default=0, related_name="products"
+        "Discount", on_delete=models.SET_NULL, blank=True, null=True, related_name="products"
     )
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     quantity = models.PositiveIntegerField()
 
     class Meta:
