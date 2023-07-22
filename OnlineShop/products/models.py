@@ -1,7 +1,7 @@
 from django.db import models
 from core.models import BaseModel
 from ckeditor.fields import RichTextField
-from accounts.models import User
+from accounts.models import Customer
 
 
 class Category(BaseModel):
@@ -79,8 +79,8 @@ class Comment(BaseModel):
     product = models.ForeignKey(
         "Product", on_delete=models.CASCADE, related_name="comments"
     )
-    user = models.OneToOneField(
-        User, on_delete=models.SET_DEFAULT, default="anonymous", related_name="comments"
+    customer = models.ForeignKey(
+        Customer, on_delete=models.SET_DEFAULT, default="anonymous", related_name="comments"
     )
     content = models.CharField(max_length=500)
     parent_comment = models.ForeignKey(
@@ -114,3 +114,4 @@ class Discount(BaseModel):
 
     def __str__(self):
         return f"{self.title} {self.percent}%"
+

@@ -44,7 +44,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("product", "user", "status", "rate")
+    list_display = ("product", "customer", "status", "rate")
     search_fields = ("product",)
     list_filter = ("product",)
     list_editable = ("status",)
