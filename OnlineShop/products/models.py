@@ -14,7 +14,7 @@ class Category(BaseModel):
         blank=True,
     )
     image = models.ImageField(
-        upload_to="images/", default="static/images/category_default.png"
+        upload_to="images/", default="images/category_default.png"
     )
     slug = models.SlugField(unique=True)
 
