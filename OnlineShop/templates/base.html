@@ -7,9 +7,9 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>
         
-        "{% block title %}
+        {% block title %}
 
-        "{% endblock %}
+        {% endblock %}
     </title>
     <meta name="robots" content="noindex, follow" />
     <meta name="description" content="">
@@ -42,12 +42,12 @@
 </head>
 
 <body>
-    "{% include 'header.html' %}
-    "{% block content %}
-    
-    "{% endblock %}
-    "{% include 'footer.html' %}
 
+    
+    {% block content %}
+    
+    {% endblock %}
+    
     <!-- All JS is here
 ============================================ -->
 
@@ -57,7 +57,6 @@
     <script src="{% static '/assets/js/vendor/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static '/assets/js/plugins/slick.js' %}"></script>
     <script src="{% static '/assets/js/plugins/jquery.syotimer.min.js' %}"></script>
-    <script src="{% static '/assets/js/plugins/jquery.instagramfeed.min.js' %}"></script>
     <script src="{% static '/assets/js/plugins/jquery.nice-select.min.js' %}"></script>
     <script src="{% static '/assets/js/plugins/wow.js' %}"></script>
     <script src="{% static '/assets/js/plugins/jquery-ui-touch-punch.js' %}"></script>

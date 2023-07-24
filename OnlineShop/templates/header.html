@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="main-wrapper bg-gray-9">
     <header class="header-area bg-orange">
         <div class="header-large-device">
@@ -6,7 +8,7 @@
                     <div class="row align-items-center">
                         <div class="col-xl-2 col-lg-2">
                             <div class="logo">
-                                <a href="index.html"><img src="static/images/Noora-logo.png" alt="logo" style="height: 80px;"></a>
+                                <a href="{% url 'home' %}"><img src="{% static 'images/Noora-logo.png' %}" alt="logo" style="height: 80px;"></a>
                             </div>
                         </div>
                         <div class="col-xl-7 col-lg-7">
@@ -30,7 +32,7 @@
                         <div class="col-xl-3 col-lg-3">
                             <div class="header-action header-action-flex">
                                 <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc">
-                                    <a href="login-register.html"><i class="icon-user"></i></a>
+                                    <a href="{% url 'login' %}"><i class="icon-user"></i></a>
                                 </div>
                                 <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc">
                                     <a href="wishlist.html"><i class="icon-heart"></i></a>
@@ -53,10 +55,10 @@
                                 <nav>
                                     <ul>
                                         <li><a href="{% url 'home' %}">HOME</a></li>
-                                        <li><a href="shop.html">SHOP</a></li>
-                                        <li><a href="contact.html">OFFER </a></li>
-                                        <li><a href="contact.html">CONTACT </a></li>
-                                        <li><a href="shop.html">ABOUT </a></li>
+                                        <li><a href="{% url 'home' %}">SHOP</a></li>
+                                        <li><a href="{% url 'home' %}">OFFER </a></li>
+                                        <li><a href="{% url 'home' %}">CONTACT </a></li>
+                                        <li><a href="{% url 'home' %}">ABOUT </a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -70,18 +72,18 @@
                 <div class="row align-items-center">
                     <div class="col-5">
                         <div class="mobile-logo">
-                            <a href="index.html">
-                                <img alt="" src="static/assets/images/logo/logo-3.png">
+                            <a href="{% url 'home' %}">
+                                <img alt="" src="static/images/Noora-logo.png">
                             </a>
                         </div>
                     </div>
                     <div class="col-7">
                         <div class="header-action header-action-flex">
                             <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc">
-                                <a href="login-register.html"><i class="icon-user"></i></a>
+                                <a href="{% url 'login' %}"><i class="icon-user"></i></a>
                             </div>
                             <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc">
-                                <a href="wishlist.html"><i class="icon-heart"></i><span class="pro-count black">03</span></a>
+                                <a href="{% url 'home' %}"><i class="icon-heart"></i><span class="pro-count black">03</span></a>
                             </div>
                             <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc header-cart">
                                 <a class="cart-active" href="#">
@@ -128,7 +130,6 @@
                 <div class="mobile-social-icon">
                     <a class="twitter" href="#"><i class="icon-social-twitter"></i></a>
                     <a class="pinterest" href="#"><i class="icon-social-pinterest"></i></a>
-                    <a class="instagram" href="#"><i class="icon-social-instagram"></i></a>
                 </div>
             </div>
         </div>
