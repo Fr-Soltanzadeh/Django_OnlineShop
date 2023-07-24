@@ -8,7 +8,9 @@ from .utils import send_otp_code
 import random
 from .models import User, OtpCode, CustomerProfile
 from django.contrib import messages
-
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+)
 
 class LoginOrRegisterView(View):
     template_name = "accounts/login.html"
@@ -73,7 +75,8 @@ class LogoutView(View):
         return redirect("login")
 
 
-class ProfileView(View):
+class ProfileView(LoginRequiredMixin, View):
+    login_url = "/login/"
     template_name = "accounts/profile.html"
 
     def get(self, request, pk):
