@@ -1,7 +1,7 @@
 from django.db import models
 from core.models import BaseModel
 from ckeditor.fields import RichTextField
-from accounts.models import User
+from accounts.models import Customer
 
 
 class Category(BaseModel):
@@ -13,8 +13,10 @@ class Category(BaseModel):
         null=True,
         blank=True,
     )
-    image = models.ImageField(upload_to="images/", default="static/images/category_default.png")
-    slug = models.SlugField()
+    image = models.ImageField(
+        upload_to="images/", default="images/category_default.png"
+    )
+    slug = models.SlugField(unique=True)
 
     class Meta:
         verbose_name_plural = "Categories"
@@ -26,7 +28,7 @@ class Category(BaseModel):
 class Product(BaseModel):
 
     title = models.CharField(max_length=150)
-    price = models.DecimalField(max_digits=2, decimal_places=2)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
     category = models.ForeignKey(
         "Category",
         on_delete=models.SET_NULL,
@@ -34,11 +36,14 @@ class Product(BaseModel):
         null=True,
         blank=True,
     )
-    image = models.ImageField(upload_to="images/", default="static/images/product_default.png")
     is_active = models.BooleanField(default=True)
     info = RichTextField()
-    discount = models.ForeignKey("Discount", on_delete=models.SET_DEFAULT, default=0, related_name="products")
-    slug = models.SlugField()
+    discount = models.ForeignKey(
+        "Discount", on_delete=models.SET_NULL, blank=True, null=True, related_name="products"
+    )
+    slug = models.SlugField(unique=True)
+    quantity = models.PositiveIntegerField()
+    wish_list = models.ManyToManyField(Customer, related_name="wish_list", blank=True)
 
     class Meta:
         verbose_name_plural = "Products"
@@ -46,12 +51,20 @@ class Product(BaseModel):
     def __str__(self):
         return self.title
 
-    # def get_absolute_url(self):
-    #     return reverse("product_detail", args=(self.id,))
+    def get_absolute_url(self):
+        return reverse("product_detail", args=(self.slug,))
+
+
+class ProductImage(BaseModel):
+    image = models.ImageField(
+        upload_to="images/", default="static/images/product_default.png"
+    )
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="images"
+    )
 
 
 class Comment(BaseModel):
-
     class StatusChoices(models.IntegerChoices):
         PENDING = 1, "PENDING"
         APPROVED = 2, "APPROVED"
@@ -64,8 +77,12 @@ class Comment(BaseModel):
         star4 = 4, "4 STAR"
         star5 = 5, "5 STAR"
 
-    product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name="comments")
-    user = models.OneToOneField(User, on_delete=models.SET_DEFAULT, default="anonymous", related_name="comments")
+    product = models.ForeignKey(
+        "Product", on_delete=models.CASCADE, related_name="comments"
+    )
+    customer = models.ForeignKey(
+        Customer, on_delete=models.SET_NULL, null=True, blank=True, related_name="comments"
+    )
     content = models.CharField(max_length=500)
     parent_comment = models.ForeignKey(
         "Comment",
@@ -85,7 +102,7 @@ class Comment(BaseModel):
 
 
 class Discount(BaseModel):
-    
+
     percent = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
     start_time = models.DateTimeField()
@@ -98,3 +115,5 @@ class Discount(BaseModel):
 
     def __str__(self):
         return f"{self.title} {self.percent}%"
+
+

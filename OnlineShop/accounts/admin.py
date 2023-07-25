@@ -1,17 +1,18 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import User, Profile, Address, OtpCode
+from .models import User, CustomerProfile, Address, OtpCode, Customer
 
 
 class ProfileInline(admin.TabularInline):
-    model = Profile
+    model = CustomerProfile
     extra = 1
 
 
 class AddressInline(admin.TabularInline):
     model = Address
     extra = 1
+
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
@@ -61,17 +62,46 @@ class CustomUserAdmin(UserAdmin):
         ),
     )
     search_fields = ("phone_number",)
-    ordering = ("first_name","last_name")
-    inlines = [ProfileInline, AddressInline]
-
+    ordering = ("first_name", "last_name")
+    inlines = [AddressInline]
+    list_per_page = 10
 
 admin.site.register(User, CustomUserAdmin)
 
 
-@admin.register(Profile)
+@admin.register(Customer)
+class CustomerAdmin(CustomUserAdmin):
+    fieldsets = (
+        (None, {"fields": ("phone_number",)}),
+        (
+            "Permissions",
+            {
+                "fields": (
+                    "is_active",
+                )
+            },
+        ),
+    )
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "phone_number",
+                    "is_active",
+                ),
+            },
+        ),
+    )
+    inlines = [ProfileInline, AddressInline]
+    list_per_page = 10
+
+
+@admin.register(CustomerProfile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = (
-        "user",
+        "customer",
         "gender",
     )
     search_fields = ("phone_number",)
@@ -86,14 +116,18 @@ class AddressAdmin(admin.ModelAdmin):
         "city",
         "street",
     )
-    search_fields = ("city","street")
+    search_fields = ("city", "street")
     list_filter = ("city", "street")
     list_per_page = 10
 
 
 @admin.register(OtpCode)
 class OtpCodeAdmin(admin.ModelAdmin):
-    list_display = ('phone_number', 'code', 'created_at',)
+    list_display = (
+        "phone_number",
+        "code",
+        "created_at",
+    )
     search_fields = ("phone_number",)
     list_filter = ("created_at",)
     list_per_page = 10

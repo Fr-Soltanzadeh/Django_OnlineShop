@@ -1,12 +1,21 @@
 from django.contrib import admin
-from .models import Product, Discount, Comment, Category
+from .models import Product, Discount, Comment, Category, ProductImage
 
 
 class CategoryInline(admin.TabularInline):
     model = Category
     extra = 3
 
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 3
 
+
+@admin.register(ProductImage)
+class ProductImageAdmin(admin.ModelAdmin):
+    list_per_page = 10
+
+    
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
@@ -16,6 +25,8 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ("title", "category")
     autocomplete_fields = ("category",)
     list_filter = ("category", "is_active")
+    prepopulated_fields = {'slug': ('title',)}
+    inlines = [ProductImageInline]
     list_per_page = 10
 
 
@@ -24,15 +35,18 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
     list_filter = ("parent_category",)
-    inlines = [CategoryInline,]
+    prepopulated_fields = {'slug': ('name',)}
+    inlines = [
+        CategoryInline,
+    ]
     list_per_page = 10
 
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("product", "user", "status", "rate")
+    list_display = ("product", "customer", "status", "rate")
     search_fields = ("product",)
-    list_filter = ("product", )
+    list_filter = ("product",)
     list_editable = ("status",)
     list_per_page = 10
 

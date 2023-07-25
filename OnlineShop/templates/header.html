@@ -1,0 +1,127 @@
+{% load static %}
+<div class="main-wrapper bg-gray-9">
+    <header class="header-area bg-orange">
+        <div class="header-large-device">
+            <div class="header-top header-top-ptb-7 border-bottom-9">
+                <div class="container">
+                    <div class="row align-items-center d-flex justify-content-between">
+                        <div class="col-xl-2 col-lg-2 ml-5">
+                            <div class="logo">
+                                <a href="{% url 'home' %}"><img src="{% static 'images/Noora-logo.png' %}" alt="logo" style="height: 80px;"></a>
+                            </div>
+                        </div>
+                        <div class="col-xl-5 col-lg-5 ">
+                            <div class="categori-search-wrap categori-search-wrap-modify-2 ">
+                                <div class="search-wrap-3">
+                                    <form action="//127.0.0.1:8000/products/" method="get">
+                                        <input placeholder="Search Products..." type="text" name="search">
+                                        <button class="orange"><i class="lnr lnr-magnifier"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3">
+                            <div class="header-action header-action-flex">
+                                <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc">
+                                    <a href="{% url 'login' %}"><i class="icon-user"></i></a>
+                                </div>
+                                <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc">
+                                    <a href="wishlist.html"><i class="icon-heart"></i></a>
+                                </div>
+                                <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc header-cart">
+                                    <a class="cart-active" href="#">
+                                        <i class="icon-basket-loaded"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-bottom">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-12">
+                            <div class="main-menu main-menu-white main-menu-font-size-14 main-menu-padding-3 main-menu-lh-5 main-menu-hover-black">
+                                <nav>
+                                    <ul>
+                                        <li><a href="{% url 'home' %}">HOME</a></li>
+                                        <li><a href="{% url 'home' %}">SHOP</a></li>
+                                        <li><a href="{% url 'home' %}">OFFER </a></li>
+                                        <li><a href="{% url 'home' %}">CONTACT </a></li>
+                                        <li><a href="{% url 'home' %}">ABOUT </a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-small-device small-device-ptb-1">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-5">
+                        <div class="mobile-logo">
+                            <a href="{% url 'home' %}">
+                                <img alt="" src="static/images/Noora-logo.png">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div class="header-action header-action-flex">
+                            <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc">
+                                <a href="{% url 'login' %}"><i class="icon-user"></i></a>
+                            </div>
+                            <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc">
+                                <a href="{% url 'home' %}"><i class="icon-heart"></i><span class="pro-count black">03</span></a>
+                            </div>
+                            <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc header-cart">
+                                <a class="cart-active" href="#">
+                                    <i class="icon-basket-loaded"></i><span class="pro-count black">02</span>
+                                </a>
+                            </div>
+                            <div class="same-style-2 same-style-2-white same-style-2-hover-black main-menu-icon">
+                                <a class="mobile-header-button-active" href="#"><i class="icon-menu"></i> </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile menu start -->
+    <div class="mobile-header-active mobile-header-wrapper-style">
+        <div class="clickalbe-sidebar-wrap">
+            <a class="sidebar-close"><i class="icon_close"></i></a>
+            <div class="mobile-header-content-area">
+                <div class="mobile-search mobile-header-padding-border-1">
+                    <form class="search-form" action="#">
+                        <input type="text" placeholder="Search here…">
+                        <button class="button-search"><i class="icon-magnifier"></i></button>
+                    </form>
+                </div>
+                <div class="mobile-menu-wrap mobile-header-padding-border-2">
+                    <!-- mobile menu start -->
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="menu-item-has-children"><a href="{% url 'home' %}">Home</a>
+                            </li>
+                            <li><a href="shop.html">SHOP</a></li>
+                                        <li><a href="contact.html">OFFER </a></li>
+                                        <li><a href="contact.html">CONTACT </a></li>
+                                        <li><a href="shop.html">ABOUT </a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!-- mobile menu end -->
+                </div>
+                <div class="mobile-social-icon">
+                    <a class="twitter" href="#"><i class="icon-social-twitter"></i></a>
+                    <a class="pinterest" href="#"><i class="icon-social-pinterest"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>

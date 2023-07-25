@@ -17,7 +17,7 @@ from django.contrib.messages import constants as messages
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-env_path =BASE_DIR / ".env"
+env_path = BASE_DIR / ".env"
 load_dotenv(dotenv_path=env_path)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
@@ -43,13 +43,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    'rest_framework.authtoken',
+    "ckeditor",
     # apps
     "accounts.apps.AccountsConfig",
     "core.apps.CoreConfig",
-    "ckeditor",
     "products.apps.ProductsConfig",
     "orders.apps.OrdersConfig",
-    "home.apps.HomeConfig"
+    "home.apps.HomeConfig",
+    "cart.apps.CartConfig",
 ]
 
 MIDDLEWARE = [
@@ -67,7 +70,7 @@ ROOT_URLCONF = "OnlineShop.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR/'templates'],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -90,11 +93,11 @@ WSGI_APPLICATION = "OnlineShop.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-       'NAME': getenv("database_name"),
-       'USER': getenv("user"),
-       'PASSWORD': getenv("password"),
-       'HOST': getenv("hostname"),
-       'PORT': getenv("port"),
+        "NAME": getenv("database_name"),
+        "USER": getenv("user"),
+        "PASSWORD": getenv("password"),
+        "HOST": getenv("hostname"),
+        "PORT": getenv("port"),
     }
 }
 # Password validation

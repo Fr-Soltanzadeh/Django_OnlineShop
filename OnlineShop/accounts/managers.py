@@ -32,3 +32,15 @@ class UserManager(BaseUserManager):
         if not extra_fields.get("is_superuser"):
             raise ValueError(_("Superuser must have is_superuser=True."))
         return self.create_user(phone_number, password, **extra_fields)
+
+
+class CustomerManager(BaseUserManager):
+    def create_user(self, phone_number, **extra_fields):
+        """
+        Create and save a user with the given phone_number and password.
+        """
+        if not phone_number:
+            raise ValueError(_("The phone_number must be set"))
+        user = self.model(phone_number=phone_number, **extra_fields)
+        user.save()
+        return user

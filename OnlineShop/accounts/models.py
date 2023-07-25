@@ -1,19 +1,22 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from .managers import UserManager
+from .managers import UserManager, CustomerManager
 from core.utils import get_phonenumber_regex
 from core.models import BaseModel
-from django_countries.fields import CountryField
 from django.urls import reverse
 
 
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     phone_number = models.CharField(
-        _("phone number"), max_length=14, unique=True, validators=[get_phonenumber_regex()]
+        _("phone number"),
+        max_length=14,
+        unique=True,
+        validators=[get_phonenumber_regex()],
     )
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    national_code = models.IntegerField(null=True, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     USERNAME_FIELD = "phone_number"
@@ -34,14 +37,24 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         verbose_name_plural = "Users"
 
 
-class Profile(BaseModel):
+class Customer(User):    
+    class Meta:
+        proxy = True
+
+    objects = CustomerManager()
+
+
+class CustomerProfile(BaseModel):
     class GenderChoices(models.IntegerChoices):
         MALE = 1, "MALE"
         FEMALE = 2, "FEMALE"
+
     gender = models.IntegerField(choices=GenderChoices.choices, default=1)
     birthday = models.DateField(null=True, blank=True)
-    national_code = models.IntegerField(null=True, blank=True)
-    user = models.OneToOneField("User", on_delete=models.CASCADE, related_name="profile")
+    customer = models.OneToOneField(
+        "Customer", on_delete=models.CASCADE, related_name="profile"
+    )
+    Shaba_number = models.CharField(max_length=26, null=True, blank=True)
 
     def __str__(self):
         return str(self.user)
@@ -51,7 +64,6 @@ class Profile(BaseModel):
 
 
 class Address(BaseModel):
-    country = CountryField(blank_label="(select country)")
     province = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
     street = models.CharField(max_length=50)
@@ -67,7 +79,9 @@ class Address(BaseModel):
 
 
 class OtpCode(models.Model):
-    phone_number = models.CharField(max_length=14, validators=[get_phonenumber_regex()], unique=True)
+    phone_number = models.CharField(
+        max_length=14, validators=[get_phonenumber_regex()], unique=True
+    )
     code = models.PositiveSmallIntegerField()
     created_at = models.DateTimeField(auto_now=True)
 
@@ -76,4 +90,3 @@ class OtpCode(models.Model):
 
     class Meta:
         verbose_name_plural = "OTP Codes"
-
