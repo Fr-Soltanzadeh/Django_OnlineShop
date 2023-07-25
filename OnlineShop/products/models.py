@@ -43,6 +43,7 @@ class Product(BaseModel):
     )
     slug = models.SlugField(unique=True)
     quantity = models.PositiveIntegerField()
+    wish_list = models.ManyToManyField(Customer, related_name="wish_list", blank=True)
 
     class Meta:
         verbose_name_plural = "Products"

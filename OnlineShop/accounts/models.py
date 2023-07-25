@@ -5,7 +5,6 @@ from .managers import UserManager, CustomerManager
 from core.utils import get_phonenumber_regex
 from core.models import BaseModel
 from django.urls import reverse
-# from products.models import Product
 
 
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
@@ -56,7 +55,6 @@ class CustomerProfile(BaseModel):
         "Customer", on_delete=models.CASCADE, related_name="profile"
     )
     Shaba_number = models.CharField(max_length=26, null=True, blank=True)
-    # wish_list = models.ManyToManyField(Product, on_delete=models.SET_NULL, related_name="customers")
 
     def __str__(self):
         return str(self.user)
