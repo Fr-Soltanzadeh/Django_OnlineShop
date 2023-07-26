@@ -4,7 +4,7 @@ from . import api_views, views
 
 urlpatterns = [
     path('products/api/', api_views.ProductListApiView.as_view(), name="products_api"),
-    path('products/api/<slug:slug>/', api_views.ProductListByCategoryApiView.as_view(), name="products_by_category_api"),
+    path('products/<slug:slug>/api/', api_views.ProductListByCategoryApiView.as_view(), name="products_by_category_api"),
     path('product/api/<slug:slug>/', api_views.ProductDetailApiView.as_view(), name="product_detail_api"),
     path('products/', views.ProductListView.as_view(), name="products"),
     path('products/<slug:slug>/', views.ProductListByCategoryView.as_view(), name="products_by_category"),
