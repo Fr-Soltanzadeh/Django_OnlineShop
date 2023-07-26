@@ -16,7 +16,7 @@ class ProductListByCategoryView(View):
         return render(request, self.template_name, context={"slug": slug})
 
 class ProductDetailView(View):
-    template_name = "product_detail.html"
+    template_name = "product_details.html"
     
     def get(self, request, slug):
         return render(request, self.template_name, context={"slug": slug})

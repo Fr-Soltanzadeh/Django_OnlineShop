@@ -57,7 +57,7 @@ class CustomerProfile(BaseModel):
     Shaba_number = models.CharField(max_length=26, null=True, blank=True)
 
     def __str__(self):
-        return str(self.user)
+        return str(self.customer)
 
     class Meta:
         verbose_name_plural = "Profiles"
