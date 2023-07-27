@@ -1,31 +1,56 @@
-<!DOCTYPE html>
-<html>
-<head>
-    {% load static %} 
+{% extends 'base.html' %}
+{% load static %}
 
-    <title>Verify code</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+{% block title %}
+ Verify Code
+{% endblock %}
 
-</head>
-<body>
-    {% include 'accounts/messages.html' %}
+{% block content %}
+{% include 'header.html' %}    
 
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="card col-4 bg-light mt-5">
-                <div class="pt-4" ><h5 class="card-title">Verify Code:</h5></div>
-                    <div class="card-body">
-                        <form method="post" action="">
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                            <input type="submit" value="Verify">
-                            <input type="hidden" name="next" value="{{ request.GET.next }}">
-                    
-                        </form>
+    <div class="breadcrumb-area bg-gray">
+        <div class="container">
+            <div class="breadcrumb-content text-center">
+                <ul>
+                    <li>
+                        <a href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="active">Verification-Code</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="login-register-area pt-20 pb-70">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7 col-md-12 ml-auto mr-auto">
+                    <div class="login-register-wrapper">
+                        
+                        <div class="tab-content">
+                            <div id="lg1" class="tab-pane active">
+                                <div class="login-form-container">
+                                    <div class="login-register-form">
+                                        <form action="#" method="post">
+                                            {% csrf_token %}
+                                            {{ form.as_p }}
+                                            <input type="hidden" name="next" value="{{ request.GET.next }}">
+                                            <div class="button-box">
+                                                <button type="submit">Verify</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+
+        {% include 'footer.html' %}
+
+        <script>
     
-</body>
-</html>
+        </script>
+        {% endblock %}
