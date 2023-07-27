@@ -25,6 +25,8 @@ class LoginOrRegisterView(View):
             phone_number = form.cleaned_data["phone_number"]
             otp_code = random.randint(1000, 9999)
             send_otp_code(phone_number, otp_code)
+            if  OtpCode.objects.filter(phone_number=phone_number).exists():
+                OtpCode.objects.get(phone_number=phone_number).delete()
             OtpCode.objects.create(phone_number=phone_number, code=otp_code)
             request.session["login_info"] = {
                 "phone_number": phone_number,

@@ -8,6 +8,13 @@ from django.urls import reverse
 
 
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
+    class RoleChoice(models.IntegerChoices):
+        ADMIN = 0, "ADMIN"
+        CUSTOMER =1, "CUSTOMER"
+        STAFF = 2, "STAFF"
+        PRODUCT_MANAGER= 3, "PRODUCT_MANAGER"
+
+    role=models.IntegerField(choices=RoleChoice.choices, default=1)
     phone_number = models.CharField(
         _("phone number"),
         max_length=14,
@@ -72,7 +79,7 @@ class Address(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.street}, {self.city}, {self.province}, {self.country}"
+        return f"{self.street}, {self.city}, {self.province}"
 
     class Meta:
         verbose_name_plural = "Addresses"

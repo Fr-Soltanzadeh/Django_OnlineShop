@@ -1,7 +1,7 @@
 from django.db import models
 from core.models import BaseModel
 from ckeditor.fields import RichTextField
-from accounts.models import Customer
+from accounts.models import User
 
 
 class Category(BaseModel):
@@ -43,7 +43,7 @@ class Product(BaseModel):
     )
     slug = models.SlugField(unique=True)
     quantity = models.PositiveIntegerField()
-    wish_list = models.ManyToManyField(Customer, related_name="wish_list", blank=True)
+    wish_list = models.ManyToManyField(User, related_name="wish_list", blank=True)
 
     class Meta:
         verbose_name_plural = "Products"
@@ -81,7 +81,7 @@ class Comment(BaseModel):
         "Product", on_delete=models.CASCADE, related_name="comments"
     )
     customer = models.ForeignKey(
-        Customer, on_delete=models.SET_NULL, null=True, blank=True, related_name="comments"
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name="comments"
     )
     content = models.CharField(max_length=500)
     parent_comment = models.ForeignKey(

@@ -21,7 +21,7 @@ class CartAdmin(admin.ModelAdmin):
 
 @admin.register(CartItem)
 class CartItemAdmin(admin.ModelAdmin):
-    list_display = ("product", "quantity")
+    list_display = ("id", "product", "quantity")
     list_filter = ("updated_at", "product")
     autocomplete_fields = ("product",)
     list_per_page = 10
