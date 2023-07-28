@@ -13,9 +13,15 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     cartItems=CartItemSerializer(many=True, read_only=True)
+    total_price=serializers.SerializerMethodField()
+    grand_price=serializers.SerializerMethodField()
     class Meta:
         model = Cart
-        fields = ("customer","cartItems")
+        fields = ("customer","cartItems","grand_price","total_price")
         # depth=2
+    def get_grand_price(self, cart):
+        return sum((item.product.price*item.quantity for item in cart.cartItems.all()))
 
+    def get_total_price(self, cart):
+        return sum((item.product.price*item.quantity for item in cart.cartItems.all()))
 
