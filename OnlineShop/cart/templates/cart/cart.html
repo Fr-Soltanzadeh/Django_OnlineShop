@@ -33,6 +33,7 @@
                                             <th>Image</th>
                                             <th>Product Name</th>
                                             <th>Price</th>
+                                            <th>Discounted Price</th>
                                             <th>Quantity</th>
                                             <th>Subtotal</th>
                                             <th>action</th>
@@ -77,15 +78,9 @@
                                     <div class="title-wrap">
                                         <h4 class="cart-bottom-title section-bg-gary-cart">Cart Total</h4>
                                     </div>
-                                    <h5>Total products <span>$260.00</span></h5>
-                                    <div class="total-shipping">
-                                        <h5>Total shipping</h5>
-                                        <ul>
-                                            <li><input type="checkbox"> Standard <span>$20.00</span></li>
-                                            <li><input type="checkbox"> Express <span>$30.00</span></li>
-                                        </ul>
-                                    </div>
-                                    <h4 class="grand-totall-title">Grand Total <span>$260.00</span></h4>
+                                    <h5>Total products <span id="total_price"></span></h5>
+                                    <h5>Your profit from the purchase:<span id="profit"></span></h5>
+                                    <h4 class="grand-totall-title">Grand Total <span id="grand_price"></span></h4>
                                     <a href="#">Proceed to Checkout</a>
                                 </div>
                             </div>
@@ -118,12 +113,14 @@
                 let cart = data.cartItems;
                 let main=document.getElementById("cart_items")
                 cart.map(function(cart_item) {
+                    const base_url = window.location.href.split("/cart").at(-2);
                     let tr = document.createElement('tr');
                     tr.id = `r${cart_item.product.id}`
 
                     let td_img = document.createElement('td');
                     td_img.classList.add('product-thumbnail');
                     a_img = document.createElement('a');
+                    a_img.href = `${base_url}/product/${cart_item.product.slug}`
                     img = document.createElement('img');
                     img.style.height="112px"
                     img.src=cart_item.product.images[0].image
@@ -135,6 +132,7 @@
                     let td_name = document.createElement('td');
                     td_name.classList.add('product-name');
                     a_name = document.createElement('a');
+                    a_name.href = `${base_url}/product/${cart_item.product.slug}`
                     a_name.innerHTML=cart_item.product.title
                     td_name.appendChild(a_name)
                     tr.appendChild(td_name);
@@ -146,6 +144,14 @@
                     span_price.innerHTML=cart_item.product.price
                     td_price.appendChild(span_price)
                     tr.appendChild(td_price);
+
+                    let td_discounted_price = document.createElement('td');
+                    td_discounted_price.classList.add('product-price-cart');
+                    span_discounted_price = document.createElement('a');
+                    span_discounted_price.classList.add('amount');
+                    span_discounted_price.innerHTML=cart_item.product.discounted_price
+                    td_discounted_price.appendChild(span_discounted_price)
+                    tr.appendChild(td_discounted_price);
 
                     let td_quantity = document.createElement('td');
                     td_quantity.classList.add('product-quantity', 'pro-details-quality');
@@ -188,7 +194,12 @@
                     main.appendChild(tr);
                     
                 });
-                
+                grand_price =document.querySelector("#grand_price")
+                grand_price.innerHTML= `$${data.grand_price}`
+                total_price =document.querySelector("#total_price")
+                total_price.innerHTML= `$${data.total_price}`
+                profit =document.querySelector("#profit")
+                profit.innerHTML= `$${Number(data.total_price)-Number(data.grand_price)}`
                 })
             .catch(function(error) {
                 console.log(error);
