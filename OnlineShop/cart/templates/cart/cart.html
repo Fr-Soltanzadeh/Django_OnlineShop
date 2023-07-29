@@ -25,7 +25,7 @@
                 <h3 class="cart-page-title">Your cart items</h3>
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-12">
-                        <form action="#">
+                        <form action="">
                             <div class="table-content table-responsive cart-table-content">
                                 <table>
                                     <thead>
@@ -51,8 +51,10 @@
                                             <a href="{%url 'products' %}">Continue Shopping</a>
                                         </div>
                                         <div class="cart-clear">
-                                            <button>Update Cart</button>
-                                            <a href="#">Clear Cart</a>
+                                            
+                                                {% csrf_token %}
+                                            <button onclick="update_cart()">Update Cart</button>
+                                            <button onclick="clear_cart()">Clear Cart</button>
                                         </div>
                                     </div>
                                 </div>
@@ -110,8 +112,15 @@
                 }
             )
             .then((data) => {
-                let cart = data.cartItems;
-                let main=document.getElementById("cart_items")
+                load_cart_data(data)
+                })
+            .catch(function(error) {
+                console.log(error);
+            });                    
+        }
+        function load_cart_data(data) {
+            let cart = data.cart_items;
+            let main=document.getElementById("cart_items")
                 cart.map(function(cart_item) {
                     const base_url = window.location.href.split("/cart").at(-2);
                     let tr = document.createElement('tr');
@@ -157,21 +166,22 @@
                     td_quantity.classList.add('product-quantity', 'pro-details-quality');
                     let div_quantity = document.createElement('div');
                     div_quantity.classList.add('cart-plus-minus');
-                    let div_minus = document.createElement('div');
-                    div_minus.classList.add('qtybutton','dec');
-                    div_minus.innerHTML="-"
-                    let input = document.createElement('input');
-                    input.classList.add('cart-plus-minus-box');
-                    input.id=`q${cart_item.product.id}`
-                    input.type="text"; 
-                    input.name="qtybutton" 
-                    input.value=cart_item.quantity
+                        let div_minus = document.createElement('div');
+                        div_minus.classList.add('qtybutton','dec');
+                        div_minus.innerHTML="-"
+                        div_minus.setAttribute("onclick",`decrease_item(${cart_item.product.id})`);
                     div_quantity.appendChild(div_minus)
+                        let input = document.createElement('input');
+                        input.classList.add('cart-plus-minus-box');
+                        input.id=`q${cart_item.product.id}`
+                        input.type="text"; 
+                        input.name=cart_item.product.id
+                        input.value=cart_item.quantity
                     div_quantity.appendChild(input)
-                    let div_plus = document.createElement('div');
-                    div_plus.classList.add('qtybutton','inc');
-                    div_plus.innerHTML="+"
-                    div_plus.setAttribute("onclick",`add_item(${cart_item.product.id})`);
+                        let div_plus = document.createElement('div');
+                        div_plus.classList.add('qtybutton','inc');
+                        div_plus.innerHTML="+"
+                        div_plus.setAttribute("onclick",`add_item(${cart_item.product.id})`);
                     div_quantity.appendChild(div_plus)
                     td_quantity.appendChild(div_quantity)
                     tr.appendChild(td_quantity);
@@ -183,16 +193,15 @@
 
                     let td_remove = document.createElement('td');
                     td_remove.classList.add('product-remove');
-                    a_remove = document.createElement('a');
-                    i_remove= document.createElement('i');
-                    i_remove.classList.add("icon_trash")
-                    a_remove.appendChild(i_remove)
-                    a_remove.setAttribute("onclick",`remove_item(${cart_item.product.id})`);
+                        a_remove = document.createElement('a');
+                            i_remove= document.createElement('i');
+                            i_remove.classList.add("icon_trash")
+                        a_remove.appendChild(i_remove)
+                        a_remove.setAttribute("onclick",`remove_item(${cart_item.product.id})`);
                     td_remove.appendChild(a_remove)
                     tr.appendChild(td_remove);
 
                     main.appendChild(tr);
-                    
                 });
                 grand_price =document.querySelector("#grand_price")
                 grand_price.innerHTML= `$${data.grand_price}`
@@ -200,29 +209,14 @@
                 total_price.innerHTML= `$${data.total_price}`
                 profit =document.querySelector("#profit")
                 profit.innerHTML= `$${Number(data.total_price)-Number(data.grand_price)}`
-                })
-            .catch(function(error) {
-                console.log(error);
-            });                    
         }
         function add_item(ItemId) {
-            console.log(`inc:q${ItemId}`)
             let quantity=document.getElementById(`q${ItemId}`)
-            console.log("before:")
-            console.log(quantity.value)
             quantity.value=Number(quantity.value)+1
-            console.log("after:")
-            console.log(quantity.value)
         }
         function decrease_item(ItemId) {
-            console.log(`dec:q${ItemId}`)
             let quantity=document.getElementById(`q${ItemId}`)
-            console.log("before:")
-            console.log(quantity.value)
-            quantity.value=Number(quantity.value)-1
-            console.log("after:")
-            console.log(quantity.value)
-            
+            quantity.value=Number(quantity.value)-1        
             if (quantity.value <=0){
                 remove_item(ItemId)
             }
@@ -231,5 +225,45 @@
             let quantity=document.getElementById(`r${ItemId}`)
             quantity.remove()
         } 
+
+        function clear_cart(){
+            const url ="api/"
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            console.log(csrftoken)
+            fetch(url,{
+                method:'DELETE',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                }
+            }) 
+            .catch(function(error) {
+                console.log(error);
+            });
+        }
+
+        function update_cart(){
+            const rows = document.querySelectorAll('#cart_items tr');
+            const data = [];
+            rows.forEach(row => {
+                const productId = row.querySelector('input[type="text"]').name;
+                const quantity = row.querySelector('input[type="text"]').value;
+                data.push({ product_id: productId, quantity: quantity });
+            });
+            console.log(data)
+            const url ="api/"
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            console.log(csrftoken)
+            fetch(url,{
+                method:'PUT',
+                body:JSON.stringify({ cart_items: data }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                }
+            })  
+            .catch(function(error) {
+                console.log(error);
+            });
+        }
     </script>
     {% endblock %}
