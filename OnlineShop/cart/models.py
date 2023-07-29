@@ -28,7 +28,11 @@ class CartItem(BaseModel):
         on_delete=models.CASCADE,
         related_name="cart_items",
     )
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return f"{self.cart}, {self.product}"
+
+    class Meta:
+        verbose_name_plural = "cart items"
+        unique_together = ['cart', 'product']
