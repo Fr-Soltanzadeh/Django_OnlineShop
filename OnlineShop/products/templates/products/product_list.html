@@ -37,9 +37,12 @@
                         <div class="shop-bottom-area">
                             <div class="tab-content jump">
                                 <div id="shop-1" class="tab-pane active">
+                                    <form action="{% url 'cart' %}">
+                                        {% csrf_token %}
                                     <div class="row" id="products_data">
 
                                     </div>
+                                    </form>
                                 </div>
                             </div>
                             <div class="pro-pagination-style text-center mt-10">
@@ -62,7 +65,6 @@
             let params = (new URL(document.location)).searchParams;
             let page = params.get("page");
             let search = params.get("search");
-            console.log(page)
             if (page!=null && parseFloat(page) == page){
                 const base_url = window.location.href.split("?page=").at(-2);
                 document.getElementById("page").innerHTML=page
@@ -87,13 +89,8 @@
                 
                 document.getElementById('next').href=`${ window.location.href}?page=2`;
                 document.getElementById('prev').href='javascript: void(0)'
+                }
             }
-
-            }
-            
-            console.log(url)
-            
-            
             fetch(url,{
                 method:'GET',
             })
@@ -108,10 +105,8 @@
                 }
             )
             .then((data) => {
-                
-
                 let products = data.results;
-                let main_div=document.getElementById("products_data")
+                let main_div=document.getElementById("products_data");
                 products.map(function(product) {
                     let div1 = document.createElement('div');
                     div1.classList.add('col-xl-4', 'col-lg-4', 'col-md-6' ,'col-sm-6', 'col-12');
@@ -122,42 +117,43 @@
                     let div_img = document.createElement('div');
                     div_img.classList.add('product-img',  'product-img-zoom','mb-15');
                     let img = document.createElement('img');
-                    img.src=product.images[0].image
-                    img.alt='product_image'
-                    img.style.maxHeight='360px'
-                    img.style.maxWidth='360px'
-                    div_img.appendChild(img)
+                    img.src=product.images[0].image;
+                    img.alt='product_image';
+                    img.style.maxHeight='360px';
+                    img.style.maxWidth='360px';
+                    div_img.appendChild(img);
                     div2.appendChild(div_img); 
                     
                     let div3=document.createElement('div');
                     div3.classList.add("product-content-wrap2", "text-center");
                     let title=document.createElement('h3');
                     let a=document.createElement('a');
-                    a.href=`/product/${product.slug}`
-                    a.innerHTML=product.title
-                    title.appendChild(a)
-                    div3.appendChild(title)
+                    a.href=`/product/${product.slug}`;
+                    a.innerHTML=product.title;
+                    title.appendChild(a);
+                    div3.appendChild(title);
                     
                     let div4=document.createElement('div');
                     div4.classList.add("product-price-2");
                     let span= document.createElement('span');
-                    span.innerHTML=product.price + '$'
-                    div4.appendChild(span)
-                    div3.appendChild(div4)
+                    span.innerHTML=product.price + '$';
+                    div4.appendChild(span);
+                    div3.appendChild(div4);
                     
                     let div5=document.createElement('div');
                     div5.classList.add("pro-add-to-cart");
                     let button= document.createElement('button');
-                    button.innerHTML="Add To Cart"
-                    button.title="Add to Cart"
-                    div5.appendChild(button)
-                    div3.appendChild(div5)
+                    button.innerHTML="Add To Cart";
+                    button.title="Add to Cart";
+                    button.setAttribute("onclick",`add_to_cart(${product.id})`);
+                    div5.appendChild(button);
+                    div3.appendChild(div5);
                     
-                    div2.appendChild(div3)
+                    div2.appendChild(div3);
                     div1.appendChild(div2);
-                    main_div.appendChild(div1)
+                    main_div.appendChild(div1);
                     if (!data.next){
-                        document.getElementById('next').href='javascript: void(0)'
+                        document.getElementById('next').href='javascript: void(0)';
                     }
                 });
                 
@@ -165,6 +161,33 @@
             .catch(function(error) {
                 console.log(error);
             });                    
+        }
+        function add_to_cart(product_id){
+            const url = '/cart/api/add/'
+            console.log(product_id)
+            console.log(JSON.stringify({ product_id: product_id }))
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            fetch(url,{
+                method:'POST',
+                body:JSON.stringify({ product_id: product_id }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                }
+            })
+            .then(
+                response=>{
+                    if (response.ok){
+                        return response.json();
+                    }
+                    else  {
+                        throw new Error('not connected');
+                    }
+                }
+            )
+            .catch(function(error) {
+                console.log(error);
+            });
         }
     </script>
         {% endblock %}
