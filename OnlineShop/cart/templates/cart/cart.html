@@ -229,7 +229,6 @@
         function clear_cart(){
             const url ="api/"
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            console.log(csrftoken)
             fetch(url,{
                 method:'DELETE',
                 headers: {
@@ -249,10 +248,8 @@
                 const quantity = row.querySelector('input[type="text"]').value;
                 data.push({ product_id: productId, quantity: quantity });
             });
-            console.log(data)
             const url ="api/"
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            console.log(csrftoken)
             fetch(url,{
                 method:'PUT',
                 body:JSON.stringify({ cart_items: data }),
