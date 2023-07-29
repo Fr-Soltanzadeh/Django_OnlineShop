@@ -133,7 +133,7 @@
                     div3.classList.add("product-content-wrap2", "text-center");
                     let title=document.createElement('h3');
                     let a=document.createElement('a');
-                    a.href="{% url 'home' %}"
+                    a.href=`/product/${product.slug}`
                     a.innerHTML=product.title
                     title.appendChild(a)
                     div3.appendChild(title)
