@@ -19,14 +19,14 @@ class CartItem(BaseModel):
     product = models.ForeignKey(
         Product,
         on_delete=models.SET_NULL,
-        related_name="cartItems",
+        related_name="cart_items",
         null=True,
         blank=True,
     )
     cart = models.ForeignKey(
         Cart,
         on_delete=models.CASCADE,
-        related_name="cartItems",
+        related_name="cart_items",
     )
     quantity = models.PositiveIntegerField()
 
