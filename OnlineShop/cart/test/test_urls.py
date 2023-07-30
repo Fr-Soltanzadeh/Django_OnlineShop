@@ -16,3 +16,5 @@ class TestUrls(SimpleTestCase):
     def test_add_to_cart_api(self):
         url = reverse("add_to_cart_api")
         self.assertEqual(resolve(url).func.view_class, AddToCartApiView)
+
+    
