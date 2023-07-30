@@ -53,6 +53,12 @@ class Product(BaseModel):
 
     def get_absolute_url(self):
         return reverse("product_detail", args=(self.slug,))
+    
+    @property
+    def discounted_price(self):
+        if self.discount :
+            return self.price*(100-self.discount.percent)/100
+        return self.price 
 
 
 class ProductImage(BaseModel):
