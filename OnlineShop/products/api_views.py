@@ -31,7 +31,6 @@ class ProductDetailApiView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field= "slug"
 
 
-
 # class ProductListByCategoryApiView(APIView):
 #     def get(self, request, slug, format=None):
 #         category = Category.objects.get(slug=slug)

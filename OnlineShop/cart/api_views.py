@@ -22,7 +22,6 @@ class CartApiView(APIView):
          return Response(serializer.data)
       else:
          try:
-            print(request.session['cart'])
             cart = request.session.get('cart')
          except:
             cart = {"customer":None,"cart_items":[], "grand_price":0, "total_price":0}
@@ -43,7 +42,6 @@ class CartApiView(APIView):
             request.session['cart']["total_price"]=0
          except KeyError:
             request.session["cart"] = {"customer":None,"cart_items":[], "grand_price":0, "total_price":0}
-         print(request.session['cart'])
          request.session.save()
       return Response(request.session["cart"])
 
@@ -97,15 +95,12 @@ class AddToCartApiView(APIView):
             product['price']=str(product['price'])
             product['discounted_price']=str(product['discounted_price'])
             try:
-               for index,x  in enumerate(request.session["cart"]['cart_items']):
-                  print(index, x)
-               item_index=[index for index,x  in enumerate(request.session["cart"]['cart_items']) if x['product']['id']==product_id][0]
+               item_index=[index for index, x in enumerate(request.session["cart"]['cart_items']) if x['product']['id']==product_id][0]
                request.session["cart"]['cart_items'][item_index]['quantity']+=1
             except IndexError:
                if not request.session.get("cart"):
                   request.session["cart"] = {"customer":None,"cart_items":[], "grand_price":0, "total_price":0}
                request.session["cart"]['cart_items'].append({'quantity':1,'product':product})
-            print(request.session["cart"])
             request.session.save()
             calculate_grand_price(request)
             return Response(request.session["cart"])

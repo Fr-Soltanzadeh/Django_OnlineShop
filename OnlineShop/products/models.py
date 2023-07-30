@@ -2,6 +2,8 @@ from django.db import models
 from core.models import BaseModel
 from ckeditor.fields import RichTextField
 from accounts.models import User
+from django.urls import reverse
+
 
 
 class Category(BaseModel):
@@ -68,6 +70,11 @@ class ProductImage(BaseModel):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="images"
     )
+    class Meta:
+        verbose_name_plural = "Product Images"
+
+    def __str__(self):
+        return f'id:{self.id}, {self.product}'
 
 
 class Comment(BaseModel):
