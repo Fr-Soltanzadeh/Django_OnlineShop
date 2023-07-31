@@ -20,15 +20,18 @@
                 </div>
             </div>
         </div>
-        <div class="cart-main-area pt-115 pb-120">
-            <div class="container">
-                <h3 class="cart-page-title">Your cart items</h3>
+        <div class="cart-main-area pt-80 pb-120" >
+            <div class="container" >
+                <h3 class="cart-page-title pb-3">Your cart items</h3>
                 <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-12">
-                        <form action="">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-12" >
+                        <div id="empty_cart" class="text-center">
+
+                        </div>
+                        <form action="" id="cart_form">
                             <div class="table-content table-responsive cart-table-content">
-                                <table>
-                                    <thead>
+                                <table >
+                                    <thead >
                                         <tr>
                                             <th>Image</th>
                                             <th>Product Name</th>
@@ -112,6 +115,7 @@
                 }
             )
             .then((data) => {
+                
                 load_cart_data(data)
                 })
             .catch(function(error) {
@@ -121,6 +125,17 @@
         function load_cart_data(data) {
             let cart = data.cart_items;
             let main=document.getElementById("cart_items")
+            if (cart.length==0){
+                document.getElementById("cart_form").hidden=true
+                let h3 = document.createElement('h3');
+                let empty_img =document.createElement('img');
+                empty_img.src="/static/images/empty-cart.svg"
+                h3.innerHTML = "Your cart is empty . . .";
+                h3.classList.add("p-3")
+                let empty_cart = document.getElementById("empty_cart")
+                empty_cart.appendChild(empty_img)
+                empty_cart.appendChild(h3)
+            }
                 cart.map(function(cart_item) {
                     const base_url = window.location.href.split("/cart").at(-2);
                     let tr = document.createElement('tr');
