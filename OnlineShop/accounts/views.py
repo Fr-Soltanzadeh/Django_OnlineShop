@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
 )
+from cart.utils import add_session_to_user_cart
 
 class LoginOrRegisterView(View):
     template_name = "accounts/login.html"
@@ -59,6 +60,7 @@ class VerifyCodeView(View):
                     user = User.objects.get(phone_number=phone_number)
                 redirect_to = request.session["login_info"]["redirect_to"]
                 login(request, user)
+                add_session_to_user_cart(request)
                 otp_code.delete()
                 messages.success(request, "You have successfully logged in.")
                 if redirect_to:

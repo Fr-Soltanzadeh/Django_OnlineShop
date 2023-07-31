@@ -22,7 +22,7 @@ class CartApiView(APIView):
          return Response(serializer.data)
       else:
          try:
-            cart = request.session.get('cart')
+            cart = request.session["cart"]
          except:
             cart = {"customer":None,"cart_items":[], "grand_price":0, "total_price":0}
             request.session["cart"] = cart
