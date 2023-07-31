@@ -97,7 +97,7 @@ class AddToCartApiView(APIView):
             try:
                item_index=[index for index, x in enumerate(request.session["cart"]['cart_items']) if x['product']['id']==product_id][0]
                request.session["cart"]['cart_items'][item_index]['quantity']+=1
-            except IndexError:
+            except (IndexError, KeyError):
                if not request.session.get("cart"):
                   request.session["cart"] = {"customer":None,"cart_items":[], "grand_price":0, "total_price":0}
                request.session["cart"]['cart_items'].append({'quantity':1,'product':product})
