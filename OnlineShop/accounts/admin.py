@@ -22,6 +22,7 @@ class CustomUserAdmin(UserAdmin):
         "phone_number",
         "is_staff",
         "is_active",
+        "fullname"
     )
     list_filter = (
         "created_at",
@@ -71,6 +72,14 @@ admin.site.register(User, CustomUserAdmin)
 
 @admin.register(Customer)
 class CustomerAdmin(CustomUserAdmin):
+    list_display = (
+        "phone_number",
+        "fullname"
+    )
+    list_filter = (
+        "created_at",
+        "is_active",
+    )
     fieldsets = (
         (None, {"fields": ("phone_number",)}),
         (
@@ -78,6 +87,10 @@ class CustomerAdmin(CustomUserAdmin):
             {
                 "fields": (
                     "is_active",
+                    "first_name",
+                    "last_name",
+                    "role",
+                    "national_code",
                 )
             },
         ),
@@ -90,6 +103,10 @@ class CustomerAdmin(CustomUserAdmin):
                 "fields": (
                     "phone_number",
                     "is_active",
+                    "first_name",
+                    "last_name",
+                    "role",
+                    "national_code",
                 ),
             },
         ),

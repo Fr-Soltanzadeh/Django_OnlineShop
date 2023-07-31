@@ -81,5 +81,5 @@ class ProfileView(LoginRequiredMixin, View):
     login_url = "/login/"
     template_name = "accounts/profile.html"
 
-    def get(self, request, pk):
+    def get(self, request):
         return render(request, self.template_name)
