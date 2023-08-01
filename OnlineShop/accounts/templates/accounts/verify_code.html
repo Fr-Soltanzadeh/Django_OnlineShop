@@ -30,7 +30,7 @@
                             <div id="lg1" class="tab-pane active">
                                 <div class="login-form-container">
                                     <div class="login-register-form">
-                                        <form action="#" method="post">
+                                        <form action="#" method="post" id="verify" onsubmit="return sendData()">
                                             {% csrf_token %}
                                             {{ form.as_p }}
                                             <input type="hidden" name="next" value="{{ request.GET.next }}">
@@ -51,6 +51,38 @@
         {% include 'footer.html' %}
 
         <script>
-    
+            function sendData () {
+                var data = new FormData(document.getElementById("verify"));
+                let url = "api/"
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                fetch(url, {
+                    method: "POST",
+                    body: data,
+                    headers: {
+                    'X-CSRFToken': csrftoken
+                }
+                })
+                .then(response => {
+                    if (response.status == 200){
+                        return response.json();
+                        
+                    }else{
+                        throw new Error("Bad Server Response"); 
+                    }
+                    return res.text();
+                })
+                .then((data) => {
+                console.log(data)
+                    if (data.redirect_to){
+                            window.location.href = data.redirect_to;
+                        }else{
+                            window.location.href = "/profile/";
+                        }
+                }
+                )
+                .then(res => console.log(res))
+                .catch(err => console.error(err));
+                    return false;
+                }
         </script>
         {% endblock %}

@@ -31,7 +31,7 @@
                             <div id="lg1" class="tab-pane active">
                                 <div class="login-form-container">
                                     <div class="login-register-form">
-                                        <form action="#" method="post">
+                                        <form action="#" method="post" onsubmit="return sendData()" id="login">
                                             {% csrf_token %}
                                             {{ form.as_p }}
                                             <input type="hidden" name="next" value="{{ request.GET.next }}">
@@ -52,7 +52,29 @@
         {% include 'footer.html' %}
 
         <script>
-    
+            function sendData () {
+                var data = new FormData(document.getElementById("login"));
+                let url = "api/"
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                fetch(url, {
+                    method: "POST",
+                    body: data,
+                    headers: {
+                    'X-CSRFToken': csrftoken
+                }
+                })
+                .then(res => {
+                    if (res.status == 200){
+                        window.location.href = "/verify_code";
+                    }else{
+                        throw new Error("Bad Server Response"); 
+                    }
+                    return res.text();
+                })
+                .then(res => console.log(res))
+                .catch(err => console.error(err));
+                    return false;
+                }
         </script>
         {% endblock %}
     
