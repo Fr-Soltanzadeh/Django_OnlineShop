@@ -1,10 +1,15 @@
 from django.urls import path
 from . import views
+from . import api_views
 
 
 urlpatterns = [
     path("login/", views.LoginOrRegisterView.as_view(), name="login"),
-    path("verify_code", views.VerifyCodeView.as_view(), name="verify_code"),
+    path("verify_code/", views.VerifyCodeView.as_view(), name="verify_code"),
     path("logout/", views.LogoutView.as_view(), name="logout"),
     path("profile/", views.ProfileView.as_view(), name="profile"),
+    path("login/api/", api_views.LoginOrRegisterApiView.as_view(), name="login_api"),
+    path("verify_code/api/", api_views.VerifyCodeApiView.as_view(), name="verify_code_api"),
+    # path("profile/api", api_views.ProfileApiView.as_view(), name="profile_api"),
+    path("refresh_token/api/", api_views.RefreshTokenApiView.as_view(), name="refresh_token_api"),
 ]
