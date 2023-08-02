@@ -73,11 +73,13 @@
                 })
                 .then((data) => {
                 console.log(data)
-                    if (data.redirect_to){
-                            window.location.href = data.redirect_to;
-                        }else{
-                            window.location.href = "/profile/";
-                        }
+                window.localStorage.setItem("access_token", data.access_token);
+                window.localStorage.setItem("refresh_token", data.refresh_token);
+                if (data.redirect_to){
+                    window.location.href = data.redirect_to;
+                }else{
+                    window.location.href = "/profile/";
+                }
                 }
                 )
                 .then(res => console.log(res))
@@ -86,3 +88,4 @@
                 }
         </script>
         {% endblock %}
+        

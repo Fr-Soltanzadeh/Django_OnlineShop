@@ -9,6 +9,7 @@ from rest_framework import permissions
 
 class ProductListByCategoryApiView(mixins.ListModelMixin, generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
+    authentication_classes=[]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     def get(self, request, *args, **kwargs):
@@ -19,6 +20,7 @@ class ProductListByCategoryApiView(mixins.ListModelMixin, generics.GenericAPIVie
 
 class ProductListApiView(mixins.ListModelMixin, generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
+    authentication_classes=[]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     def get(self, request, *args, **kwargs):

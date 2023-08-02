@@ -14,14 +14,14 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from cart.utils import add_session_to_user_cart
 from rest_framework import views, permissions, status
-
+from .serializers import CustomerSerializer
 
 User = get_user_model()
 
 
 class LoginOrRegisterApiView(APIView):
-    permission_classes = [permissions.AllowAny]
-    
+    # permission_classes = [permissions.AllowAny]
+    authentication_classes=[]
     def post(self, request, *args, **kwargs):
         
         serializer= LoginSerializer(data=request.data, partial=True)
@@ -46,8 +46,8 @@ class LoginOrRegisterApiView(APIView):
 
 
 class VerifyCodeApiView(APIView):
-    permission_classes = [permissions.AllowAny]
-
+    # permission_classes = [permissions.AllowAny]
+    authentication_classes=[]
     def post(self, request):
         serializer= OtpCodeSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -61,13 +61,13 @@ class VerifyCodeApiView(APIView):
                 redirect_to = request.session["login_info"]["redirect_to"]
                 login(request, user)
                 add_session_to_user_cart(request)
+                access_token = generate_access_token(user)
+                refresh_token = generate_refresh_token(user)
                 otp_code.delete()
                 request.session["login_info"]={}
                 request.session.save()
-                access_token = generate_access_token(user)
-                refresh_token = generate_refresh_token(user)
                 messages.success(request, "You have successfully logged in.")
-                return Response(data={"redirect_to":redirect_to, 'token': access_token, 'refresh_token':refresh_token}, status=status.HTTP_200_OK)
+                return Response(data={"redirect_to":redirect_to, 'access_token': access_token, 'refresh_token':refresh_token}, status=status.HTTP_200_OK)
                 
         messages.error(
             request,
@@ -77,18 +77,15 @@ class VerifyCodeApiView(APIView):
 
 
 class RefreshTokenApiView(APIView):
-    '''
-    To obtain a new access_token this view expects 2 important things:
-        1. a cookie that contains a valid refresh_token
-        2. a header 'X-CSRFTOKEN' with a valid csrf token, client app can get it from cookies "csrftoken"
-    '''
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
+    authentication_classes=[]
+    def get(self, request):
+        refresh_token = request.headers.get('Authorization')
 
-    def post(self, request):
-        refresh_token = request.COOKIES.get('refreshtoken')
         if refresh_token is None:
             raise exceptions.AuthenticationFailed(
                 'Authentication credentials were not provided.')
+        refresh_token = refresh_token.replace('Bearer', '').replace(' ', '')
         try:
             payload = jwt.decode(
                 refresh_token, settings.REFRESH_TOKEN_SECRET, algorithms=['HS256'])
@@ -104,5 +101,11 @@ class RefreshTokenApiView(APIView):
             raise exceptions.AuthenticationFailed('user is inactive')
 
         access_token = generate_access_token(user)
-        return Response({'access_token': access_token})
+        refresh_token = generate_refresh_token(user)
+        return Response({'access_token': access_token, 'refresh_token':refresh_token}, status=status.HTTP_200_OK)
 
+
+class ProfileApiView(APIView):
+    def get(self, request, format=None):
+        serializer = CustomerSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)

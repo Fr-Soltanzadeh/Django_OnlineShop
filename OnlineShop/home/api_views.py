@@ -6,7 +6,9 @@ from rest_framework import permissions
 
 
 class HomeApiView(APIView):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
+    authentication_classes=[]
+
     def get(self, request):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)

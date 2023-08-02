@@ -61,7 +61,7 @@ class CustomerProfile(BaseModel):
     customer = models.OneToOneField(
         "Customer", on_delete=models.CASCADE, related_name="profile"
     )
-    Shaba_number = models.CharField(max_length=26, null=True, blank=True)
+    shaba_number = models.CharField(max_length=26, null=True, blank=True)
 
     def __str__(self):
         return str(self.customer)
@@ -76,7 +76,7 @@ class Address(BaseModel):
     street = models.CharField(max_length=50)
     detail = models.CharField(max_length=300)
     postal_code = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")
 
     def __str__(self):
         return f"{self.street}, {self.city}, {self.province}"

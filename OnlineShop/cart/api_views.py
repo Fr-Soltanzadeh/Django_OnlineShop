@@ -12,7 +12,8 @@ from rest_framework import permissions
 
 
 class CartApiView(APIView):
-   permission_classes = [permissions.AllowAny]
+   # permission_classes = [permissions.AllowAny]
+   authentication_classes=[]
    def get(self, request):
       if request.user.is_authenticated:
          user = request.user
@@ -77,7 +78,8 @@ class CartApiView(APIView):
       
 
 class AddToCartApiView(APIView):
-      permission_classes = [permissions.AllowAny]
+      # permission_classes = [permissions.AllowAny]
+      authentication_classes=[]
       def post(self, request):
          product_id=request.data.get('product_id')
          product = Product.objects.get(id=int(product_id))
