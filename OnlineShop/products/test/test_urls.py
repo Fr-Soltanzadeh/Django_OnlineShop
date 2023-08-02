@@ -1,7 +1,11 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
 from ..views import ProductDetailView, ProductListByCategoryView, ProductListView
-from ..api_views import ProductDetailApiView, ProductListApiView, ProductListByCategoryApiView
+from ..api_views import (
+    ProductDetailApiView,
+    ProductListApiView,
+    ProductListByCategoryApiView,
+)
 
 
 class TestUrls(SimpleTestCase):

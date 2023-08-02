@@ -5,7 +5,6 @@ from accounts.models import User
 from django.urls import reverse
 
 
-
 class Category(BaseModel):
     name = models.CharField(max_length=100)
     parent_category = models.ForeignKey(
@@ -41,7 +40,11 @@ class Product(BaseModel):
     is_active = models.BooleanField(default=True)
     info = RichTextField()
     discount = models.ForeignKey(
-        "Discount", on_delete=models.SET_NULL, blank=True, null=True, related_name="products"
+        "Discount",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="products",
     )
     slug = models.SlugField(unique=True)
     quantity = models.PositiveIntegerField()
@@ -55,12 +58,12 @@ class Product(BaseModel):
 
     def get_absolute_url(self):
         return reverse("product_detail", args=(self.slug,))
-    
+
     @property
     def discounted_price(self):
-        if self.discount :
-            return self.price*(100-self.discount.percent)/100
-        return self.price 
+        if self.discount:
+            return self.price * (100 - self.discount.percent) / 100
+        return self.price
 
 
 class ProductImage(BaseModel):
@@ -70,11 +73,12 @@ class ProductImage(BaseModel):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="images"
     )
+
     class Meta:
         verbose_name_plural = "Product Images"
 
     def __str__(self):
-        return f'id:{self.id}, {self.product}'
+        return f"id:{self.id}, {self.product}"
 
 
 class Comment(BaseModel):
@@ -128,5 +132,3 @@ class Discount(BaseModel):
 
     def __str__(self):
         return f"{self.title} {self.percent}%"
-
-

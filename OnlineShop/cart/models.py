@@ -6,8 +6,9 @@ from core.utils import get_phonenumber_regex
 
 
 class Cart(BaseModel):
-   
+
     customer = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
+
     class Meta:
         verbose_name_plural = "carts"
 
@@ -35,4 +36,4 @@ class CartItem(BaseModel):
 
     class Meta:
         verbose_name_plural = "cart items"
-        unique_together = ['cart', 'product']
+        unique_together = ["cart", "product"]

@@ -21,15 +21,16 @@ User = get_user_model()
 
 class LoginOrRegisterApiView(APIView):
     # permission_classes = [permissions.AllowAny]
-    authentication_classes=[]
+    authentication_classes = []
+
     def post(self, request, *args, **kwargs):
-        
-        serializer= LoginSerializer(data=request.data, partial=True)
+
+        serializer = LoginSerializer(data=request.data, partial=True)
         if serializer.is_valid():
             phone_number = serializer.data["phone_number"]
             otp_code = random.randint(1000, 9999)
             send_otp_code(phone_number, otp_code)
-            if  OtpCode.objects.filter(phone_number=phone_number).exists():
+            if OtpCode.objects.filter(phone_number=phone_number).exists():
                 OtpCode.objects.get(phone_number=phone_number).delete()
             OtpCode.objects.create(phone_number=phone_number, code=otp_code)
             request.session["login_info"] = {
@@ -47,9 +48,10 @@ class LoginOrRegisterApiView(APIView):
 
 class VerifyCodeApiView(APIView):
     # permission_classes = [permissions.AllowAny]
-    authentication_classes=[]
+    authentication_classes = []
+
     def post(self, request):
-        serializer= OtpCodeSerializer(data=request.data)
+        serializer = OtpCodeSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             phone_number = request.session["login_info"]["phone_number"]
             otp_code = OtpCode.objects.get(phone_number=phone_number)
@@ -64,11 +66,18 @@ class VerifyCodeApiView(APIView):
                 access_token = generate_access_token(user)
                 refresh_token = generate_refresh_token(user)
                 otp_code.delete()
-                request.session["login_info"]={}
+                request.session["login_info"] = {}
                 request.session.save()
                 messages.success(request, "You have successfully logged in.")
-                return Response(data={"redirect_to":redirect_to, 'access_token': access_token, 'refresh_token':refresh_token}, status=status.HTTP_200_OK)
-                
+                return Response(
+                    data={
+                        "redirect_to": redirect_to,
+                        "access_token": access_token,
+                        "refresh_token": refresh_token,
+                    },
+                    status=status.HTTP_200_OK,
+                )
+
         messages.error(
             request,
             "The entered code is not correct. Try again",
@@ -78,33 +87,40 @@ class VerifyCodeApiView(APIView):
 
 class RefreshTokenApiView(APIView):
     permission_classes = [permissions.AllowAny]
-    authentication_classes=[]
+    authentication_classes = []
+
     def get(self, request):
-        refresh_token = request.headers.get('Authorization')
+        refresh_token = request.headers.get("Authorization")
 
         if refresh_token is None:
             raise exceptions.AuthenticationFailed(
-                'Authentication credentials were not provided.')
-        refresh_token = refresh_token.replace('Bearer', '').replace(' ', '')
+                "Authentication credentials were not provided."
+            )
+        refresh_token = refresh_token.replace("Bearer", "").replace(" ", "")
         try:
             payload = jwt.decode(
-                refresh_token, settings.REFRESH_TOKEN_SECRET, algorithms=['HS256'])
+                refresh_token, settings.REFRESH_TOKEN_SECRET, algorithms=["HS256"]
+            )
         except jwt.ExpiredSignatureError:
             raise exceptions.AuthenticationFailed(
-                'expired refresh token, please login again.')
+                "expired refresh token, please login again."
+            )
         except:
             raise exceptions.ParseError
 
-        user = User.objects.filter(id=payload.get('user_id')).first()
+        user = User.objects.filter(id=payload.get("user_id")).first()
         if user is None:
-            raise exceptions.AuthenticationFailed('User not found')
+            raise exceptions.AuthenticationFailed("User not found")
 
         if not user.is_active:
-            raise exceptions.AuthenticationFailed('user is inactive')
+            raise exceptions.AuthenticationFailed("user is inactive")
 
         access_token = generate_access_token(user)
         refresh_token = generate_refresh_token(user)
-        return Response({'access_token': access_token, 'refresh_token':refresh_token}, status=status.HTTP_200_OK)
+        return Response(
+            {"access_token": access_token, "refresh_token": refresh_token},
+            status=status.HTTP_200_OK,
+        )
 
 
 class ProfileApiView(APIView):

@@ -7,7 +7,7 @@ from rest_framework import permissions
 
 class HomeApiView(APIView):
     # permission_classes = [permissions.AllowAny]
-    authentication_classes=[]
+    authentication_classes = []
 
     def get(self, request):
         categories = Category.objects.all()

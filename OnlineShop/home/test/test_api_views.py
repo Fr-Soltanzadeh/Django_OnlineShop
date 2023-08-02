@@ -4,13 +4,14 @@ from django.urls import reverse
 from products.models import Category
 from products.serializers import CategorySerializer
 
+
 class HomeApiViewTest(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.url = reverse('home_api')
-        Category.objects.create(name='Category 1', slug= "Category1")
-        Category.objects.create(name='Category 2', slug= "Category2")
-        Category.objects.create(name='Category 3', slug= "Category3")
+        self.url = reverse("home_api")
+        Category.objects.create(name="Category 1", slug="Category1")
+        Category.objects.create(name="Category 2", slug="Category2")
+        Category.objects.create(name="Category 3", slug="Category3")
 
     def test_get_categories(self):
         response = self.client.get(self.url)

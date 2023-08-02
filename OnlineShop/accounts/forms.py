@@ -18,9 +18,13 @@ class CustomUserChangeForm(UserChangeForm):
 
 class LoginForm(forms.Form):
     phone_number = forms.CharField(
-        label="", validators=[get_phonenumber_regex()], widget=forms.TextInput(attrs={"placeholder": "Phone Number"})
+        label="",
+        validators=[get_phonenumber_regex()],
+        widget=forms.TextInput(attrs={"placeholder": "Phone Number"}),
     )
 
 
 class VerifyCodeForm(forms.Form):
-    verify_code = forms.CharField(label="", widget=forms.TextInput(attrs={"placeholder": "Verification Code"}))
+    verify_code = forms.CharField(
+        label="", widget=forms.TextInput(attrs={"placeholder": "Verification Code"})
+    )

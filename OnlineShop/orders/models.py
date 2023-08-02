@@ -14,7 +14,9 @@ class Order(BaseModel):
         CANCEL = 5, "CANCEL"
 
     status = models.IntegerField(choices=StatusChoice.choices, default=1)
-    customer = models.ForeignKey(User, on_delete=models.RESTRICT, related_name="orders",null=True)
+    customer = models.ForeignKey(
+        User, on_delete=models.RESTRICT, related_name="orders", null=True
+    )
     province = models.CharField(max_length=50, null=True, blank=True)
     city = models.CharField(max_length=50, null=True, blank=True)
     street = models.CharField(max_length=50, null=True, blank=True)

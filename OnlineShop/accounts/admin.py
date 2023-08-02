@@ -18,12 +18,7 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = User
-    list_display = (
-        "phone_number",
-        "is_staff",
-        "is_active",
-        "fullname"
-    )
+    list_display = ("phone_number", "is_staff", "is_active", "fullname")
     list_filter = (
         "created_at",
         "is_staff",
@@ -67,15 +62,13 @@ class CustomUserAdmin(UserAdmin):
     inlines = [AddressInline]
     list_per_page = 10
 
+
 admin.site.register(User, CustomUserAdmin)
 
 
 @admin.register(Customer)
 class CustomerAdmin(CustomUserAdmin):
-    list_display = (
-        "phone_number",
-        "fullname"
-    )
+    list_display = ("phone_number", "fullname")
     list_filter = (
         "created_at",
         "is_active",
