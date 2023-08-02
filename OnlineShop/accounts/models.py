@@ -37,9 +37,6 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     def fullname(self):
         return self.first_name + " " + self.last_name
 
-    def get_absolute_url(self):
-        return reverse("profile", args=(self.id,))
-
     class Meta:
         verbose_name_plural = "Users"
 

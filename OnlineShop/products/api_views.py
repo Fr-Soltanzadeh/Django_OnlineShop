@@ -31,6 +31,8 @@ class ProductListApiView(mixins.ListModelMixin, generics.GenericAPIView):
 
 
 class ProductDetailApiView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AllowAny]
+    authentication_classes=[]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field= "slug"

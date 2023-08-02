@@ -22,9 +22,13 @@ class VerifyCodeView(View):
 
     def get(self, request):
         if request.user.is_authenticated:
+            # print("111111111111111111111111111111111111111")
             return HttpResponseRedirect(reverse("profile"))
         elif not request.session.get("login_info"):
+            # print("222222222222222222222222222222222")
+            print(request.session.get("login_info"))
             return HttpResponseRedirect(reverse("login"))
+        # print("333333333333333333333333333333")
         form = VerifyCodeForm()
         return render(request, self.template_name, {"form": form})
 

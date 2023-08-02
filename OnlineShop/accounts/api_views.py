@@ -77,7 +77,7 @@ class VerifyCodeApiView(APIView):
 
 
 class RefreshTokenApiView(APIView):
-    # permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.AllowAny]
     authentication_classes=[]
     def get(self, request):
         refresh_token = request.headers.get('Authorization')
@@ -92,6 +92,8 @@ class RefreshTokenApiView(APIView):
         except jwt.ExpiredSignatureError:
             raise exceptions.AuthenticationFailed(
                 'expired refresh token, please login again.')
+        except:
+            raise exceptions.ParseError
 
         user = User.objects.filter(id=payload.get('user_id')).first()
         if user is None:

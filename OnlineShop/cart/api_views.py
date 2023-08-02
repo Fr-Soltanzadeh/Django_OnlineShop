@@ -27,7 +27,7 @@ class CartApiView(APIView):
          try:
             cart = request.session["cart"]
          except:
-            cart = {"customer":None,"cart_items":[], "grand_price":0, "total_price":0}
+            cart = {"customer":None,"cart_items":[], "grand_price":"0", "total_price":"0"}
             request.session["cart"] = cart
       return Response(cart)
 
@@ -44,7 +44,7 @@ class CartApiView(APIView):
             request.session['cart']["grand_price"]=0
             request.session['cart']["total_price"]=0
          except KeyError:
-            request.session["cart"] = {"customer":None,"cart_items":[], "grand_price":0, "total_price":0}
+            request.session["cart"] = {"customer":None,"cart_items":[], "grand_price":"0", "total_price":"0"}
          request.session.save()
       return Response(request.session["cart"])
 
@@ -71,7 +71,7 @@ class CartApiView(APIView):
                else:
                   request.session["cart"]['cart_items'][index]['quantity']=cart_items[str(item['product']['id'])]
          except:
-            request.session["cart"] = {"customer":None,"cart_items":[], "grand_price":0, "total_price":0}
+            request.session["cart"] = {"customer":None,"cart_items":[], "grand_price":"0", "total_price":"0"}
          request.session.save()
          calculate_grand_price(request)
          return Response(request.session["cart"])
@@ -104,7 +104,7 @@ class AddToCartApiView(APIView):
                request.session["cart"]['cart_items'][item_index]['quantity']+=1
             except (IndexError, KeyError):
                if not request.session.get("cart"):
-                  request.session["cart"] = {"customer":None,"cart_items":[], "grand_price":0, "total_price":0}
+                  request.session["cart"] = {"customer":None,"cart_items":[], "grand_price":"0", "total_price":"0"}
                request.session["cart"]['cart_items'].append({'quantity':1,'product':product})
             request.session.save()
             calculate_grand_price(request)
