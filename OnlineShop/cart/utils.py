@@ -46,4 +46,4 @@ def add_session_to_user_cart(request):
                 cart_item.quantity = item["quantity"]
                 cart_item.save()
     except KeyError:
-        ...
+        print(request.session.items())
