@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
- Login
+ Profile
 {% endblock %}
 
 {% block content %}
@@ -221,7 +221,61 @@
         {% include 'footer.html' %}
 
         <script>
-    
+            window.onload= function() {
+            const url ="api/"
+
+            fetch(url,{
+                method:'GET',
+                headers:{
+                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`
+                }
+            })
+            .then(
+                response=>{
+                    if (response.ok){
+                        return response.json();
+                    }
+                    else  {
+                        if (response.status==401){
+                            const refresh_token_url ="/refresh_token/api/"
+                            fetch(refresh_token_url,{
+                                method:'GET',
+                                headers:{
+                                    'Authorization':"Bearer "+  window.localStorage.getItem("refresh_token")
+                                }
+                            })
+                            .then(
+                                response=>{
+                                    if (response.status==401){
+                                        window.location.href = "/login/";
+                                    }else{
+                                        if (response.ok){
+                                            return response.json(); 
+                                        }
+                                    }
+                                }
+                            )
+                            .then((data)=> {
+                                window.localStorage.setItem("access_token", data.access_token);
+                                window.localStorage.setItem("refresh_token", data.refresh_token);
+                                window.location.href = "/profile/";
+                                }
+                            )
+                        }else{
+                            throw new Error('not connected');
+                        }
+                        
+                    }
+                }
+            )
+            .then((data) => {
+                
+                console.log(data)
+                })
+            .catch(function(error) {
+                console.log(error);
+            });                    
+        }
         </script>
         {% endblock %}
     
