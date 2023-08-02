@@ -73,18 +73,18 @@
                     document.getElementById('prev').href=`${base_url}?page=${+page-1}`;
                 }
                 if (search!=null){
-                    url =`${base_url}api/?page=${page}?search=${search}`;
+                    url =`${base_url}api/v1/?page=${page}?search=${search}`;
                 }else{
-                    url =`${base_url}api/?page=${page}`;
+                    url =`${base_url}api/v1/?page=${page}`;
                 } 
             }else{
                 if (page!=null && parseFloat(page) != page) {
                     window.location.href = "/products";
                 }else{
                     if (search!=null){
-                        url=`/products/api/?search=${search}`
+                        url=`/products/api/v1/?search=${search}`
                     }else{
-                        url ='api/';
+                        url ='api/v1/';
                     }
                 
                 document.getElementById('next').href=`${ window.location.href}?page=2`;
@@ -163,7 +163,7 @@
             });                    
         }
         function add_to_cart(product_id){
-            const url = '/cart/api/add/'
+            const url = '/cart/api/v1/add/'
             console.log(product_id)
             console.log(JSON.stringify({ product_id: product_id }))
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;

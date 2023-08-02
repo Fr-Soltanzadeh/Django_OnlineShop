@@ -222,7 +222,7 @@
 
         <script>
             window.onload= function() {
-            const url ="api/"
+            const url ="api/v1/"
 
             fetch(url,{
                 method:'GET',
@@ -237,7 +237,7 @@
                     }
                     else  {
                         if (response.status==401){
-                            const refresh_token_url ="/refresh_token/api/"
+                            const refresh_token_url ="/refresh_token/api/v1/"
                             fetch(refresh_token_url,{
                                 method:'GET',
                                 headers:{

@@ -53,7 +53,7 @@
         <script>
             function sendData () {
                 var data = new FormData(document.getElementById("verify"));
-                let url = "api/"
+                let url = "api/v1/"
                 const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
                 fetch(url, {
                     method: "POST",

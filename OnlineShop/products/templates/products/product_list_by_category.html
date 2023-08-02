@@ -91,14 +91,14 @@
                 if (page>1){
                     document.getElementById('prev').href=`${base_url}?page=${+page-1}`;
                 }
-                url =base_url+'api/?page='+page;
+                url =base_url+'api/v1/?page='+page;
                 
             }else{
                 if (page!=null && parseFloat(page) != page) {
                     const base_url = window.location.href.split("?page=").at(-2);
                     window.location.href =base_url;
                 }else{
-                url ='api/';
+                url ='api/v1/';
                 document.getElementById('next').href=`${ window.location.href}?page=2`;
                 document.getElementById('prev').href='javascript: void(0)'
                 }
@@ -176,7 +176,7 @@
         }
         
         function add_to_cart(product_id){
-            const url = '/cart/api/add/'
+            const url = '/cart/api/v1/add/'
             console.log(product_id)
             console.log(JSON.stringify({ product_id: product_id }))
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;

@@ -100,7 +100,7 @@
 
     <script>
      window.onload= function() {
-            const url ="api/"
+            const url ="api/v1/"
             fetch(url,{
                 method:'GET',
             })
@@ -242,7 +242,7 @@
         } 
 
         function clear_cart(){
-            const url ="api/"
+            const url ="api/v1/"
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             fetch(url,{
                 method:'DELETE',
@@ -263,7 +263,7 @@
                 const quantity = row.querySelector('input[type="text"]').value;
                 data.push({ product_id: productId, quantity: quantity });
             });
-            const url ="api/"
+            const url ="api/v1/"
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             fetch(url,{
                 method:'PUT',
