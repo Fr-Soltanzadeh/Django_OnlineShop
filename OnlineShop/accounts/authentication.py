@@ -2,28 +2,31 @@ import jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from rest_framework import authentication
-from rest_framework.exceptions import AuthenticationFailed, ParseError
+from rest_framework.exceptions import PermissionDenied, ParseError, AuthenticationFailed
 
 
 User = get_user_model()
 
 class JWTAuthentication(authentication.BaseAuthentication):
+    
     def authenticate(self, request):
+       
         # Extract the JWT from the Authorization header
-        authorization_header=request.headers.get('Authorization')
+        authorization_header=request.headers.get('Authorization') 
         if not authorization_header:
-            return None
+            raise AuthenticationFailed('Token not found')
 
         jwt_token = JWTAuthentication.get_the_token_from_header(authorization_header)  # clean the token
-
         # Decode the JWT and verify its signature
         try:
             payload = jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=['HS256'])
+
         except jwt.exceptions.InvalidSignatureError:
             raise AuthenticationFailed('Invalid signature')
+        except jwt.exceptions.ExpiredSignatureError:
+           raise AuthenticationFailed('Signature expired')
         except:
-            raise ParseError()
-
+            raise ParseError
         # Get the user from the database
         user_id = payload.get('user_id')
         if not user_id:
@@ -32,7 +35,6 @@ class JWTAuthentication(authentication.BaseAuthentication):
         user = User.objects.filter(id=user_id).first()
         if not user:
             raise AuthenticationFailed('User not found')
-
         # Return the user and token payload
         return user, payload
 
