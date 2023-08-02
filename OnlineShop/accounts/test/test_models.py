@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ..models import User, Profile, OtpCode, Address
+from ..models import User, OtpCode, Address, CustomerProfile, Customer
 from model_bakery import baker
 from django.urls import reverse
 
@@ -25,10 +25,10 @@ class TestUserModel(TestCase):
         )
 
 
-class TestProfileModel(TestCase):
+class TestCustomerProfileModel(TestCase):
     def setUp(self):
-        self.user = User.objects.create(phone_number="09102098929", password="123")
-        self.profile = baker.make(Profile, user=self.user)
+        self.customer = Customer.objects.create(phone_number="09102098929")
+        self.profile = baker.make(CustomerProfile, customer=self.customer)
 
     def test_model_str(self):
         self.assertEqual(str(self.profile), "09102098929")

@@ -1,7 +1,9 @@
 from django.db import models
 from core.models import BaseModel
 from ckeditor.fields import RichTextField
-from accounts.models import Customer
+from accounts.models import User
+from django.urls import reverse
+
 
 
 class Category(BaseModel):
@@ -43,7 +45,7 @@ class Product(BaseModel):
     )
     slug = models.SlugField(unique=True)
     quantity = models.PositiveIntegerField()
-    wish_list = models.ManyToManyField(Customer, related_name="wish_list", blank=True)
+    wish_list = models.ManyToManyField(User, related_name="wish_list", blank=True)
 
     class Meta:
         verbose_name_plural = "Products"
@@ -53,6 +55,12 @@ class Product(BaseModel):
 
     def get_absolute_url(self):
         return reverse("product_detail", args=(self.slug,))
+    
+    @property
+    def discounted_price(self):
+        if self.discount :
+            return self.price*(100-self.discount.percent)/100
+        return self.price 
 
 
 class ProductImage(BaseModel):
@@ -62,6 +70,11 @@ class ProductImage(BaseModel):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="images"
     )
+    class Meta:
+        verbose_name_plural = "Product Images"
+
+    def __str__(self):
+        return f'id:{self.id}, {self.product}'
 
 
 class Comment(BaseModel):
@@ -81,7 +94,7 @@ class Comment(BaseModel):
         "Product", on_delete=models.CASCADE, related_name="comments"
     )
     customer = models.ForeignKey(
-        Customer, on_delete=models.SET_NULL, null=True, blank=True, related_name="comments"
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name="comments"
     )
     content = models.CharField(max_length=500)
     parent_comment = models.ForeignKey(

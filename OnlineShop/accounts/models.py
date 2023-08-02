@@ -8,6 +8,13 @@ from django.urls import reverse
 
 
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
+    class RoleChoice(models.IntegerChoices):
+        ADMIN = 0, "ADMIN"
+        CUSTOMER =1, "CUSTOMER"
+        STAFF = 2, "STAFF"
+        PRODUCT_MANAGER= 3, "PRODUCT_MANAGER"
+
+    role=models.IntegerField(choices=RoleChoice.choices, default=1)
     phone_number = models.CharField(
         _("phone number"),
         max_length=14,
@@ -54,10 +61,10 @@ class CustomerProfile(BaseModel):
     customer = models.OneToOneField(
         "Customer", on_delete=models.CASCADE, related_name="profile"
     )
-    Shaba_number = models.CharField(max_length=26, null=True, blank=True)
+    shaba_number = models.CharField(max_length=26, null=True, blank=True)
 
     def __str__(self):
-        return str(self.user)
+        return str(self.customer)
 
     class Meta:
         verbose_name_plural = "Profiles"
@@ -69,10 +76,10 @@ class Address(BaseModel):
     street = models.CharField(max_length=50)
     detail = models.CharField(max_length=300)
     postal_code = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")
 
     def __str__(self):
-        return f"{self.street}, {self.city}, {self.province}, {self.country}"
+        return f"{self.street}, {self.city}, {self.province}"
 
     class Meta:
         verbose_name_plural = "Addresses"

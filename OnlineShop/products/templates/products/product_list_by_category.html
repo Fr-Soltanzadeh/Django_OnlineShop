@@ -20,7 +20,7 @@
             </div>
         </div>
         
-        <div class="shop-area pt-120 pb-120">
+        <div class="shop-area pt-80 pb-120">
             <div class="container">
                 <div class="row flex-row-reverse">
                     <div class="col-lg-12">
@@ -54,17 +54,21 @@
                         <div class="shop-bottom-area">
                             <div class="tab-content jump">
                                 <div id="shop-1" class="tab-pane active">
+                                    <form action="{% url 'cart' %}">
+                                        {% csrf_token %}
                                     <div class="row" id="products_data">
-
+                                        
+                                            
+                                        
                                     </div>
+                                </form>
                                 </div>
                             </div>
                             <div class="pro-pagination-style text-center mt-10">
                                 <ul>
-                                    <li><a class="prev" href="#"><i class="icon-arrow-left"></i></a></li>
-                                    <li><a class="active" href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a class="next" href="#"><i class="icon-arrow-right"></i></a></li>
+                                    <li><a id="prev" class="prev" href="#"><i class="icon-arrow-left"></i></a></li>
+                                    <li><a id="page" class="active" href="#">1</a></li>
+                                    <li><a id="next" class="next" href="#"><i class="icon-arrow-right"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -76,8 +80,29 @@
         {% include 'footer.html' %}
     <script>
         window.onload= function() {
-            const slug = window.location.href.split("/").at(-1)
-            const url ='api/'+slug;
+            let params = (new URL(document.location)).searchParams;
+            let page = params.get("page");
+            let url =""
+            
+            if (page!=null && parseFloat(page) == page){
+                const base_url = window.location.href.split("?page=").at(-2);
+                document.getElementById("page").innerHTML=page
+                document.getElementById('next').href=`${base_url}?page=${+page+1}`;
+                if (page>1){
+                    document.getElementById('prev').href=`${base_url}?page=${+page-1}`;
+                }
+                url =base_url+'api/v1/?page='+page;
+                
+            }else{
+                if (page!=null && parseFloat(page) != page) {
+                    const base_url = window.location.href.split("?page=").at(-2);
+                    window.location.href =base_url;
+                }else{
+                url ='api/v1/';
+                document.getElementById('next').href=`${ window.location.href}?page=2`;
+                document.getElementById('prev').href='javascript: void(0)'
+                }
+            }
             fetch(url,{
                 method:'GET',
             })
@@ -93,7 +118,7 @@
             )
             .then((data) => {
                 
-                let products = data;
+                let products = data.results;
                 let main_div=document.getElementById("products_data")
                 products.map(function(product) {
                     let div1 = document.createElement('div');
@@ -106,13 +131,15 @@
                     img.classList.add('product-img',  'product-img-zoom','mb-15');
                     img.src=product.images[0].image
                     img.alt='product_image'
+                    img.style.maxHeight='360px'
+                    img.style.maxWidth='360px'
                     div2.appendChild(img); 
                     
                     let div3=document.createElement('div');
                     div3.classList.add("product-content-wrap2", "text-center");
                     let title=document.createElement('h3');
                     let a=document.createElement('a');
-                    a.href="{% url 'home' %}"
+                    a.href=`/product/${product.slug}`
                     a.innerHTML=product.title
                     title.appendChild(a)
                     div3.appendChild(title)
@@ -129,18 +156,51 @@
                     let button= document.createElement('button');
                     button.innerHTML="Add To Cart"
                     button.title="Add to Cart"
+                    button.setAttribute("onclick",`add_to_cart(${product.id})`);
                     div5.appendChild(button)
                     div3.appendChild(div5)
                     
                     div2.appendChild(div3)
                     div1.appendChild(div2);
                     main_div.appendChild(div1)
+                    
+                    if (!data.next){
+                        document.getElementById('next').href='javascript: void(0)'
+                    }
                 });
                 
                 })
             .catch(function(error) {
                 console.log(error);
             });                    
+        }
+        
+        function add_to_cart(product_id){
+            const url = '/cart/api/v1/add/'
+            console.log(product_id)
+            console.log(JSON.stringify({ product_id: product_id }))
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            fetch(url,{
+                method:'POST',
+                body:JSON.stringify({ product_id: product_id }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                }
+            })
+            .then(
+                response=>{
+                    if (response.ok){
+                        return response.json();
+                    }
+                    else  {
+                        throw new Error('not connected');
+                    }
+                }
+            )
+            .catch(function(error) {
+                console.log(error);
+            });
         }
     </script>
         {% endblock %}

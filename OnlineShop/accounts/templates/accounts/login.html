@@ -1,31 +1,80 @@
-<!DOCTYPE html>
-<html>
-<head>
-    {% load static %} 
+{% extends 'base.html' %}
+{% load static %}
 
-    <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+{% block title %}
+ Login
+{% endblock %}
 
-</head>
-<body>
-    {% include 'accounts/messages.html' %}
+{% block content %}
+{% include 'header.html' %}    
 
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="card col-4 bg-light mt-5">
-                <div class="pt-4" ><h5 class="card-title">Login</h5></div>
-                    <div class="card-body">
-                        <form method="post" action="">
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                            <input type="submit" value="Login">
-                            <input type="hidden" name="next" value="{{ request.GET.next }}">
-                    
-                        </form>
+   
+    <div class="breadcrumb-area bg-gray">
+        <div class="container">
+            <div class="breadcrumb-content text-center">
+                <ul>
+                    <li>
+                        <a href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="active">Login-Register</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="login-register-area pt-20 pb-90">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7 col-md-12 ml-auto mr-auto">
+                    <div class="login-register-wrapper">
+                        
+                        <div class="tab-content">
+                            <div id="lg1" class="tab-pane active">
+                                <div class="login-form-container">
+                                    <div class="login-register-form">
+                                        <form action="#" method="post" onsubmit="return sendData()" id="login">
+                                            {% csrf_token %}
+                                            {{ form.as_p }}
+                                            <input type="hidden" name="next" value="{{ request.GET.next }}">
+                                            <div class="button-box">
+                                                <button type="submit">Login</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+
+        {% include 'footer.html' %}
+
+        <script>
+            function sendData () {
+                var data = new FormData(document.getElementById("login"));
+                let url = "api/v1/"
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                fetch(url, {
+                    method: "POST",
+                    body: data,
+                    headers: {
+                    'X-CSRFToken': csrftoken
+                }
+                })
+                .then(res => {
+                    if (res.status == 200){
+                        window.location.href = "/verify_code";
+                    }else{
+                        throw new Error("Bad Server Response"); 
+                    }
+                    return res.text();
+                })
+                .then(res => console.log(res))
+                .catch(err => console.error(err));
+                    return false;
+                }
+        </script>
+        {% endblock %}
     
-</body>
-</html>
