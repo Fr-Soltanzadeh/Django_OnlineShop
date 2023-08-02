@@ -1,6 +1,7 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
 from ..views import LoginOrRegisterView, LogoutView, ProfileView, VerifyCodeView
+from ..api_views import LoginOrRegisterApiView, ProfileApiView, VerifyCodeApiView
 
 
 class TestUrls(SimpleTestCase):
@@ -17,5 +18,17 @@ class TestUrls(SimpleTestCase):
         self.assertEqual(resolve(url).func.view_class, LogoutView)
 
     def test_profile(self):
-        url = reverse("profile", args=("1",))
+        url = reverse("profile")
         self.assertEqual(resolve(url).func.view_class, ProfileView)
+
+    def test_login(self):
+        url = reverse("login_api")
+        self.assertEqual(resolve(url).func.view_class, LoginOrRegisterApiView)
+
+    def test_verify_code(self):
+        url = reverse("verify_code_api")
+        self.assertEqual(resolve(url).func.view_class, VerifyCodeApiView)
+
+    def test_profile(self):
+        url = reverse("profile_api")
+        self.assertEqual(resolve(url).func.view_class, ProfileApiView)
