@@ -19,11 +19,6 @@ class TestUserModel(TestCase):
     def test_model_fullname(self):
         self.assertEqual(self.user.fullname, "Farzaneh Soltanzadeh")
 
-    def test_get_absolute_url(self):
-        self.assertEqual(
-            self.user.get_absolute_url(), reverse("profile", args=(self.user.id,))
-        )
-
 
 class TestCustomerProfileModel(TestCase):
     def setUp(self):

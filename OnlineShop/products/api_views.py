@@ -9,31 +9,35 @@ from rest_framework import permissions
 
 class ProductListByCategoryApiView(mixins.ListModelMixin, generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
-    authentication_classes=[]
+    authentication_classes = []
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
     def get(self, request, *args, **kwargs):
-        category = Category.objects.get(slug=kwargs['slug'])
-        self.queryset = self.queryset.filter(category=category)   
+        category = Category.objects.get(slug=kwargs["slug"])
+        self.queryset = self.queryset.filter(category=category)
         return self.list(request, *args, **kwargs)
 
 
 class ProductListApiView(mixins.ListModelMixin, generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
-    authentication_classes=[]
+    authentication_classes = []
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
     def get(self, request, *args, **kwargs):
         search_phrase = request.GET.get("search")
         if search_phrase:
-            self.queryset = self.queryset.filter(title__icontains = search_phrase)    
+            self.queryset = self.queryset.filter(title__icontains=search_phrase)
         return self.list(request, *args, **kwargs)
 
 
 class ProductDetailApiView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AllowAny]
+    authentication_classes = []
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    lookup_field= "slug"
+    lookup_field = "slug"
 
 
 # class ProductListByCategoryApiView(APIView):

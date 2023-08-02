@@ -18,7 +18,7 @@ class TestProductDetailView(TestCase):
         self.client = Client()
 
     def test_ProductDetail_GET(self):
-        response = self.client.get(reverse("product_detail",args=("girl-doll",)))
+        response = self.client.get(reverse("product_detail", args=("girl-doll",)))
         self.assertTemplateUsed(response, "products/product_details.html")
         self.assertEqual(response.status_code, 200)
 

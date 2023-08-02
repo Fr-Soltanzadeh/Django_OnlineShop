@@ -11,4 +11,3 @@ class TestHomeView(TestCase):
         response = self.client.get(reverse("home"))
         self.assertTemplateUsed(response, "home/index.html")
         self.assertEqual(response.status_code, 200)
-

@@ -10,11 +10,11 @@ from django.urls import reverse
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     class RoleChoice(models.IntegerChoices):
         ADMIN = 0, "ADMIN"
-        CUSTOMER =1, "CUSTOMER"
+        CUSTOMER = 1, "CUSTOMER"
         STAFF = 2, "STAFF"
-        PRODUCT_MANAGER= 3, "PRODUCT_MANAGER"
+        PRODUCT_MANAGER = 3, "PRODUCT_MANAGER"
 
-    role=models.IntegerField(choices=RoleChoice.choices, default=1)
+    role = models.IntegerField(choices=RoleChoice.choices, default=1)
     phone_number = models.CharField(
         _("phone number"),
         max_length=14,
@@ -37,14 +37,11 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     def fullname(self):
         return self.first_name + " " + self.last_name
 
-    def get_absolute_url(self):
-        return reverse("profile", args=(self.id,))
-
     class Meta:
         verbose_name_plural = "Users"
 
 
-class Customer(User):    
+class Customer(User):
     class Meta:
         proxy = True
 

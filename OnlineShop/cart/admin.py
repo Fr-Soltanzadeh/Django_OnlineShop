@@ -9,9 +9,7 @@ class CartItemInline(admin.TabularInline):
 
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
-    list_display = (
-        "customer",
-    )
+    list_display = ("customer",)
     search_fields = ("customer",)
     inlines = [
         CartItemInline,

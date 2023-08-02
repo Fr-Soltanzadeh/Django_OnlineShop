@@ -6,6 +6,7 @@ class CategoryInline(admin.TabularInline):
     model = Category
     extra = 3
 
+
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 3
@@ -15,7 +16,7 @@ class ProductImageInline(admin.TabularInline):
 class ProductImageAdmin(admin.ModelAdmin):
     list_per_page = 10
 
-    
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
@@ -25,7 +26,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ("title", "category")
     autocomplete_fields = ("category",)
     list_filter = ("category", "is_active")
-    prepopulated_fields = {'slug': ('title',)}
+    prepopulated_fields = {"slug": ("title",)}
     inlines = [ProductImageInline]
     list_per_page = 10
 
@@ -35,7 +36,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
     list_filter = ("parent_category",)
-    prepopulated_fields = {'slug': ('name',)}
+    prepopulated_fields = {"slug": ("name",)}
     inlines = [
         CategoryInline,
     ]
