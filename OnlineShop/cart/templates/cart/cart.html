@@ -103,6 +103,9 @@
             const url ="api/v1/"
             fetch(url,{
                 method:'GET',
+                headers:{
+                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`
+                }
             })
             .then(
                 response=>{
@@ -247,7 +250,8 @@
             fetch(url,{
                 method:'DELETE',
                 headers: {
-                    'X-CSRFToken': csrftoken
+                    'X-CSRFToken': csrftoken,
+                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`,
                 }
             }) 
             .catch(function(error) {
@@ -270,6 +274,7 @@
                 body:JSON.stringify({ cart_items: data }),
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`,
                     'X-CSRFToken': csrftoken
                 }
             })  

@@ -27,7 +27,7 @@ def send_otp_code(phone_number, otp_code):
         print(e)
 
 
-def generate_access_token(user, expiration_time_minutes=5):
+def generate_access_token(user, expiration_time_minutes=60):
 
     access_token_payload = {
         "user_id": user.id,

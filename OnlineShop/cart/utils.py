@@ -33,7 +33,6 @@ def add_session_to_user_cart(request):
         except:
             cart = Cart.objects.create(customer=user)
         cart_items = request.session["cart"]["cart_items"]
-        print(cart_items)
 
         for item in cart_items:
             product = Product.objects.get(id=item["product"]["id"])

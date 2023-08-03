@@ -35,8 +35,11 @@ class JWTAuthentication(authentication.BaseAuthentication):
             raise AuthenticationFailed("User Id not found in JWT")
 
         user = User.objects.filter(id=user_id).first()
+        
         if not user:
             raise AuthenticationFailed("User not found")
+        request.user = user
+        print("user",request.user)
         # Return the user and token payload
         return user, payload
 
