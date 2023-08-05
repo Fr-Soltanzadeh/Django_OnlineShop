@@ -67,6 +67,7 @@
                         return response.json();
                         
                     }else{
+                        location.reload();
                         throw new Error("Bad Server Response"); 
                     }
                     return res.text();

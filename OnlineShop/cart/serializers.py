@@ -24,7 +24,10 @@ class CartSerializer(serializers.ModelSerializer):
 
     def get_grand_price(self, cart):
         return sum(
-            (item.product.discounted_price * item.quantity for item in cart.cart_items.all())
+            (
+                item.product.discounted_price * item.quantity
+                for item in cart.cart_items.all()
+            )
         )
 
     def get_total_price(self, cart):

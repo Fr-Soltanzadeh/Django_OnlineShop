@@ -86,14 +86,14 @@ class VerifyCodeApiView(APIView):
 
 
 class RefreshTokenApiView(APIView):
-    
+
     authentication_classes = []
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
         refresh_token = request.headers.get("Authorization")
-        if refresh_token is None or refresh_token=="Bearer null":
-            return Response({'message':'invalid token'},status.HTTP_401_UNAUTHORIZED)
+        if refresh_token is None or refresh_token == "Bearer null":
+            return Response({"message": "invalid token"}, status.HTTP_401_UNAUTHORIZED)
             raise exceptions.AuthenticationFailed(
                 "Authentication credentials were not provided."
             )
@@ -127,7 +127,6 @@ class RefreshTokenApiView(APIView):
 
 
 class ProfileApiView(APIView):
-
     def get(self, request, format=None):
         serializer = CustomerSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
