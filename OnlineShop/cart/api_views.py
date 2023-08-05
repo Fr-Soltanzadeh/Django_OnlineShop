@@ -9,22 +9,20 @@ from django.db import IntegrityError
 from decimal import Decimal
 from .utils import calculate_grand_price
 from rest_framework import permissions
+from accounts.authentication import LoginAuthentication
 
 
 class CartApiView(APIView):
     permission_classes = [permissions.AllowAny]
-    # authentication_classes = []
+    authentication_classes = [LoginAuthentication]
 
     def get(self, request):
         user = request.user
         print(user)
         if request.user.is_authenticated:
             user = request.user
-            print(user)
             try:
-               
                 cart = user.cart
-                
             except:
                 cart = Cart.objects.create(customer=user)
             serializer = CartSerializer(user.cart)
@@ -101,7 +99,7 @@ class CartApiView(APIView):
 
 class AddToCartApiView(APIView):
     permission_classes = [permissions.AllowAny]
-    # authentication_classes = []
+    authentication_classes = [LoginAuthentication]
 
     def post(self, request):
         product_id = request.data.get("product_id")

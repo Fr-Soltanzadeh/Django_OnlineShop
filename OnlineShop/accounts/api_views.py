@@ -20,7 +20,7 @@ User = get_user_model()
 
 
 class LoginOrRegisterApiView(APIView):
-    # permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.AllowAny]
     authentication_classes = []
 
     def post(self, request, *args, **kwargs):
@@ -47,7 +47,7 @@ class LoginOrRegisterApiView(APIView):
 
 
 class VerifyCodeApiView(APIView):
-    # permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.AllowAny]
     authentication_classes = []
 
     def post(self, request):
@@ -86,13 +86,14 @@ class VerifyCodeApiView(APIView):
 
 
 class RefreshTokenApiView(APIView):
-    permission_classes = [permissions.AllowAny]
+    
     authentication_classes = []
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request):
         refresh_token = request.headers.get("Authorization")
-
-        if refresh_token is None:
+        if refresh_token is None or refresh_token=="Bearer null":
+            return Response({'message':'invalid token'},status.HTTP_401_UNAUTHORIZED)
             raise exceptions.AuthenticationFailed(
                 "Authentication credentials were not provided."
             )
@@ -106,7 +107,9 @@ class RefreshTokenApiView(APIView):
                 "expired refresh token, please login again."
             )
         except:
-            raise exceptions.ParseError
+            raise exceptions.AuthenticationFailed(
+                "Couldn't parse token, please login again."
+            )
 
         user = User.objects.filter(id=payload.get("user_id")).first()
         if user is None:
@@ -124,6 +127,7 @@ class RefreshTokenApiView(APIView):
 
 
 class ProfileApiView(APIView):
+
     def get(self, request, format=None):
         serializer = CustomerSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)

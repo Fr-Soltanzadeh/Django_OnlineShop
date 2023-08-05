@@ -28,7 +28,6 @@ def send_otp_code(phone_number, otp_code):
 
 
 def generate_access_token(user, expiration_time_minutes=60):
-
     access_token_payload = {
         "user_id": user.id,
         "exp": datetime.datetime.utcnow()
