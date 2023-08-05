@@ -1,14 +1,10 @@
 from django.shortcuts import render
 from django.views import View
 
-# from django.views.decorators.cache import cache_page
-# from django.utils.decorators import method_decorator
-
 
 class ProductListView(View):
     template_name = "products/product_list.html"
 
-    # @method_decorator(cache_page(180))
     def get(self, request):
         return render(request, self.template_name)
 

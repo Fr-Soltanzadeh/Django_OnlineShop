@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework import permissions
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 class ProductListByCategoryApiView(mixins.ListModelMixin, generics.GenericAPIView):
@@ -13,6 +15,7 @@ class ProductListByCategoryApiView(mixins.ListModelMixin, generics.GenericAPIVie
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+    @method_decorator(cache_page(180))
     def get(self, request, *args, **kwargs):
         category = Category.objects.get(slug=kwargs["slug"])
         self.queryset = self.queryset.filter(category=category)
@@ -25,6 +28,7 @@ class ProductListApiView(mixins.ListModelMixin, generics.GenericAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+    @method_decorator(cache_page(180))
     def get(self, request, *args, **kwargs):
         search_phrase = request.GET.get("search")
         if search_phrase:
