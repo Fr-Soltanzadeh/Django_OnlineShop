@@ -37,7 +37,7 @@
                                     <a href="#payment-method" data-toggle="tab"><i class="fa fa-credit-card"></i> Wishlist</a>
                                     <a href="#address-edit" data-toggle="tab"><i class="fa fa-map-marker"></i> Address</a>
                                     <a href="#account-info" data-toggle="tab"><i class="fa fa-user"></i> Account Details</a>
-                                    <a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Logout</a>
+                                    <a href="{% url 'logout' %}" onclick="delete_token()"><i class="fa fa-sign-out"></i> Logout</a>
                                 </div>
                             </div>
                             <!-- My Account Tab Menu End -->
@@ -223,11 +223,11 @@
         <script>
             window.onload= function() {
             const url ="api/v1/"
-
+            const token =`Bearer ${window.localStorage.getItem("access_token")}`
             fetch(url,{
                 method:'GET',
                 headers:{
-                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`
+                    'Authorization':token
                 }
             })
             .then(
@@ -237,30 +237,7 @@
                     }
                     else  {
                         if (response.status==401){
-                            const refresh_token_url ="/refresh_token/api/v1/"
-                            fetch(refresh_token_url,{
-                                method:'GET',
-                                headers:{
-                                    'Authorization':"Bearer "+  window.localStorage.getItem("refresh_token")
-                                }
-                            })
-                            .then(
-                                response=>{
-                                    if (response.status==401){
-                                        window.location.href = "/login/";
-                                    }else{
-                                        if (response.ok){
-                                            return response.json(); 
-                                        }
-                                    }
-                                }
-                            )
-                            .then((data)=> {
-                                window.localStorage.setItem("access_token", data.access_token);
-                                window.localStorage.setItem("refresh_token", data.refresh_token);
-                                window.location.href = "/profile/";
-                                }
-                            )
+                            refresh_token("/login/")
                         }else{
                             throw new Error('not connected');
                         }

@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
- Noora Kids Shop
+ Products: {{slug}}
 {% endblock %}
 
 {% block content %}
@@ -185,7 +185,8 @@
                 body:JSON.stringify({ product_id: product_id }),
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken
+                    'X-CSRFToken': csrftoken,
+                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`,
                 }
             })
             .then(
