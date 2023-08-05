@@ -113,7 +113,11 @@
                         return response.json();
                     }
                     else  {
-                        throw new Error('not connected');
+                        if (response.status==401){
+                            refresh_token(location.href)
+                        }else{
+                            throw new Error('not connected');
+                        }
                     }
                 }
             )
