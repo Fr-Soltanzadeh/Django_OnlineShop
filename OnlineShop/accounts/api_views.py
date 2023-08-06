@@ -8,13 +8,16 @@ from rest_framework.views import APIView
 import random
 from .serializers import LoginSerializer, OtpCodeSerializer
 from .utils import send_otp_code
-from .models import User, OtpCode, CustomerProfile
+from .models import User, OtpCode, CustomerProfile, Address
 from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from cart.utils import add_session_to_user_cart
 from rest_framework import views, permissions, status
-from .serializers import CustomerSerializer
+from .serializers import CustomerSerializer, AddressSerializer
+from rest_framework import generics
+from rest_framework import mixins
+
 
 User = get_user_model()
 
@@ -126,7 +129,24 @@ class RefreshTokenApiView(APIView):
         )
 
 
-class ProfileApiView(APIView):
+class CustomerApiView(APIView):
     def get(self, request, format=None):
         serializer = CustomerSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CustomerAddressListAPIView(generics.ListCreateAPIView):
+
+    serializer_class = AddressSerializer
+    
+    def get_queryset(self):
+        return Address.objects.filter(user=self.request.user)
+        
+
+
+class CustomerAddressAPIView(generics.RetrieveUpdateDestroyAPIView):    
+
+    serializer_class = AddressSerializer
+
+    def get_queryset(self):
+        return Address.objects.filter(user=self.request.user)

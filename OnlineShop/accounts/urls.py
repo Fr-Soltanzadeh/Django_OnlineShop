@@ -14,10 +14,12 @@ urlpatterns = [
         api_views.VerifyCodeApiView.as_view(),
         name="verify_code_api",
     ),
-    path("profile/api/v1/", api_views.ProfileApiView.as_view(), name="profile_api"),
+    path("profile/api/v1/", api_views.CustomerApiView.as_view(), name="profile_api"),
     path(
         "refresh_token/api/v1/",
         api_views.RefreshTokenApiView.as_view(),
         name="refresh_token_api",
     ),
+    path("user_address/api/v1/", api_views.CustomerAddressListAPIView.as_view(), name="user_addresses_api"),
+    path("user_address/api/v1/<int:pk>", api_views.CustomerAddressAPIView.as_view(), name="user_address_api"),
 ]
