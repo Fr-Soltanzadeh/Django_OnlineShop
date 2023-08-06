@@ -37,7 +37,7 @@ class Order(BaseModel):
     province = models.CharField(max_length=50, null=True, blank=True)
     city = models.CharField(max_length=50, null=True, blank=True)
     street = models.CharField(max_length=50, null=True, blank=True)
-    detail = models.CharField(max_length=300, null=True, blank=True)
+    address_detail = models.CharField(max_length=300, null=True, blank=True)
     postal_code = models.IntegerField(null=True, blank=True)
     total_price = models.DecimalField(
         max_digits=4, decimal_places=2, null=True, blank=True
