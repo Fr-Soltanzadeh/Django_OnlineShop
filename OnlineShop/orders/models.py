@@ -5,6 +5,23 @@ from products.models import Product
 from core.utils import get_phonenumber_regex
 
 
+class Coupon(BaseModel):
+
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    title = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=False)
+    coupon_code = models.IntegerField()
+    quantity = models.PositiveIntegerField()
+    percent = models.PositiveIntegerField()
+
+    class Meta:
+        verbose_name_plural = "coupons"
+
+    def __str__(self):
+        return f"{self.coupon_code} {self.title} {self.percent}%"
+
+
 class Order(BaseModel):
     class StatusChoice(models.IntegerChoices):
         PENDING = 1, "PENDING"
@@ -23,10 +40,10 @@ class Order(BaseModel):
     detail = models.CharField(max_length=300, null=True, blank=True)
     postal_code = models.IntegerField(null=True, blank=True)
     total_price = models.DecimalField(
-        max_digits=2, decimal_places=2, null=True, blank=True
+        max_digits=4, decimal_places=2, null=True, blank=True
     )
     final_price = models.DecimalField(
-        max_digits=2, decimal_places=2, null=True, blank=True
+        max_digits=4, decimal_places=2, null=True, blank=True
     )
     receiver_fullname = models.CharField(max_length=100, null=True, blank=True)
     receiver_phone_number = models.CharField(
@@ -56,7 +73,8 @@ class Transaction(BaseModel):
         blank=True,
     )
     final_price = models.DecimalField(
-        max_digits=2, decimal_places=2, null=True, blank=True
+        max_digits=4
+        , decimal_places=2, null=True, blank=True
     )
     status = models.IntegerField(choices=StatusChoice.choices, default=1)
 
@@ -81,7 +99,7 @@ class OrderItem(BaseModel):
         related_name="orderItems",
     )
     quantity = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=2, decimal_places=2, null=True, blank=True)
+    price = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
         return f"{self.order}, {self.product}"
