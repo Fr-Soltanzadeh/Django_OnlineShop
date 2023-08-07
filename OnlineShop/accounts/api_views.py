@@ -134,15 +134,23 @@ class CustomerApiView(APIView):
         serializer = CustomerSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-class CustomerAddressListAPIView(generics.ListCreateAPIView):
-
-    serializer_class = AddressSerializer
-    
-    def get_queryset(self):
-        return Address.objects.filter(user=self.request.user)
         
+class CustomerAddressListAPIView(APIView):
+    
+    def get(self, request, format=None):
+        addresses=Address.objects.filter(user=request.user)
+        serializer = AddressSerializer(addresses, many=True)
+        return Response(serializer.data)
 
+    def post(self, request, format=None):
+        data=request.data.copy()        
+        if not data.get('user'):
+            data['user']=request.user.id
+        serializer = AddressSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CustomerAddressAPIView(generics.RetrieveUpdateDestroyAPIView):    
 
