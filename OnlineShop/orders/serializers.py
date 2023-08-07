@@ -8,14 +8,16 @@ class OrderItemSerilizer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderItem
-        fields = ("price", "quantity","product")
+        fields = ("price", "quantity", "product")
 
-    def get_product(self,order_item):
+    def get_product(self, order_item):
         return order_item.product.title
+
 
 class OrderSerializer(serializers.ModelSerializer):
     orderItems = OrderItemSerilizer(many=True, read_only=True)
     customer = CustomerSerializer(read_only=True)
+
     class Meta:
         model = Order
-        fields="__all__"
+        fields = "__all__"

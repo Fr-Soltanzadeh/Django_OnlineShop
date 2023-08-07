@@ -26,7 +26,7 @@ class Order(BaseModel):
     class StatusChoice(models.IntegerChoices):
         PENDING = 1, "PENDING"
         PAID = 2, "CONFIRMED"
-        PAYMENT_FAILED =3, "PAYMENT_FAILED"
+        PAYMENT_FAILED = 3, "PAYMENT_FAILED"
         SENDING = 4, "SENDING"
         DELIVERED = 5, "DELIVERED"
         CANCEL = 6, "CANCEL"
@@ -50,11 +50,11 @@ class Order(BaseModel):
     receiver_phone_number = models.CharField(
         max_length=14, validators=[get_phonenumber_regex()], null=True, blank=True
     )
-    transaction_id= models.CharField(max_length=50, null=True, blank=True)
+    transaction_id = models.CharField(max_length=50, null=True, blank=True)
     shipping = models.DecimalField(
         max_digits=4, decimal_places=2, null=True, blank=True
     )
-    
+
     class Meta:
         verbose_name_plural = "Orders"
 
@@ -104,5 +104,3 @@ class OrderItem(BaseModel):
 
 #     def __str__(self):
 #         return f"order {self.order} {self.final_price}"
-
-

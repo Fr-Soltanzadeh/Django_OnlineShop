@@ -20,6 +20,14 @@ urlpatterns = [
         api_views.RefreshTokenApiView.as_view(),
         name="refresh_token_api",
     ),
-    path("user_address/api/v1/", api_views.CustomerAddressListAPIView.as_view(), name="user_addresses_api"),
-    path("user_address/api/v1/<int:pk>", api_views.CustomerAddressAPIView.as_view(), name="user_address_api"),
+    path(
+        "user_address/api/v1/",
+        api_views.CustomerAddressListAPIView.as_view(),
+        name="user_addresses_api",
+    ),
+    path(
+        "user_address/api/v1/<int:pk>",
+        api_views.CustomerAddressAPIView.as_view(),
+        name="user_address_api",
+    ),
 ]
