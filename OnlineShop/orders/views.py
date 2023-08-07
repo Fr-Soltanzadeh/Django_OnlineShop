@@ -77,7 +77,9 @@ class VerifyOrderView(View):
             response = response.json()
             print(response)
             if response['Status'] == 100 or response['Status'] == 101:
+                order.status = 2
                 return HttpResponse(f"Transaction success.RefID:  {str(response['RefID'])}, Status: {response['Status']}, order ID: {order_id}")
             else:
+                order.status = 3
                 return HttpResponse('Transaction failed, order ID:'+ str(order_id))
         return response

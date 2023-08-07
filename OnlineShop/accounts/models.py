@@ -23,7 +23,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     )
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    national_code = models.IntegerField(null=True, blank=True)
+    national_code = models.CharField(max_length=10, null=True, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     USERNAME_FIELD = "phone_number"

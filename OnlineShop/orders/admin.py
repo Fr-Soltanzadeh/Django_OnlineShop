@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, Transaction, OrderItem, Coupon
+from .models import Order, OrderItem, Coupon
 
 
 class OrderItemInline(admin.TabularInline):
@@ -22,11 +22,11 @@ class OrderAdmin(admin.ModelAdmin):
     list_per_page = 10
 
 
-@admin.register(Transaction)
-class TransactionAdmin(admin.ModelAdmin):
-    list_display = ("order", "final_price")
-    search_fields = ("order",)
-    list_per_page = 10
+# @admin.register(Transaction)
+# class TransactionAdmin(admin.ModelAdmin):
+#     list_display = ("order", "final_price")
+#     search_fields = ("order",)
+#     list_per_page = 10
 
 
 @admin.register(OrderItem)

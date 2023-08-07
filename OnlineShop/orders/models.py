@@ -25,10 +25,11 @@ class Coupon(BaseModel):
 class Order(BaseModel):
     class StatusChoice(models.IntegerChoices):
         PENDING = 1, "PENDING"
-        CONFIRMED = 2, "CONFIRMED"
-        SENDING = 3, "SENDING"
-        DELIVERED = 4, "DELIVERED"
-        CANCEL = 5, "CANCEL"
+        PAID = 2, "CONFIRMED"
+        PAYMENT_FAILED =3, "PAYMENT_FAILED"
+        SENDING = 4, "SENDING"
+        DELIVERED = 5, "DELIVERED"
+        CANCEL = 6, "CANCEL"
 
     status = models.IntegerField(choices=StatusChoice.choices, default=1)
     customer = models.ForeignKey(
@@ -49,40 +50,16 @@ class Order(BaseModel):
     receiver_phone_number = models.CharField(
         max_length=14, validators=[get_phonenumber_regex()], null=True, blank=True
     )
-
+    transaction_id= models.CharField(max_length=50, null=True, blank=True)
+    shipping = models.DecimalField(
+        max_digits=4, decimal_places=2, null=True, blank=True
+    )
+    
     class Meta:
         verbose_name_plural = "Orders"
 
     def __str__(self):
         return f"order id:{self.id}"
-
-
-class Transaction(BaseModel):
-    class StatusChoice(models.IntegerChoices):
-        PENDING = 1, "PENDING"
-        PAID = 2, "PAID"
-        FAILED = 3, "FAILED"
-        DONE = 4, "DONE"
-        CANCEL = 5, "CANCEL"
-
-    order = models.ForeignKey(
-        Order,
-        on_delete=models.SET_NULL,
-        related_name="transactions",
-        null=True,
-        blank=True,
-    )
-    final_price = models.DecimalField(
-        max_digits=4
-        , decimal_places=2, null=True, blank=True
-    )
-    status = models.IntegerField(choices=StatusChoice.choices, default=1)
-
-    class Meta:
-        verbose_name_plural = "transactions"
-
-    def __str__(self):
-        return f"order {self.order} {self.final_price}"
 
 
 class OrderItem(BaseModel):
@@ -103,3 +80,29 @@ class OrderItem(BaseModel):
 
     def __str__(self):
         return f"{self.order}, {self.product}"
+
+
+# class Transaction(BaseModel):
+#     class StatusChoice(models.IntegerChoices):
+#         PENDING = 1, "PENDING"
+#         PAID = 2, "PAID"
+#         FAILED = 3, "FAILED"
+#         DONE = 4, "DONE"
+#         CANCEL = 5, "CANCEL"
+
+#     order = models.ForeignKey(
+#         Order,
+#         on_delete=models.SET_NULL,
+#         related_name="transactions",
+#         null=True,
+#         blank=True,
+#     )
+#     status = models.IntegerField(choices=StatusChoice.choices, default=1)
+
+#     class Meta:
+#         verbose_name_plural = "transactions"
+
+#     def __str__(self):
+#         return f"order {self.order} {self.final_price}"
+
+

@@ -237,7 +237,7 @@
                     }
                     else  {
                         if (response.status==401){
-                            refresh_token("/login/")
+                            refresh_token("/login/",Location.reload)
                         }else{
                             throw new Error('not connected');
                         }

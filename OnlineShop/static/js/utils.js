@@ -1,4 +1,4 @@
-function refresh_token(fail_url){
+function refresh_token(fail_url, success_function){
     const refresh_token_url ="/refresh_token/api/v1/"
     fetch(refresh_token_url,{
         method:'GET',
@@ -23,7 +23,7 @@ function refresh_token(fail_url){
     .then((data)=> {
         window.localStorage.setItem("access_token", data.access_token);
         window.localStorage.setItem("refresh_token", data.refresh_token);
-        location.reload();
+        success_function();
         }
     )
     }

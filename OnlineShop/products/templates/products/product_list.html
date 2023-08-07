@@ -164,8 +164,6 @@
         }
         function add_to_cart(product_id){
             const url = '/cart/api/v1/add/'
-            console.log(product_id)
-            console.log(JSON.stringify({ product_id: product_id }))
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             fetch(url,{
                 method:'POST',

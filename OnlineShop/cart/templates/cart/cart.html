@@ -114,7 +114,7 @@
                     }
                     else  {
                         if (response.status==401){
-                            refresh_token(location.href)
+                            refresh_token(location.href, Location.reload)
                         }else{
                             throw new Error('not connected');
                         }
