@@ -8,6 +8,7 @@
 
 {% block content %}
 {% include 'header.html' %}
+
     <div class="main-wrapper">
 
         <div class="breadcrumb-area bg-gray">
@@ -22,9 +23,9 @@
                 </div>
             </div>
         </div>
-        <div class="checkout-main-area pt-120 pb-120">
+        <div class="checkout-main-area pt-80 pb-120">
             <div class="container">
-                <div class="customer-zone mb-20">
+                <!-- <div class="customer-zone mb-20">
                     <p class="cart-page-title">Have a coupon? <a class="checkout-click3" href="#">Click here to enter your code</a></p>
                     <div class="checkout-login-info3">
                         <form action="#">
@@ -32,69 +33,77 @@
                             <input type="submit" value="Apply Coupon">
                         </form>
                     </div>
-                </div>
+                </div> -->
+                
                 <div class="checkout-wrap pt-30">
                     <div class="row">
                         <div class="col-lg-7">
                             <div class="billing-info-wrap mr-50">
                                 <h3>Billing Details</h3>
-                               
-                                <div class="checkout-account mt-25">
-                                    <input class="checkout-toggle" type="checkbox">
-                                    <span>Ship to a different address?</span>
+                                <div class="row mt-3">
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="billing-info mb-20">
+                                            <label>Reciever Fullname</label>
+                                            <input type="text">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="billing-info mb-20">
+                                            <label>Reciever Phone Number</label>
+                                            <input type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="addresses">
+
+                                </div>
+                                
+                                <div class="checkout-account mt-40">
+                                    <input class="checkout-toggle" type="radio" name="flexRadioDefault">
+                                    <span>Add a new address to ship?</span>
                                 </div>
                                 <div class="different-address open-toggle mt-30">
+                                    <form action="javascript: void(0)" method="post" style="width:  100%;" onsubmit="post_address()" id="add_address">
+                                        {% csrf_token %}
                                     <div class="row">
+                                        
+                                            
                                         <div class="col-lg-6 col-md-6">
-                                            <div class="billing-info mb-20">
-                                                <label>Reciever First Name</label>
-                                                <input type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="billing-info mb-20">
-                                                <label>Reciever Last Name</label>
-                                                <input type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12">
                                             <div class="billing-info mb-20">
                                                 <label>Province</label>
-                                                <input type="text">
+                                                <input type="text" name="province">
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6">
                                             <div class="billing-info mb-20">
                                                 <label>City / Town</label>
-                                                <input type="text">
+                                                <input type="text" name="city">
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6">
                                             <div class="billing-info mb-20">
                                                 <label>Street</label>
-                                                <input type="text">
+                                                <input type="text" name="street">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                            <div class="billing-info mb-20">
+                                                <label>Postcode</label>
+                                                <input type="text" name="postal_code">
                                             </div>
                                         </div>
                                         <div class="col-lg-12">
                                             <div class="billing-info mb-20">
                                                 <label>Address detail</label>
-                                                <input type="text">
+                                                <input type="text" name="detail">
                                             </div>
                                         </div>
                                         
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="billing-info mb-20">
-                                                <label>Postcode</label>
-                                                <input type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="billing-info mb-20">
-                                                <label>Reciever Phone</label>
-                                                <input type="text">
-                                            </div>
-                                        </div>
+                                            <input type="submit" value="Place address">
+
                                     </div>
+                                </form>
                                 </div>
                             </div>
                         </div>
@@ -149,7 +158,7 @@
                                     </div>
                                 </div>
                                 <div class="Place-order">
-                                    <a href="#">Place Order</a>
+                                    <a href="#">Proceed to pay</a>
                                 </div>
                             </div>
                         </div>
@@ -159,8 +168,101 @@
         </div>
         {% include 'footer.html' %}
 
-        <script>
+    <script>
+        window.onload=function(){
+            const url ="/cart/api/v1/"
+            fetch(url,{
+                method:'GET',
+                headers:{
+                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`
+                }
+            })
+            .then(
+                response=>{
+                    if (response.ok){
+                        return response.json();
+                    }
+                    else  {
+                        if (response.status==401){
+                            refresh_token(location.href)
+                        }else{
+                            throw new Error('not connected');
+                        }
+                    }
+                }
+            )
+            .then((data) => {
+                
+                load_address(data.customer.addresses)
+                load_order(data)
+                })
+            .catch(function(error) {
+                console.log(error);
+            });   
+            function load_address(data){
+                addresses=document.getElementById('addresses')
+                data.forEach(address => {
+                    let div=document.createElement('div')
+                    div.classList.add("mt-3","form-check")
+                    let input=document.createElement('input')
+                    input.classList.add("form-check-input")
+                    input.type="radio"
+                    input.name="flexRadioDefault"
+                    let span=document.createElement('span')
+                    span.innerText=`${address.province}, ${address.city}, ${address.street}, ${address.detail}, ${address.postal_code}`
+                    div.appendChild(input)
+                    div.appendChild(span)
+                    addresses.appendChild(div)
+                });
+            }   
+            function load_order(data){
+                console.log(data)
+                // data.forEach(element => {
+                    
+                // });
+            }                  
+        }
+        function post_address(){
+            const url = "/user_address/api/v1/"
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const form = document.getElementById("add_address");
+            const formData = new FormData(form);
+            
+            for (let pair of formData.entries()) {
+        console.log(pair[0] + ": " + pair[1]);
+    }
+            fetch(url,{
+                method:'POST',
+                body: formData,
+                headers:{
+                    'X-CSRFToken': csrftoken,
+                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`,
+                }
+            })
+            .then(
+                response=>{
+                    if (response.ok){
+                        return response.json();
+                    }
+                    else  {
+                        if (response.status==401){
+                            refresh_token("/login/",post_address)
+                        }else{
+                            throw new Error('not connected');
+                        }
+                    }
+                }
+            )
+            .then((data) => {
+               location.reload()
+                })
+            .catch(function(error) {
+                console.log(error);
+            });   
+
+        }
+            
     
-        </script>
+    </script>
     {% endblock %}
     
