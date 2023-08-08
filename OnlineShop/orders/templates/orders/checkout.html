@@ -35,75 +35,78 @@
                     </div>
                 </div>
                 
+
                 <div class="checkout-wrap pt-30">
                     <div class="row">
                         <div class="col-lg-7">
                             <div class="billing-info-wrap mr-50">
                                 <h3>Billing Details</h3>
-                                <div class="row mt-3">
+                                
+                                <div id="addresses">
+
+
+                                </div>
+                                
+                                <div class="checkout-account mt-30">
+                                    <input class="checkout-toggle" type="checkbox" name="flexRadioDefault">
+                                    <span>Add a new address to ship?</span>
+                                </div>
+                                <div class="different-address open-toggle mt-20">
+                                    <form action="javascript: void(0)" method="post" style="width:  100%;" onsubmit="post_address()" id="add_address">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            
+                                                
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info mb-20">
+                                                    <label>Province</label>
+                                                    <input type="text" name="province" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info mb-20">
+                                                    <label>City / Town</label>
+                                                    <input type="text" name="city" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info mb-20">
+                                                    <label>Street</label>
+                                                    <input type="text" name="street" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info mb-20">
+                                                    <label>Postcode</label>
+                                                    <input type="text" name="postal_code" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="billing-info mb-20">
+                                                    <label>Address detail</label>
+                                                    <input type="text" name="address_detail" required>
+                                                </div>
+                                            </div>
+                                            <input type="submit" value="Place address">
+                                        </div>
+                                    </form>
+                                    <form action="javascript: void(0)" method="post" onsubmit="post_order()">
+                                    
+                                </div>
+                                <div class="row mt-50">
                                     <div class="col-lg-6 col-md-6">
                                         <div class="billing-info mb-20">
                                             <label>Reciever Fullname</label>
-                                            <input type="text" name="receiver_fullname">
+                                            <input type="text" id="receiver_fullname" required>
                                         </div>
                                     </div>
                                     
                                     <div class="col-lg-6 col-md-6">
                                         <div class="billing-info mb-20">
                                             <label>Reciever Phone Number</label>
-                                            <input type="text" name="receiver_phone_number">
+                                            <input type="text" id="receiver_phone_number" required>
                                         </div>
                                     </div>
-                                </div>
-                                <div id="addresses">
-
-                                </div>
-                                
-                                <div class="checkout-account mt-40">
-                                    <input class="checkout-toggle" type="radio" name="flexRadioDefault">
-                                    <span>Add a new address to ship?</span>
-                                </div>
-                                <div class="different-address open-toggle mt-30">
-                                    <form action="javascript: void(0)" method="post" style="width:  100%;" onsubmit="post_address()" id="add_address">
-                                        {% csrf_token %}
-                                    <div class="row">
-                                        
-                                            
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="billing-info mb-20">
-                                                <label>Province</label>
-                                                <input type="text" name="province">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="billing-info mb-20">
-                                                <label>City / Town</label>
-                                                <input type="text" name="city">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="billing-info mb-20">
-                                                <label>Street</label>
-                                                <input type="text" name="street">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="billing-info mb-20">
-                                                <label>Postcode</label>
-                                                <input type="text" name="postal_code">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12">
-                                            <div class="billing-info mb-20">
-                                                <label>Address detail</label>
-                                                <input type="text" name="address_detail">
-                                            </div>
-                                        </div>
-                                        
-                                            <input type="submit" value="Place address">
-
-                                    </div>
-                                </form>
                                 </div>
                             </div>
                         </div>
@@ -162,9 +165,11 @@
                                         </div> -->
                                     </div>
                                 </div>
+                                    {% csrf_token %}
                                 <div class="Place-order">
-                                    <a href="#">Proceed to pay</a>
+                                    <input type="submit" value="Proceed to pay">
                                 </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -212,8 +217,8 @@
                     let input=document.createElement('input')
                     input.classList.add("form-check-input")
                     input.type="radio"
-                    input.name="flexRadioDefault"
-                    input.value=data.id
+                    input.name="flexRadioDefault2"
+                    input.value=address.id
                     input.checked="checked"
                     let span=document.createElement('span')
                     span.innerText=`${address.province}, ${address.city}, ${address.street}, ${address.detail}, ${address.postal_code}`
@@ -246,10 +251,6 @@
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             const form = document.getElementById("add_address");
             const formData = new FormData(form);
-            
-            for (let pair of formData.entries()) {
-        console.log(pair[0] + ": " + pair[1]);
-    }
             fetch(url,{
                 method:'POST',
                 body: formData,
@@ -278,7 +279,47 @@
             .catch(function(error) {
                 console.log(error);
             });   
+        }
 
+        function post_order(){
+            const url = "/order/api/v1/"
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const address_id = document.querySelector('input[name="flexRadioDefault2"]:checked').value,
+            data={
+                receiver_phone_number:document.getElementById('receiver_phone_number').value,
+                receiver_fullname:document.getElementById('receiver_fullname').value,
+                address_id:address_id,
+            }
+            console.log(data)
+            fetch(url,{
+                method:'POST',
+                body: JSON.stringify(data),
+                headers:{
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`,
+                }
+            })
+            .then(
+                response=>{
+                    if (response.ok){
+                        return response.json();
+                    }
+                    else  {
+                        if (response.status==401){
+                            refresh_token("/login/",post_address)
+                        }else{
+                            throw new Error('not connected');
+                        }
+                    }
+                }
+            )
+            .then((data) => {
+               location.reload()
+                })
+            .catch(function(error) {
+                console.log(error);
+            });   
         }
             
     
