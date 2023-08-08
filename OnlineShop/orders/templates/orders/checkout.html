@@ -93,7 +93,9 @@
                                     <form action="javascript: void(0)" method="post" onsubmit="post_order()">
                                     
                                 </div>
+                                
                                 <div class="row mt-50">
+                                
                                     <div class="col-lg-6 col-md-6">
                                         <div class="billing-info mb-20">
                                             <label>Reciever Fullname</label>
@@ -107,6 +109,10 @@
                                             <input type="text" id="receiver_phone_number" required>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="">
+                                    <input id="me" type="checkbox">
+                                    <span>Me</span>
                                 </div>
                             </div>
                         </div>
@@ -321,7 +327,19 @@
                 console.log(error);
             });   
         }
-            
+const checkbox = document.getElementById('me');
+
+// Define the function to be called when the checkbox is checked
+function handleCheckboxChange() {
+  if (checkbox.checked) {
+    console.log("checked")
+    document.getElementById('receiver_phone_number').value=`${"{{request.user.phone_number}}"}`
+    document.getElementById('receiver_fullname').value=`${"{{request.user.fullname}}"}`
+}
+}
+
+// Add an event listener to the checkbox for the 'change' event
+checkbox.addEventListener('change', handleCheckboxChange);
     
     </script>
     {% endblock %}
