@@ -25,14 +25,7 @@ class CartSerializer(serializers.ModelSerializer):
         # depth=2
 
     def get_grand_price(self, cart):
-        return sum(
-            (
-                item.product.discounted_price * item.quantity
-                for item in cart.cart_items.all()
-            )
-        )
+        return cart.calculate_final_price_without_shipping()
 
     def get_total_price(self, cart):
-        return sum(
-            (item.product.price * item.quantity for item in cart.cart_items.all())
-        )
+        return cart.calculate_total_price()

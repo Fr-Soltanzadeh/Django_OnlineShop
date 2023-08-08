@@ -3,6 +3,7 @@ from core.models import BaseModel
 from accounts.models import User
 from products.models import Product
 from core.utils import get_phonenumber_regex
+from decimal import Decimal
 
 
 class Coupon(BaseModel):
@@ -41,10 +42,10 @@ class Order(BaseModel):
     address_detail = models.CharField(max_length=300, null=True, blank=True)
     postal_code = models.IntegerField(null=True, blank=True)
     total_price = models.DecimalField(
-        max_digits=4, decimal_places=2, null=True, blank=True
+        max_digits=10, decimal_places=2, null=True, blank=True
     )
     final_price = models.DecimalField(
-        max_digits=4, decimal_places=2, null=True, blank=True
+        max_digits=10, decimal_places=2, null=True, blank=True
     )
     receiver_fullname = models.CharField(max_length=100, null=True, blank=True)
     receiver_phone_number = models.CharField(
@@ -52,7 +53,10 @@ class Order(BaseModel):
     )
     transaction_id = models.CharField(max_length=50, null=True, blank=True)
     shipping = models.DecimalField(
-        max_digits=4, decimal_places=2, null=True, blank=True
+        max_digits=10, decimal_places=2, default=Decimal(2.00)
+    )
+    coupon = models.OneToOneField(
+        Coupon, on_delete=models.SET_NULL, related_name="order", null=True, blank=True
     )
 
     class Meta:
@@ -60,6 +64,30 @@ class Order(BaseModel):
 
     def __str__(self):
         return f"order id:{self.id}"
+
+    def calculate_final_price(self):
+        if self.coupon:
+            self.final_price = (
+                sum(
+                    (
+                        item.product.discounted_price * item.quantity
+                        for item in self.orderItems.all()
+                    )
+                )
+                * (100 - self.coupon.percent)
+                / 100
+                + self.shipping
+            )
+        else:
+            self.final_price = (
+                sum(
+                    (
+                        item.product.discounted_price * item.quantity
+                        for item in self.orderItems.all()
+                    )
+                )
+                + self.shipping
+            )
 
 
 class OrderItem(BaseModel):
@@ -76,7 +104,7 @@ class OrderItem(BaseModel):
         related_name="orderItems",
     )
     quantity = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
         return f"{self.order}, {self.product}"

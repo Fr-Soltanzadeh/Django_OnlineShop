@@ -20,4 +20,17 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = "__all__"
+        fields = (
+            "customer",
+            "orderItems",
+            "province",
+            "city",
+            "street",
+            "address_detail",
+            "postal_code",
+            "total_price",
+            "final_price",
+            "receiver_fullname",
+            "receiver_phone_number",
+            "shipping",
+        )

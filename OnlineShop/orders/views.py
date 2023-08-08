@@ -95,6 +95,16 @@ class VerifyOrderView(View):
             print(response)
             if response["Status"] == 100 or response["Status"] == 101:
                 order.status = 2
+                cart = request.user.cart
+                if cart.coupon:
+                    coupon = cart.coupon
+                    coupon.is_active = False
+                    coupon.save()
+
+                for item in cart.cart_items:
+                    item.delete()
+                order.transaction_id = response["RefID"]
+
                 return HttpResponse(
                     f"Transaction success.RefID:  {str(response['RefID'])}, Status: {response['Status']}, order ID: {order_id}"
                 )
