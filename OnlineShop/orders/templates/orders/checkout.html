@@ -28,8 +28,9 @@
                 <div class="customer-zone mb-20">
                     <p class="cart-page-title">Have a coupon? <a class="checkout-click3" href="#">Click here to enter your code</a></p>
                     <div class="checkout-login-info3">
-                        <form action="#">
-                            <input type="text" placeholder="Coupon code">
+                        <form action="javascript: void(0)" method="post" onsubmit="post_coupon()" id="coupon">
+                            {% csrf_token %}
+                            <input type="text" placeholder="Coupon code" required>
                             <input type="submit" value="Apply Coupon">
                         </form>
                     </div>
@@ -54,9 +55,7 @@
                                 <div class="different-address open-toggle mt-20">
                                     <form action="javascript: void(0)" method="post" style="width:  100%;" onsubmit="post_address()" id="add_address">
                                         {% csrf_token %}
-                                        <div class="row">
-                                            
-                                                
+                                        <div class="row">                                                
                                             <div class="col-lg-6 col-md-6">
                                                 <div class="billing-info mb-20">
                                                     <label>Province</label>
@@ -313,7 +312,7 @@
                     }
                     else  {
                         if (response.status==401){
-                            refresh_token("/login/",post_address)
+                            refresh_token("/login/",post_order)
                         }else{
                             throw new Error('not connected');
                         }
@@ -340,7 +339,44 @@ function handleCheckboxChange() {
 
 // Add an event listener to the checkbox for the 'change' event
 checkbox.addEventListener('change', handleCheckboxChange);
-    
+function post_coupon(){
+    const url = "/apply_coupon/api/v1/"
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            data={
+                coupon_code:document.getElementById('coupon').value,
+            }
+            console.log(data)
+            fetch(url,{
+                method:'POST',
+                body: JSON.stringify(data),
+                headers:{
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`,
+                }
+            })
+            .then(
+                response=>{
+                    if (response.ok){
+                        return response.json();
+                    }
+                    else  {
+                        if (response.status==401){
+                            refresh_token("/login/",post_coupon)
+                        }else{
+                            throw new Error('not connected');
+                        }
+                    }
+                }
+            )
+            .then((data) => {
+               location.reload()
+                })
+            .catch(function(error) {
+                console.log(error);
+            });   
+
+}
     </script>
     {% endblock %}
     
