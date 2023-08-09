@@ -25,7 +25,7 @@ class CartApiView(APIView):
                 cart = user.cart
             except:
                 cart = Cart.objects.create(customer=user)
-            serializer = CartSerializer(user.cart)
+            serializer = CartSerializer(cart)
             return Response(serializer.data)
         else:
             try:

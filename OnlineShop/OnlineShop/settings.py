@@ -14,7 +14,9 @@ from pathlib import Path
 from os import getenv
 from dotenv import load_dotenv
 from django.contrib.messages import constants as messages
+from corsheaders.defaults import default_headers
 
+CORS_ALLOW_HEADERS = default_headers + ("Access-Control-Allow-Origin",)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 env_path = BASE_DIR / ".env"
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "ckeditor",
+    "corsheaders",
     # apps
     "accounts.apps.AccountsConfig",
     "core.apps.CoreConfig",
@@ -58,6 +61,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -175,13 +179,27 @@ REST_FRAMEWORK = {
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        # "LOCATION": "redis://username:password@127.0.0.1:6379",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
-    }
-}
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         # "LOCATION": "redis://username:password@127.0.0.1:6379",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         },
+#     }
+# }
+
+# ZarinPal config: SANDBOX MODE
+MERCHANT = "00000000-0000-0000-0000-000000000000"
+SANDBOX = True
+
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1",
+]
+CORS_ORIGIN_WHITELIST = [
+    "http://127.0.0.1",
+]

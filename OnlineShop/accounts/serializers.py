@@ -15,7 +15,7 @@ class OtpCodeSerializer(serializers.Serializer):
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = ("province", "city", "street", "detail", "postal_code")
+        fields = ("province", "city", "street", "detail", "postal_code", "user", "id")
 
 
 class CustomerProfileSerializer(serializers.ModelSerializer):

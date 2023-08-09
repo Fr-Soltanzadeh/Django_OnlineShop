@@ -24,7 +24,7 @@ class TestAddToCartApiView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(CartItem.objects.count(), 1)
         self.assertIn("cart_items", response.data)
-        self.assertIn("grand_price", response.data)
+        self.assertIn("total_price", response.data)
 
     def test_add_to_cart_unauthenticated_user(self):
         self.client.logout()
