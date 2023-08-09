@@ -12,8 +12,7 @@ class Coupon(BaseModel):
     end_time = models.DateTimeField()
     title = models.CharField(max_length=100)
     is_active = models.BooleanField(default=False)
-    coupon_code = models.IntegerField()
-    quantity = models.PositiveIntegerField()
+    coupon_code = models.IntegerField(unique=True)
     percent = models.PositiveIntegerField()
 
     class Meta:

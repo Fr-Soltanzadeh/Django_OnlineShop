@@ -63,8 +63,8 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="row justify-content-between">
-                            <div class="col-lg-4 col-md-6">
+                        <div class="row justify-content-end">
+                            <!-- <div class="col-lg-4 col-md-6">
                                 <div class="discount-code-wrapper">
                                     <div class="title-wrap">
                                         <h4 class="cart-bottom-title section-bg-gray">Use Coupon Code</h4>
@@ -77,7 +77,7 @@
                                         </form>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-lg-4 col-md-12">
                                 <div class="grand-totall">
                                     <div class="title-wrap">
@@ -226,11 +226,11 @@
                     main.appendChild(tr);
                 });
                 grand_price =document.querySelector("#grand_price")
-                grand_price.innerHTML= `$${data.grand_price}`
+                grand_price.innerHTML= `$${data.total_price_with_discount}`
                 total_price =document.querySelector("#total_price")
                 total_price.innerHTML= `$${data.total_price}`
                 profit =document.querySelector("#profit")
-                profit.innerHTML= `$${Number(data.total_price)-Number(data.grand_price)}`
+                profit.innerHTML= `$${Number(data.total_price)-Number(data.total_price_with_discount)}`
         }
         function add_item(ItemId) {
             let quantity=document.getElementById(`q${ItemId}`)

@@ -7,6 +7,7 @@ from .models import Order, OrderItem, Coupon
 from accounts.models import Address
 from django.http import HttpResponseRedirect
 from datetime import datetime
+import pytz
 
 
 class OrderApiView(APIView):
@@ -25,7 +26,6 @@ class OrderApiView(APIView):
             "receiver_fullname":data["receiver_fullname"],
             "receiver_phone_number":data["receiver_phone_number"],
             "coupon":cart.coupon}
-        print(order_data)
         order = Order.objects.create(
             customer=user,
             province=address.province,
@@ -54,13 +54,11 @@ class OrderApiView(APIView):
 class ApplyCoupon(APIView):
     def post(self, request):
         coupon_code = request.data.get("coupon_code")
-        if (
-            coupon := Coupon.objects.filter(coupon_code=coupon_code).exists()
-            and coupon.is_active
-            and coupon.end_time > datetime.now()
-        ):
-            cart = request.user.cart
-            cart.coupon = coupon
-            cart.save()
+        if Coupon.objects.filter(coupon_code=coupon_code).exists():
+            coupon=Coupon.objects.get(coupon_code=coupon_code)
+            if coupon.is_active and coupon.end_time > datetime.now().replace(tzinfo=pytz.utc):
+                cart = request.user.cart
+                cart.coupon = coupon
+                cart.save()
             return Response(data={"is_valid": True})
         return Response(data={"is_valid": False})

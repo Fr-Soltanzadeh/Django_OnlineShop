@@ -101,6 +101,7 @@ class VerifyOrderView(View):
                 if cart.coupon:
                     coupon = cart.coupon
                     coupon.is_active = False
+                    
                     coupon.save()
 
                 for item in cart.cart_items.all():
