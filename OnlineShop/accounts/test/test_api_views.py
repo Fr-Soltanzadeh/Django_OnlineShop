@@ -49,4 +49,4 @@ class TestRefreshTokenApiView(TestCase):
 
     def test_get_new_access_token_GET_invalid(self):
         response = self.client.get(self.url, headers={"Authorization": "123"})
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
