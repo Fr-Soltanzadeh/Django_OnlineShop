@@ -16,9 +16,7 @@ from dotenv import load_dotenv
 from django.contrib.messages import constants as messages
 from corsheaders.defaults import default_headers
 
-CORS_ALLOW_HEADERS = default_headers + (
-    'Access-Control-Allow-Origin',
-)
+CORS_ALLOW_HEADERS = default_headers + ("Access-Control-Allow-Origin",)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 env_path = BASE_DIR / ".env"
@@ -58,8 +56,6 @@ INSTALLED_APPS = [
     "orders.apps.OrdersConfig",
     "home.apps.HomeConfig",
     "cart.apps.CartConfig",
-
-
 ]
 
 MIDDLEWARE = [
@@ -199,8 +195,8 @@ MERCHANT = "00000000-0000-0000-0000-000000000000"
 SANDBOX = True
 
 
-CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:8000',
+    "http://127.0.0.1:8000",
 ]

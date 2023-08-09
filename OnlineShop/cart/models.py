@@ -22,7 +22,11 @@ class Cart(BaseModel):
         return f"customer{self.customer.id} {self.customer.fullname}"
 
     def calculate_final_price_without_shipping(self):
-        if self.coupon and self.coupon.is_active and self.coupon.end_time > datetime.now().replace(tzinfo=pytz.utc):
+        if (
+            self.coupon
+            and self.coupon.is_active
+            and self.coupon.end_time > datetime.now().replace(tzinfo=pytz.utc)
+        ):
             return (
                 sum(
                     (
@@ -39,9 +43,13 @@ class Cart(BaseModel):
                 for item in self.cart_items.all()
             )
         )
+
     def calculate_total_discounted_price(self):
         return sum(
-            (item.product.discounted_price * item.quantity for item in self.cart_items.all())
+            (
+                item.product.discounted_price * item.quantity
+                for item in self.cart_items.all()
+            )
         )
 
     def calculate_total_price(self):

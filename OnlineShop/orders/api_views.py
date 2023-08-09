@@ -16,16 +16,18 @@ class OrderApiView(APIView):
         cart = user.cart
         data = request.data
         address = Address.objects.get(id=int(data["address_id"]))
-        order_data={ "customer":user,
-            "province":address.province,
-            "postal_code":address.postal_code,
-            "city":address.city,
-            "address_detail":address.detail,
-            "street":address.street,
-            "total_price":cart.calculate_total_price(),
-            "receiver_fullname":data["receiver_fullname"],
-            "receiver_phone_number":data["receiver_phone_number"],
-            "coupon":cart.coupon}
+        order_data = {
+            "customer": user,
+            "province": address.province,
+            "postal_code": address.postal_code,
+            "city": address.city,
+            "address_detail": address.detail,
+            "street": address.street,
+            "total_price": cart.calculate_total_price(),
+            "receiver_fullname": data["receiver_fullname"],
+            "receiver_phone_number": data["receiver_phone_number"],
+            "coupon": cart.coupon,
+        }
         order = Order.objects.create(
             customer=user,
             province=address.province,
@@ -38,7 +40,7 @@ class OrderApiView(APIView):
             receiver_phone_number=data["receiver_phone_number"],
             coupon=cart.coupon,
         )
-        
+
         for item in cart.cart_items.all():
             OrderItem.objects.create(
                 product=item.product,
@@ -55,8 +57,10 @@ class ApplyCoupon(APIView):
     def post(self, request):
         coupon_code = request.data.get("coupon_code")
         if Coupon.objects.filter(coupon_code=coupon_code).exists():
-            coupon=Coupon.objects.get(coupon_code=coupon_code)
-            if coupon.is_active and coupon.end_time > datetime.now().replace(tzinfo=pytz.utc):
+            coupon = Coupon.objects.get(coupon_code=coupon_code)
+            if coupon.is_active and coupon.end_time > datetime.now().replace(
+                tzinfo=pytz.utc
+            ):
                 cart = request.user.cart
                 cart.coupon = coupon
                 cart.save()

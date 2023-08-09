@@ -6,6 +6,7 @@ from datetime import datetime
 from decimal import Decimal
 import pytz
 
+
 class CartItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
 
@@ -24,7 +25,13 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ("customer", "cart_items", "total_price_with_discount", "total_price_with_discount_coupon", "total_price")
+        fields = (
+            "customer",
+            "cart_items",
+            "total_price_with_discount",
+            "total_price_with_discount_coupon",
+            "total_price",
+        )
         # depth=2
 
     def get_total_price_with_discount(self, cart):
