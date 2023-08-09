@@ -56,7 +56,7 @@
                                         <div class="cart-clear">
                                             
                                                 {% csrf_token %}
-                                            <button onclick="update_cart()">Update Cart</button>
+                                            <button onclick="update_cart()" id="update_button">Update Cart</button>
                                             <button onclick="clear_cart()">Clear Cart</button>
                                         </div>
                                     </div>
@@ -232,9 +232,11 @@
                 profit =document.querySelector("#profit")
                 profit.innerHTML= `$${Number(data.total_price)-Number(data.total_price_with_discount)}`
         }
+        update_button=document.getElementById("update_button")
         function add_item(ItemId) {
             let quantity=document.getElementById(`q${ItemId}`)
             quantity.value=Number(quantity.value)+1
+            update_button.style="color:#fff; background-color: #ff2f2f;"
         }
         function decrease_item(ItemId) {
             let quantity=document.getElementById(`q${ItemId}`)
@@ -242,10 +244,14 @@
             if (quantity.value <=0){
                 remove_item(ItemId)
             }
+            update_button.style="color:#fff; background-color: #ff2f2f;"
+
         }
         function remove_item(ItemId) {
             let quantity=document.getElementById(`r${ItemId}`)
             quantity.remove()
+            update_button.style="color:#fff; background-color: #ff2f2f;"
+
         } 
 
         function clear_cart(){

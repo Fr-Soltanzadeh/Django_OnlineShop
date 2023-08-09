@@ -9,8 +9,6 @@
 {% block content %}
 {% include 'header.html' %}
 
-    <div class="main-wrapper">
-
         <div class="breadcrumb-area bg-gray">
             <div class="container">
                 <div class="breadcrumb-content text-center">
@@ -139,8 +137,8 @@
                                         <div class="your-order-info order-total">
                                             <ul>
                                                 <li>Your profit from purchase<span id="profit"></span></li>
-                                                <li  ><small>Product discounts</small><span  style="color: black;"><small id="profit_discount"></small></span></li>
-                                                <li  ><small>Coupon</small><span  style="color: black;"><small id="profit_coupon"></small></span></li>
+                                                <li id="li_profit_discount" ><small>Product discounts</small><span  style="color: black;"><small id="profit_discount"></small></span></li>
+                                                <li  id="li_profit_coupon"><small>Coupon</small><span  style="color: black;"><small id="profit_coupon"></small></span></li>
                                             </ul>
                                         </div>
                                         <div class="your-order-info order-shipping">
@@ -216,51 +214,52 @@
                 })
             .catch(function(error) {
                 console.log(error);
-            });   
-            function load_address(data){
-                addresses=document.getElementById('addresses')
-                data.forEach(address => {
-                    let div=document.createElement('div')
-                    div.classList.add("mt-3","form-check")
-                    let input=document.createElement('input')
-                    input.classList.add("form-check-input")
-                    input.type="radio"
-                    input.name="flexRadioDefault2"
-                    input.value=address.id
-                    input.checked="checked"
-                    let span=document.createElement('span')
-                    span.innerText=`${address.province}, ${address.city}, ${address.street}, ${address.detail}, ${address.postal_code}`
-                    div.appendChild(input)
-                    div.appendChild(span)
-                    addresses.appendChild(div)
-                });
-            }   
-            function load_order(data){
-                console.log(data)
-                document.getElementById("Subtotal").innerHTML=`$${data.total_price}`
-                const shipping=2
-                document.getElementById("Shipping").innerHTML=`$${shipping}`
-                const profit =(Number(data.total_price)-Number(data.total_price_with_discount_coupon)).toFixed(2)
-                if (Number(profit)>0){
-                    document.getElementById("profit_discount").innerHTML=`$${(Number(data.total_price)-Number(data.total_price_with_discount)).toFixed(2)}`
-                    document.getElementById("profit_coupon").innerHTML=`$${((data.total_price_with_discount)-Number(data.total_price_with_discount_coupon)).toFixed(2)}`
-                }else{document.getElementById("profit_discount").hidden=true
-                    document.getElementById("profit_coupon").hidden=true
-                }
-                document.getElementById("profit").innerHTML=`$${profit}`
-                document.getElementById("Total").innerHTML=`$${(Number(data.total_price_with_discount_coupon)+Number(shipping)).toFixed(2)}`
-                const cartItems=data.cart_items
-                let items = document.getElementById("items")
-                cartItems.forEach(item=>{
-                    li = document.createElement("li")
-                    li.innerHTML=`${item.product.title} X ${item.quantity}`
-                    span=document.createElement("span")
-                    span.innerHTML=`$${Number(item.product.price) *Number(item.quantity)}`
-                    li.appendChild(span)
-                    items.appendChild(li)                    
-                })
-            }                  
-        }
+            }); 
+        }  
+        function load_address(data){
+            addresses=document.getElementById('addresses')
+            data.forEach(address => {
+                let div=document.createElement('div')
+                div.classList.add("mt-3","form-check")
+                let input=document.createElement('input')
+                input.classList.add("form-check-input")
+                input.type="radio"
+                input.name="flexRadioDefault2"
+                input.value=address.id
+                input.checked="checked"
+                let span=document.createElement('span')
+                span.innerText=`${address.province}, ${address.city}, ${address.street}, ${address.detail}, ${address.postal_code}`
+                div.appendChild(input)
+                div.appendChild(span)
+                addresses.appendChild(div)
+            });
+        }   
+        function load_order(data){
+            console.log(data)
+            document.getElementById("Subtotal").innerHTML=`$${data.total_price.toFixed(2)}`
+            const shipping=2
+            document.getElementById("Shipping").innerHTML=`$${shipping.toFixed(2)}`
+            const profit =(Number(data.total_price)-Number(data.total_price_with_discount_coupon)).toFixed(2)
+            if (Number(profit)>0){
+                document.getElementById("profit_discount").innerHTML=`$${(Number(data.total_price)-Number(data.total_price_with_discount)).toFixed(2)}`
+                document.getElementById("profit_coupon").innerHTML=`$${((data.total_price_with_discount)-Number(data.total_price_with_discount_coupon)).toFixed(2)}`
+            }else{document.getElementById("li_profit_discount").hidden=true
+                document.getElementById("li_profit_coupon").hidden=true
+            }
+            document.getElementById("profit").innerHTML=`$${profit}`
+            document.getElementById("Total").innerHTML=`$${(Number(data.total_price_with_discount_coupon)+Number(shipping)).toFixed(2)}`
+            const cartItems=data.cart_items
+            let items = document.getElementById("items")
+            cartItems.forEach(item=>{
+                li = document.createElement("li")
+                li.innerHTML=`${item.product.title} X ${item.quantity}`
+                span=document.createElement("span")
+                span.innerHTML=`$${(Number(item.product.price) *Number(item.quantity)).toFixed(2)}`
+                li.appendChild(span)
+                items.appendChild(li)                    
+            })
+        }                  
+        
         function post_address(){
             const url = "/user_address/api/v1/"
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -340,7 +339,7 @@
                 console.log(error);
             });   
         }
-const checkbox = document.getElementById('me');
+        const checkbox = document.getElementById('me');
 
 // Define the function to be called when the checkbox is checked
 function handleCheckboxChange() {
@@ -352,7 +351,7 @@ function handleCheckboxChange() {
 }
 
 // Add an event listener to the checkbox for the 'change' event
-checkbox.addEventListener('change', handleCheckboxChange);
+        checkbox.addEventListener('change', handleCheckboxChange);
 function post_coupon(){
     const url = "/apply_coupon/api/v1/"
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
