@@ -52,9 +52,7 @@ class OrderPayView(View):
                 ZP_API_REQUEST, data=data, headers=headers, timeout=10
             )
             if response.status_code == 200:
-
                 response = response.json()
-
                 if response["Status"] == 100:
                     return redirect(ZP_API_STARTPAY + str(response["Authority"]))
                 elif response.get("errors"):
@@ -63,7 +61,6 @@ class OrderPayView(View):
                     return HttpResponse(
                         f"Error code: {e_code}, Error Message: {e_message}"
                     )
-            print(response)
             return HttpResponse(response.items())
 
         except requests.exceptions.Timeout:
@@ -92,7 +89,6 @@ class VerifyOrderView(View):
 
         if response.status_code == 200:
             response = response.json()
-            print(response)
             if response["Status"] == 100 or response["Status"] == 101:
                 order.status = 2
                 order.transaction_id = response["RefID"]
