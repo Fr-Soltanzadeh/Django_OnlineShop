@@ -26,7 +26,7 @@ class Coupon(BaseModel):
 class Order(BaseModel):
     class StatusChoice(models.IntegerChoices):
         PENDING = 1, "PENDING"
-        PAID = 2, "CONFIRMED"
+        PAID = 2, "PAID"
         PAYMENT_FAILED = 3, "PAYMENT_FAILED"
         SENDING = 4, "SENDING"
         DELIVERED = 5, "DELIVERED"

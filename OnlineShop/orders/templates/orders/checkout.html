@@ -289,7 +289,7 @@
         function post_order(){
             const url = "/order/api/v1/"
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const address_id = document.querySelector('input[name="flexRadioDefault2"]:checked').value,
+            const address_id = document.querySelector('input[name="flexRadioDefault2"]:checked').value;
             data={
                 receiver_phone_number:document.getElementById('receiver_phone_number').value,
                 receiver_fullname:document.getElementById('receiver_fullname').value,
@@ -307,20 +307,24 @@
             })
             .then(
                 response=>{
-                    if (response.ok){
-                        return response.json();
-                    }
-                    else  {
-                        if (response.status==401){
-                            refresh_token("/login/",post_order)
-                        }else{
-                            throw new Error('not connected');
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                        } else {
+                        if (response.ok){
+                            return response.json();
+                        }
+                        else  {
+                            if (response.status==401){
+                                refresh_token("/login/",post_order);
+                            }else{
+                                throw new Error('not connected');
+                            }
                         }
                     }
                 }
             )
             .then((data) => {
-               location.reload()
+                console.log(data);
                 })
             .catch(function(error) {
                 console.log(error);
@@ -370,6 +374,7 @@ function post_coupon(){
                 }
             )
             .then((data) => {
+                console.log(data)
                location.reload()
                 })
             .catch(function(error) {
