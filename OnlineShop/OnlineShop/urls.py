@@ -26,13 +26,18 @@ api_urls = [
     path("cart/", include("cart.api.urls")),
     path("orders/", include("orders.api.urls")),
 ]
-urlpatterns = [
-    path("admin/", admin.site.urls),
+
+normal_urls = [
     path("", include("home.urls")),
     path("accounts/", include("accounts.urls")),
     path("products/", include("products.urls")),
     path("cart/", include("cart.urls")),
     path("orders/", include("orders.urls")),
+]
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("", include(normal_urls)),
     path("api/v1/", include(api_urls)),
 ]
 
