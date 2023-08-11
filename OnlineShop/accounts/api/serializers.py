@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from core.utils import get_phonenumber_regex
-from .models import CustomerProfile, User, Address, Customer
+from ..models import CustomerProfile, User, Address, Customer
 
 
 class LoginSerializer(serializers.Serializer):
@@ -15,7 +15,7 @@ class OtpCodeSerializer(serializers.Serializer):
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = ("province", "city", "street", "detail", "postal_code")
+        fields = ("province", "city", "street", "detail", "postal_code", "user", "id")
 
 
 class CustomerProfileSerializer(serializers.ModelSerializer):
@@ -31,6 +31,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = (
+            "phone_number",
             "first_name",
             "last_name",
             "national_code",

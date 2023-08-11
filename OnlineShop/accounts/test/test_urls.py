@@ -1,7 +1,11 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
 from ..views import LoginOrRegisterView, LogoutView, ProfileView, VerifyCodeView
-from ..api_views import LoginOrRegisterApiView, ProfileApiView, VerifyCodeApiView
+from accounts.api.views import (
+    LoginOrRegisterApiView,
+    CustomerApiView,
+    VerifyCodeApiView,
+)
 
 
 class TestUrls(SimpleTestCase):
@@ -31,4 +35,4 @@ class TestUrls(SimpleTestCase):
 
     def test_profile(self):
         url = reverse("profile_api")
-        self.assertEqual(resolve(url).func.view_class, ProfileApiView)
+        self.assertEqual(resolve(url).func.view_class, CustomerApiView)

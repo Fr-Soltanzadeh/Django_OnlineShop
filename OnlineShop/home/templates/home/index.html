@@ -18,7 +18,7 @@
                                 <h1 class="animated">BEST <br>OFFER</h1>
                                 <h4 class="animated">Best choice<br> for your sweet kids</h4><br>
                                 <div class="btn-style-1">
-                                    <a class="animated btn-1-padding-4 btn-1-orange btn-1-font-14" href="product-details.html">Shop Now</a>
+                                    <a class="animated btn-1-padding-4 btn-1-orange btn-1-font-14" href="{% url 'products' %}">Shop Now</a>
                                 </div>
                             </div>
                         </div>
@@ -50,7 +50,7 @@
     {% include 'footer.html' %}
     <script>
         window.onload= function() {
-            fetch('home/api/v1/',{
+            fetch('/api/v1/products/categories/',{
                 method:'GET',
             })
             .then(
@@ -79,7 +79,7 @@
                     let div3=document.createElement('div');
                     div3.classList.add("product-img", "product-img-border-transparent");
                     let a=document.createElement('a');
-                    a.href=`products/${category.slug}`
+                    a.href=`/products/category/${category.slug}/`
                     let image=document.createElement('img');
                     image.src=category.image
                     image.alt='category_image'
@@ -92,7 +92,7 @@
                     let name=document.createElement('h5');
                     name.classList.add("font-width-dec")
                     let a2=document.createElement('a');
-                    a2.href=`products/${category.slug}`
+                    a2.href=`/products/category/${category.slug}/`
                     a2.innerHTML=category.name
                     name.appendChild(a2)
                     div4.appendChild(name)                    

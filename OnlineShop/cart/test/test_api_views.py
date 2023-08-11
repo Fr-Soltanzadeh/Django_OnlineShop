@@ -2,8 +2,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from products.models import Product
-from ..serializers import CartSerializer
-from products.serializers import ProductSerializer
+from cart.api.serializers import CartSerializer
+from products.api.serializers import ProductSerializer
 from ..models import CartItem, Cart
 from model_bakery import baker
 from accounts.models import User
@@ -24,7 +24,7 @@ class TestAddToCartApiView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(CartItem.objects.count(), 1)
         self.assertIn("cart_items", response.data)
-        self.assertIn("grand_price", response.data)
+        self.assertIn("total_price", response.data)
 
     def test_add_to_cart_unauthenticated_user(self):
         self.client.logout()

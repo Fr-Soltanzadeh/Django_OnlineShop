@@ -50,8 +50,6 @@
                                         <li><a href="{% url 'home' %}">HOME</a></li>
                                         <li><a href="{% url 'products' %}">SHOP</a></li>
                                         <li><a href="{% url 'home' %}">OFFER </a></li>
-                                        <li><a href="{% url 'home' %}">CONTACT </a></li>
-                                        <li><a href="{% url 'home' %}">ABOUT </a></li>
                                         {% if not user.is_authenticated %}
                                         <li><a href="{% url 'login' %}">LOGIN </a></li>
                                         {%else%}
@@ -71,7 +69,7 @@
                     <div class="col-5">
                         <div class="mobile-logo">
                             <a href="{% url 'home' %}">
-                                <img alt="" src="static/images/Noora-logo.png">
+                                <img alt="" src="{% static 'images/Noora-logo.png' %}">
                             </a>
                         </div>
                     </div>

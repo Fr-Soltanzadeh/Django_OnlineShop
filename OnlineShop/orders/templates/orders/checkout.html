@@ -1,0 +1,403 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+ Checkout
+{% endblock %}
+
+{% block content %}
+{% include 'header.html' %}
+
+        <div class="breadcrumb-area bg-gray">
+            <div class="container">
+                <div class="breadcrumb-content text-center">
+                    <ul>
+                        <li>
+                            <a href="{% url 'home' %}">Home</a>
+                        </li>
+                        <li class="active">Checkout </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="checkout-main-area pt-80 pb-120">
+            <div class="container">
+                <div class="customer-zone mb-20">
+                    <p class="cart-page-title">Have a coupon? <a class="checkout-click3" href="#">Click here to enter your code</a></p>
+                    <div class="checkout-login-info3">
+                        <form action="javascript: void(0)" method="post" onsubmit="post_coupon()">
+                            {% csrf_token %}
+                            <input type="text" placeholder="Coupon code" required id="coupon">
+                            <input type="submit" value="Apply Coupon">
+                        </form>
+                        <p id="invalid_coupon" style="color: red;" class="pt-2"></p>
+                    </div>
+                </div>
+                
+
+                <div class="checkout-wrap pt-30">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="billing-info-wrap mr-50">
+                                <h3>Billing Details</h3>
+                                
+                                <div id="addresses">
+
+
+                                </div>
+                                
+                                <div class="checkout-account mt-30">
+                                    <input class="checkout-toggle" type="checkbox" name="flexRadioDefault">
+                                    <span>Add a new address to ship?</span>
+                                </div>
+                                <div class="different-address open-toggle mt-20">
+                                    <form action="javascript: void(0)" method="post" style="width:  100%;" onsubmit="post_address()" id="add_address">
+                                        {% csrf_token %}
+                                        <div class="row">                                                
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info mb-20">
+                                                    <label>Province</label>
+                                                    <input type="text" name="province" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info mb-20">
+                                                    <label>City / Town</label>
+                                                    <input type="text" name="city" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info mb-20">
+                                                    <label>Street</label>
+                                                    <input type="text" name="street" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info mb-20">
+                                                    <label>Postcode</label>
+                                                    <input type="text" name="postal_code" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="billing-info mb-20">
+                                                    <label>Address detail</label>
+                                                    <input type="text" name="detail" required>
+                                                </div>
+                                            </div>
+                                            <input type="submit" value="Place address">
+                                        </div>
+                                    </form>
+                                    <form action="javascript: void(0)" method="post" onsubmit="post_order()">
+                                    
+                                </div>
+                                
+                                <div class="row mt-50">
+                                
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="billing-info mb-20">
+                                            <label>Reciever Fullname</label>
+                                            <input type="text" id="receiver_fullname" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="billing-info mb-20">
+                                            <label>Reciever Phone Number</label>
+                                            <input type="text" id="receiver_phone_number" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <input id="me" type="checkbox">
+                                    <span>Me</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="your-order-area">
+                                <h3>Your order</h3>
+                                <div class="your-order-wrap gray-bg-4">
+                                    <div class="your-order-info-wrap">
+                                        <div class="your-order-info">
+                                            <ul>
+                                                <li>Product <span>Total</span></li>
+                                            </ul>
+                                        </div>
+                                        <div class="your-order-middle">
+                                            <ul id="items">
+                                                
+                                            </ul>
+                                        </div>
+                                        <div class="your-order-info order-subtotal">
+                                            <ul>
+                                                <li >Subtotal <span id="Subtotal"> </span></li>
+                                            </ul>
+                                        </div>
+                                        <div class="your-order-info order-total">
+                                            <ul>
+                                                <li>Your profit from purchase<span id="profit"></span></li>
+                                                <li id="li_profit_discount" ><small>Product discounts</small><span  style="color: black;"><small id="profit_discount"></small></span></li>
+                                                <li  id="li_profit_coupon"><small>Coupon</small><span  style="color: black;"><small id="profit_coupon"></small></span></li>
+                                            </ul>
+                                        </div>
+                                        <div class="your-order-info order-shipping">
+                                            <ul>
+                                                <li>Shipping <span id="Shipping"> </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <div class="your-order-info order-total">
+                                            <ul>
+                                                <li>Final <span id="Total"></span></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="payment-method">
+                                        <div class="pay-top sin-payment">
+                                            <input id="payment_method_1" class="input-radio" type="radio" value="cheque" checked="checked" name="payment_method" required>
+                                            <label for="payment_method_1"> Direct Bank Transfer </label>
+                                            <div class="payment-box payment_method_bacs">
+                                                <p>Make your payment directly into our bank account. Please use your Order ID as the payment reference.</p>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="pay-top sin-payment sin-payment-3">
+                                            <input id="payment-method-4" class="input-radio" type="radio" value="cheque" name="payment_method">
+                                            <label for="payment-method-4">PayPal <img alt="" src="{% static 'assets/images/icon-img/payment.png'%}"><a href="#">What is PayPal?</a></label>
+                                            <div class="payment-box payment_method_bacs">
+                                                <p>Make your payment directly into our bank account. Please use your Order ID as the payment reference.</p>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                </div>
+                                    {% csrf_token %}
+                                <div class="Place-order">
+                                    <input type="submit" value="Proceed to pay">
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'footer.html' %}
+
+    <script>
+        let fullname ="";
+        let phone_number =""; 
+        window.onload=function(){
+            const url ="/api/v1/cart/"
+            fetch(url,{
+                method:'GET',
+                headers:{
+                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`
+                }
+            })
+            .then(
+                response=>{
+                    if (response.ok){
+                        return response.json();
+                    }
+                    else  {
+                        if (response.status==401){
+                            refresh_token(location.href)
+                        }else{
+                            throw new Error('not connected');
+                        }
+                    }
+                }
+            )
+            .then((data) => {
+                fullname=`${data.customer.first_name} ${data.customer.last_name}`;
+                phone_number=data.customer.phone_number;
+                load_address(data.customer.addresses)
+                load_order(data)
+                })
+            .catch(function(error) {
+                console.log(error);
+            }); 
+        }  
+        function load_address(data){
+            addresses=document.getElementById('addresses')
+            data.forEach(address => {
+                let div=document.createElement('div')
+                div.classList.add("mt-3","form-check")
+                let input=document.createElement('input')
+                input.classList.add("form-check-input")
+                input.type="radio"
+                input.name="flexRadioDefault2"
+                input.value=address.id
+                input.checked="checked"
+                let span=document.createElement('span')
+                span.innerText=`${address.province}, ${address.city}, ${address.street}, ${address.detail}, ${address.postal_code}`
+                div.appendChild(input)
+                div.appendChild(span)
+                addresses.appendChild(div)
+            });
+        }   
+        function load_order(data){
+            console.log(data)
+            document.getElementById("Subtotal").innerHTML=`$${data.total_price.toFixed(2)}`
+            const shipping=2
+            document.getElementById("Shipping").innerHTML=`$${shipping.toFixed(2)}`
+            const profit =(Number(data.total_price)-Number(data.total_price_with_discount_coupon)).toFixed(2)
+            if (Number(profit)>0){
+                document.getElementById("profit_discount").innerHTML=`$${(Number(data.total_price)-Number(data.total_price_with_discount)).toFixed(2)}`
+                document.getElementById("profit_coupon").innerHTML=`$${((data.total_price_with_discount)-Number(data.total_price_with_discount_coupon)).toFixed(2)}`
+            }else{document.getElementById("li_profit_discount").hidden=true
+                document.getElementById("li_profit_coupon").hidden=true
+            }
+            document.getElementById("profit").innerHTML=`$${profit}`
+            document.getElementById("Total").innerHTML=`$${(Number(data.total_price_with_discount_coupon)+Number(shipping)).toFixed(2)}`
+            const cartItems=data.cart_items
+            let items = document.getElementById("items")
+            cartItems.forEach(item=>{
+                li = document.createElement("li")
+                li.innerHTML=`${item.product.title} X ${item.quantity}`
+                span=document.createElement("span")
+                span.innerHTML=`$${(Number(item.product.price) *Number(item.quantity)).toFixed(2)}`
+                li.appendChild(span)
+                items.appendChild(li)                    
+            })
+        }                  
+        
+        function post_address(){
+            const url = "/api/v1/accounts/user_address/"
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const form = document.getElementById("add_address");
+            const formData = new FormData(form);
+            fetch(url,{
+                method:'POST',
+                body: formData,
+                headers:{
+                    'X-CSRFToken': csrftoken,
+                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`,
+                }
+            })
+            .then(
+                response=>{
+                    if (response.ok){
+                        return response.json();
+                    }
+                    else  {
+                        if (response.status==401){
+                            refresh_token("/accounts/login/",post_address)
+                        }else{
+                            throw new Error('not connected');
+                        }
+                    }
+                }
+            )
+            .then((data) => {
+               location.reload()
+                })
+            .catch(function(error) {
+                console.log(error);
+            });   
+        }
+
+        function post_order(){
+            const url = "/api/v1/orders/"
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const address_id = document.querySelector('input[name="flexRadioDefault2"]:checked').value;
+            data={
+                receiver_phone_number:document.getElementById('receiver_phone_number').value,
+                receiver_fullname:document.getElementById('receiver_fullname').value,
+                address_id:address_id,
+            }
+            console.log(data)
+            fetch(url,{
+                method:'POST',
+                body: JSON.stringify(data),
+                headers:{
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`,
+                }
+            })
+            .then(
+                response=>{
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                        } else {
+                        if (response.ok){
+                            return response.json();
+                        }
+                        else  {
+                            if (response.status==401){
+                                refresh_token("/accounts/login/",post_order);
+                            }else{
+                                throw new Error('not connected');
+                            }
+                        }
+                    }
+                }
+            )
+            .then((data) => {
+                console.log(data);
+                })
+            .catch(function(error) {
+                console.log(error);
+            });   
+        }
+        const checkbox = document.getElementById('me');
+
+// Define the function to be called when the checkbox is checked
+function handleCheckboxChange() {
+  if (checkbox.checked) {
+    console.log("checked")
+    document.getElementById('receiver_phone_number').value=phone_number
+    document.getElementById('receiver_fullname').value=fullname
+}
+}
+
+// Add an event listener to the checkbox for the 'change' event
+        checkbox.addEventListener('change', handleCheckboxChange);
+function post_coupon(){
+    const url = "/api/v1/orders/apply_coupon/"
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            data={
+                coupon_code:document.getElementById('coupon').value,
+            }
+            console.log(data)
+            fetch(url,{
+                method:'POST',
+                body: JSON.stringify(data),
+                headers:{
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`,
+                }
+            })
+            .then(
+                response=>{
+                    if (response.ok){
+                        return response.json();
+                    }
+                    else  {
+                        if (response.status==401){
+                            refresh_token("/accounts/login/",post_coupon)
+                        }else{
+                            throw new Error('not connected');
+                        }
+                    }
+                }
+            )
+            .then((data) => {
+                if (data.is_valid){
+                    location.reload()
+                }else{
+                    document.getElementById("invalid_coupon").innerHTML="Invalid or expired coupon code"
+                }
+               
+                })
+            .catch(function(error) {
+                console.log(error);
+            });   
+
+}
+    </script>
+    {% endblock %}
+    
