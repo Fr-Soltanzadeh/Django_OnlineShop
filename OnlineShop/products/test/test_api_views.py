@@ -12,6 +12,7 @@ from decimal import Decimal
 from model_bakery import baker
 from rest_framework.test import APIClient, APITestCase
 
+
 class TestProductListByCategoryView(APITestCase):
     def setUp(self):
         self.client = Client()
@@ -73,7 +74,6 @@ class TestProductListView(TestCase):
     def test_ProductList_GET(self):
         response = self.client.get(reverse("products"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
 
 
 class CategoryApiViewTest(APITestCase):

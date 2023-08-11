@@ -11,12 +11,11 @@ from rest_framework import status
 from datetime import datetime, timedelta
 
 
-
 class OrderApiViewTest(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = User.objects.create(phone_number='09102098929')
-        self.url = reverse('order_api')
+        self.user = User.objects.create(phone_number="09102098929")
+        self.url = reverse("order_api")
 
         # Create a cart for the user
         self.cart = Cart.objects.create(customer=self.user)
@@ -24,11 +23,11 @@ class OrderApiViewTest(TestCase):
         # Create an address for the user
         self.address = Address.objects.create(
             user=self.user,
-            province='Test Province',
+            province="Test Province",
             postal_code=12345,
-            city='Test City',
-            detail='Test Address',
-            street='Test Street'
+            city="Test City",
+            detail="Test Address",
+            street="Test Street",
         )
 
         # Add items to the cart
@@ -36,7 +35,7 @@ class OrderApiViewTest(TestCase):
         self.cart_item = CartItem.objects.create(
             cart=self.cart, product=self.product, quantity=2
         )
-        
+
     def test_create_order_authenticated_user(self):
         self.client.force_authenticate(user=self.user)
         data = {
@@ -49,10 +48,10 @@ class OrderApiViewTest(TestCase):
 
         self.assertEqual(response.status_code, 302)
         order = Order.objects.get(customer=self.user)
-        self.assertTrue(response.url.startswith(reverse('pay', args=(order.id,))))
+        self.assertTrue(response.url.startswith(reverse("pay", args=(order.id,))))
 
         # Assert that the order has been created with the correct data
-        
+
         self.assertEqual(order.province, self.address.province)
         self.assertEqual(order.postal_code, self.address.postal_code)
         self.assertEqual(order.city, self.address.city)
@@ -84,19 +83,22 @@ class OrderApiViewTest(TestCase):
 class ApplyCouponViewTest(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = User.objects.create(phone_number='09102098929')
-        
-        self.url = reverse('apply_coupon_api')
+        self.user = User.objects.create(phone_number="09102098929")
+
+        self.url = reverse("apply_coupon_api")
 
         # Create a cart for the user
         self.cart = Cart.objects.create(customer=self.user)
 
     def test_valid_coupon(self):
         self.client.force_authenticate(user=self.user)
-        coupon = baker.make(Coupon, coupon_code=1234, is_active=True, end_time=datetime.now()+timedelta(days=1))
-        data = {
-            "coupon_code": 1234
-        }
+        coupon = baker.make(
+            Coupon,
+            coupon_code=1234,
+            is_active=True,
+            end_time=datetime.now() + timedelta(days=1),
+        )
+        data = {"coupon_code": 1234}
 
         response = self.client.post(self.url, data)
 
@@ -107,9 +109,7 @@ class ApplyCouponViewTest(TestCase):
     def test_invalid_coupon(self):
         self.client.force_authenticate(user=self.user)
 
-        data = {
-            "coupon_code": 5678
-        }
+        data = {"coupon_code": 5678}
 
         response = self.client.post(self.url, data)
 
@@ -118,12 +118,14 @@ class ApplyCouponViewTest(TestCase):
         self.assertIsNone(self.cart.coupon)
 
     def test_unauthenticated_user(self):
-        coupon = baker.make(Coupon, coupon_code=1234, is_active=True, end_time=datetime.now()+timedelta(days=1))
-        data = {
-            "coupon_code": 1234
-        }
+        coupon = baker.make(
+            Coupon,
+            coupon_code=1234,
+            is_active=True,
+            end_time=datetime.now() + timedelta(days=1),
+        )
+        data = {"coupon_code": 1234}
 
         response = self.client.post(self.url, data)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
- 

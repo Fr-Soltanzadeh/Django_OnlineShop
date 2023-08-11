@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-api_urls=[
+api_urls = [
     path("accounts/", include("accounts.api.urls")),
     path("products/", include("products.api.urls")),
     path("cart/", include("cart.api.urls")),
@@ -33,7 +33,7 @@ urlpatterns = [
     path("products/", include("products.urls")),
     path("cart/", include("cart.urls")),
     path("orders/", include("orders.urls")),
-    path("api/v1/", include(api_urls))
+    path("api/v1/", include(api_urls)),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
