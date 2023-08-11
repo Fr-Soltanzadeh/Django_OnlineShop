@@ -1,4 +1,4 @@
-from .models import Product, Category
+from ..models import Product, Category
 from .serializers import ProductSerializer, CategorySerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -53,7 +53,7 @@ class CategoryApiView(APIView):
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
 
-        
+
 # class ProductListByCategoryApiView(APIView):
 #     def get(self, request, slug, format=None):
 #         category = Category.objects.get(slug=slug)

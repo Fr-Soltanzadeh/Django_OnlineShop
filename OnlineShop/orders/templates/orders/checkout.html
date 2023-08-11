@@ -82,7 +82,7 @@
                                             <div class="col-lg-12">
                                                 <div class="billing-info mb-20">
                                                     <label>Address detail</label>
-                                                    <input type="text" name="address_detail" required>
+                                                    <input type="text" name="detail" required>
                                                 </div>
                                             </div>
                                             <input type="submit" value="Place address">
@@ -185,8 +185,10 @@
         {% include 'footer.html' %}
 
     <script>
+        let fullname ="";
+        let phone_number =""; 
         window.onload=function(){
-            const url ="/cart/api/v1/"
+            const url ="/api/v1/cart/"
             fetch(url,{
                 method:'GET',
                 headers:{
@@ -208,7 +210,8 @@
                 }
             )
             .then((data) => {
-                
+                fullname=`${data.customer.first_name} ${data.customer.last_name}`;
+                phone_number=data.customer.phone_number;
                 load_address(data.customer.addresses)
                 load_order(data)
                 })
@@ -261,7 +264,7 @@
         }                  
         
         function post_address(){
-            const url = "/user_address/api/v1/"
+            const url = "/api/v1/accounts/user_address/"
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             const form = document.getElementById("add_address");
             const formData = new FormData(form);
@@ -280,7 +283,7 @@
                     }
                     else  {
                         if (response.status==401){
-                            refresh_token("/login/",post_address)
+                            refresh_token("/accounts/login/",post_address)
                         }else{
                             throw new Error('not connected');
                         }
@@ -296,7 +299,7 @@
         }
 
         function post_order(){
-            const url = "/order/api/v1/"
+            const url = "/api/v1/orders/"
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             const address_id = document.querySelector('input[name="flexRadioDefault2"]:checked').value;
             data={
@@ -324,7 +327,7 @@
                         }
                         else  {
                             if (response.status==401){
-                                refresh_token("/login/",post_order);
+                                refresh_token("/accounts/login/",post_order);
                             }else{
                                 throw new Error('not connected');
                             }
@@ -345,15 +348,15 @@
 function handleCheckboxChange() {
   if (checkbox.checked) {
     console.log("checked")
-    document.getElementById('receiver_phone_number').value=`${"{{request.user.phone_number}}"}`
-    document.getElementById('receiver_fullname').value=`${"{{request.user.fullname}}"}`
+    document.getElementById('receiver_phone_number').value=phone_number
+    document.getElementById('receiver_fullname').value=fullname
 }
 }
 
 // Add an event listener to the checkbox for the 'change' event
         checkbox.addEventListener('change', handleCheckboxChange);
 function post_coupon(){
-    const url = "/apply_coupon/api/v1/"
+    const url = "/api/v1/orders/apply_coupon/"
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             data={
                 coupon_code:document.getElementById('coupon').value,
@@ -375,7 +378,7 @@ function post_coupon(){
                     }
                     else  {
                         if (response.status==401){
-                            refresh_token("/login/",post_coupon)
+                            refresh_token("/accounts/login/",post_coupon)
                         }else{
                             throw new Error('not connected');
                         }
@@ -386,7 +389,7 @@ function post_coupon(){
                 if (data.is_valid){
                     location.reload()
                 }else{
-                    document.getElementById("invalid_coupon").innerHTML="Invalid coupon code"
+                    document.getElementById("invalid_coupon").innerHTML="Invalid or expired coupon code"
                 }
                
                 })

@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import Cart, CartItem
-from products.serializers import ProductSerializer
-from accounts.serializers import CustomerSerializer
+from cart.models import Cart, CartItem
+from products.api.serializers import ProductSerializer
+from accounts.api.serializers import CustomerSerializer
 from datetime import datetime
 from decimal import Decimal
 import pytz

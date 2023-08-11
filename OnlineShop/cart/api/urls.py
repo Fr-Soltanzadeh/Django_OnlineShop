@@ -3,9 +3,9 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from . import  views
 
 urlpatterns = [
-    path("", api_views.CartApiView.as_view(), name="cart_api"),
+    path("", views.CartApiView.as_view(), name="cart_api"),
     path(
-        "add/", api_views.AddToCartApiView.as_view(), name="add_to_cart_api"
+        "add/", views.AddToCartApiView.as_view(), name="add_to_cart_api"
     ),
 ]
 

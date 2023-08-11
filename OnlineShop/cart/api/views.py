@@ -1,13 +1,13 @@
-from .models import CartItem, Cart
+from ..models import CartItem, Cart
 from products.models import Product
-from products.serializers import ProductSerializer
+from products.api.serializers import ProductSerializer
 from accounts.models import Customer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import CartItemSerializer, CartSerializer
 from django.db import IntegrityError
 from decimal import Decimal
-from .utils import calculate_grand_price
+from ..utils import calculate_grand_price
 from rest_framework import permissions
 from accounts.authentication import LoginAuthentication
 

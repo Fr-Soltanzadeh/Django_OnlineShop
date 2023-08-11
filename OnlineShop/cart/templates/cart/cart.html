@@ -100,7 +100,7 @@
 
     <script>
      window.onload= function() {
-            const url ="api/v1/"
+            const url ="/api/v1/cart/"
             fetch(url,{
                 method:'GET',
                 headers:{
@@ -144,14 +144,13 @@
                 empty_cart.appendChild(h3)
             }
                 cart.map(function(cart_item) {
-                    const base_url = window.location.href.split("/cart").at(-2);
                     let tr = document.createElement('tr');
                     tr.id = `r${cart_item.product.id}`
 
                     let td_img = document.createElement('td');
                     td_img.classList.add('product-thumbnail');
                     a_img = document.createElement('a');
-                    a_img.href = `${base_url}/product/${cart_item.product.slug}`
+                    a_img.href = `/products/${cart_item.product.slug}/`
                     img = document.createElement('img');
                     img.style.height="112px"
                     img.src=cart_item.product.images[0].image
@@ -163,7 +162,7 @@
                     let td_name = document.createElement('td');
                     td_name.classList.add('product-name');
                     a_name = document.createElement('a');
-                    a_name.href = `${base_url}/product/${cart_item.product.slug}`
+                    a_name.href = `/products/${cart_item.product.slug}/`
                     a_name.innerHTML=cart_item.product.title
                     td_name.appendChild(a_name)
                     tr.appendChild(td_name);
@@ -255,7 +254,7 @@
         } 
 
         function clear_cart(){
-            const url ="api/v1/"
+            const url ="/api/v1/cart/"
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             fetch(url,{
                 method:'DELETE',
@@ -277,7 +276,7 @@
                 const quantity = row.querySelector('input[type="text"]').value;
                 data.push({ product_id: productId, quantity: quantity });
             });
-            const url ="api/v1/"
+            const url ="/api/v1/cart/"
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             fetch(url,{
                 method:'PUT',
