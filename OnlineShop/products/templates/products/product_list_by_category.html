@@ -82,27 +82,29 @@
         window.onload= function() {
             let params = (new URL(document.location)).searchParams;
             let page = params.get("page");
+            let pathname = (new URL(document.location)).pathname;
+            const base_url =`${pathname}`
+            const base_api_url = `/api/v1${pathname}`
             let url =""
-            
+            // const base_url = "/api/v1/products/category/";
             if (page!=null && parseFloat(page) == page){
-                const base_url = window.location.href.split("?page=").at(-2);
                 document.getElementById("page").innerHTML=page
                 document.getElementById('next').href=`${base_url}?page=${+page+1}`;
                 if (page>1){
                     document.getElementById('prev').href=`${base_url}?page=${+page-1}`;
                 }
-                url =base_url+'api/v1/?page='+page;
+                url =base_api_url+'?page='+page;
                 
             }else{
                 if (page!=null && parseFloat(page) != page) {
-                    const base_url = window.location.href.split("?page=").at(-2);
                     window.location.href =base_url;
                 }else{
-                url ='api/v1/';
-                document.getElementById('next').href=`${ window.location.href}?page=2`;
+                url =base_api_url;
+                document.getElementById('next').href=`${ base_url}?page=2`;
                 document.getElementById('prev').href='javascript: void(0)'
                 }
             }
+            console.log(url)
             fetch(url,{
                 method:'GET',
             })
@@ -176,7 +178,7 @@
         }
         
         function add_to_cart(product_id){
-            const url = '/cart/api/v1/add/'
+            const url = '/api/v1/cart/add/'
             console.log(product_id)
             console.log(JSON.stringify({ product_id: product_id }))
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;

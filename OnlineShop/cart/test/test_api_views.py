@@ -2,8 +2,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from products.models import Product
-from ..serializers import CartSerializer
-from products.serializers import ProductSerializer
+from cart.api.serializers import CartSerializer
+from products.api.serializers import ProductSerializer
 from ..models import CartItem, Cart
 from model_bakery import baker
 from accounts.models import User

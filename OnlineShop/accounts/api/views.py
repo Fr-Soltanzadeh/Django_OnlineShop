@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 import random
 from .serializers import LoginSerializer, OtpCodeSerializer
 from .utils import send_otp_code
-from .models import User, OtpCode, CustomerProfile, Address
+from accounts.models import User, OtpCode, CustomerProfile, Address
 from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout

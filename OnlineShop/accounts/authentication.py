@@ -78,7 +78,7 @@ class LoginAuthentication(authentication.BaseAuthentication):
             return None
 
         user = User.objects.filter(id=user_id).first()
-
+        request.user = user
         if not user:
             return None
         # Return the user and token payload

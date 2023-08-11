@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.shortcuts import reverse
 from rest_framework import views, permissions, status
 from .serializers import OrderSerializer
-from .models import Order, OrderItem, Coupon
+from ..models import Order, OrderItem, Coupon
 from accounts.models import Address
 from django.http import HttpResponseRedirect
 from datetime import datetime
@@ -64,5 +64,5 @@ class ApplyCoupon(APIView):
                 cart = request.user.cart
                 cart.coupon = coupon
                 cart.save()
-            return Response(data={"is_valid": True})
+                return Response(data={"is_valid": True})
         return Response(data={"is_valid": False})

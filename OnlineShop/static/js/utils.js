@@ -1,5 +1,5 @@
 function refresh_token(fail_url, success_function){
-    const refresh_token_url ="/refresh_token/api/v1/"
+    const refresh_token_url ="/api/v1/accounts/refresh_token/"
     fetch(refresh_token_url,{
         method:'GET',
         headers:{

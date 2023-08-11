@@ -25,7 +25,7 @@ ZP_API_VERIFY = (
 )
 ZP_API_STARTPAY = f"https://{sandbox}.zarinpal.com/pg/StartPay/"
 description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"  # Required
-CallbackURL = "http://127.0.0.1:8000/verify_order/"
+CallbackURL = "http://127.0.0.1:8000/orders/verify_order/"
 
 
 class OrderPayView(View):
@@ -39,7 +39,7 @@ class OrderPayView(View):
             "Amount": int(round(float(order.total_price))) * 1000,
             "Description": description,
             "CallbackURL": CallbackURL,
-            "metadata": {"mobile": request.user.phone_number},
+            "metadata": {"mobile": order.customer.phone_number},
         }
         data = json.dumps(data)
         headers = {
@@ -85,15 +85,15 @@ class VerifyOrderView(View):
             "content-type": "application/json",
             "content-length": str(len(data)),
         }
-        response = requests.post(ZP_API_VERIFY, data=data, headers=headers)
 
+        response = requests.post(ZP_API_VERIFY, data=data, headers=headers)
         if response.status_code == 200:
             response = response.json()
             if response["Status"] == 100 or response["Status"] == 101:
                 order.status = 2
                 order.transaction_id = response["RefID"]
                 order.save()
-                cart = request.user.cart
+                cart = order.customer.cart
                 if cart.coupon:
                     coupon = cart.coupon
                     coupon.is_active = False

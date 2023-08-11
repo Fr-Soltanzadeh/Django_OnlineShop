@@ -1,7 +1,7 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
 from ..views import ProductDetailView, ProductListByCategoryView, ProductListView
-from ..api_views import (
+from products.api.views import (
     ProductDetailApiView,
     ProductListApiView,
     ProductListByCategoryApiView,
