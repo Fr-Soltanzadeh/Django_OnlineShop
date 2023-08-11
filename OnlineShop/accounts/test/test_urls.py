@@ -1,7 +1,7 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
 from ..views import LoginOrRegisterView, LogoutView, ProfileView, VerifyCodeView
-from ..api_views import LoginOrRegisterApiView, CustomerApiView, VerifyCodeApiView
+from accounts.api.views import LoginOrRegisterApiView, CustomerApiView, VerifyCodeApiView
 
 
 class TestUrls(SimpleTestCase):

@@ -1,17 +1,16 @@
 from django.test import TestCase, RequestFactory, Client
 from django.urls import reverse
-from ..api_views import (
+from products.api.views import (
     ProductDetailApiView,
     ProductListApiView,
     ProductListByCategoryApiView,
 )
 from ..models import Category, Product
 from rest_framework import status
-from rest_framework.test import APITestCase
-from ..serializers import ProductSerializer
+from products.api.serializers import ProductSerializer, CategorySerializer
 from decimal import Decimal
 from model_bakery import baker
-
+from rest_framework.test import APIClient, APITestCase
 
 class TestProductListByCategoryView(APITestCase):
     def setUp(self):
@@ -74,3 +73,19 @@ class TestProductListView(TestCase):
     def test_ProductList_GET(self):
         response = self.client.get(reverse("products"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+
+class CategoryApiViewTest(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.url = reverse("category_api")
+        Category.objects.create(name="Category 1", slug="Category1")
+        Category.objects.create(name="Category 2", slug="Category2")
+        Category.objects.create(name="Category 3", slug="Category3")
+
+    def test_get_categories(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        expected_data = CategorySerializer(Category.objects.all(), many=True).data
+        self.assertEqual(response.data, expected_data)

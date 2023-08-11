@@ -1,7 +1,7 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
 from ..views import CartView
-from ..api_views import CartApiView, AddToCartApiView
+from cart.api.views import CartApiView, AddToCartApiView
 
 
 class TestUrls(SimpleTestCase):
