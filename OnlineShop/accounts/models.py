@@ -21,6 +21,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         unique=True,
         validators=[get_phonenumber_regex()],
     )
+    email = models.EmailField(null=True, blank=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     national_code = models.CharField(max_length=10, null=True, blank=True)
