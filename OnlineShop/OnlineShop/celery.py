@@ -8,8 +8,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'OnlineShop.settings')
 app = Celery('OnlineShop')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.enable_utc = False
-app.conf.update(timezone = 'Europe/Paris')
-app.autodiscover_tasks(["orders", "products"])
+# app.autodiscover_tasks(["orders", "products"])
+app.autodiscover_tasks()
 
 # CELERY BEAT SETTINGS
 app.conf.beat_schedule = {
@@ -21,3 +21,6 @@ app.conf.beat_schedule = {
 }
 
 # celery -A redismail worker -l info
+@app.task(bind=True, ignore_result=True)
+def debug_task(self):
+    print(f'Request: {self.request!r}')
