@@ -1,6 +1,6 @@
 from celery import shared_task
 from django.core.mail import send_mail
-from redismail import settings
+from django.conf import settings
 
 @shared_task(bind=True)
 def send_ad_mails(self, target_mails, message):
