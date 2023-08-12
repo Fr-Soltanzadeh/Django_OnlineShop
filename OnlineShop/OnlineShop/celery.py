@@ -15,9 +15,15 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'send-ad-mail-every-week': {
         'task': 'products.tasks.send_ad_mails',
-        'schedule': crontab(hour=15, minute=56),
-        'args' : ("I am a Nigerian Prince.",)
+        'schedule': crontab(day_of_week='6', hour='16', minute='0'),
     }
 }
 
+
+@app.task(bind=True)
+def debug_task(self):
+    print('Request: {0!r}'.format(self.request))
 # celery -A OnlineShop worker -l info -P solo
+# celery -A OnlineShop worker -l info -P solo --logfile=celery.log --detach
+# celery -A OnlineShop beat -l info --logfile=celery.beat.log --detach  
+# celery -A OnlineShop beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
