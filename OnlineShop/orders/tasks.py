@@ -7,8 +7,6 @@ logger = get_task_logger(__name__)
 
 @shared_task(bind=True)
 def send_notification_mail(self, target_mail, message, mail_subject):
-    logger.info("Your message here")
-    print("*******************************************************")
     send_mail(
         subject = mail_subject,
         message=message,
@@ -16,5 +14,4 @@ def send_notification_mail(self, target_mail, message, mail_subject):
         recipient_list=[target_mail],
         fail_silently=False,
         )
-    print("done")
-    return "Done"
+    return f"Email sent to {target_mail} successfully"

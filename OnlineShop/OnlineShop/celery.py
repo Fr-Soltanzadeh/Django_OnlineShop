@@ -20,7 +20,4 @@ app.conf.beat_schedule = {
     }
 }
 
-# celery -A redismail worker -l info
-@app.task(bind=True, ignore_result=True)
-def debug_task(self):
-    print(f'Request: {self.request!r}')
+# celery -A OnlineShop worker -l info -P solo
