@@ -6,7 +6,7 @@ from celery.utils.log import get_task_logger
 logger = get_task_logger(__name__)
 
 @shared_task(bind=True)
-def send_notification_mail(self, target_mail, message, mail_subject):
+def send_order_status_email(self, target_mail, message, mail_subject):
     send_mail(
         subject = mail_subject,
         message=message,
