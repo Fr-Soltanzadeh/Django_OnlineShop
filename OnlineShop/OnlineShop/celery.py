@@ -24,6 +24,6 @@ app.conf.beat_schedule = {
 def debug_task(self):
     print('Request: {0!r}'.format(self.request))
 # celery -A OnlineShop worker -l info -P solo
-# celery -A OnlineShop worker -l info -P solo --logfile=celery.log --detach
-# celery -A OnlineShop beat -l info --logfile=celery.beat.log --detach  
+# celery -A OnlineShop worker -l info -P solo --logfile=celery.log
+# celery -A OnlineShop beat -l info --logfile=celery.beat.log
 # celery -A OnlineShop beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler

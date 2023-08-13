@@ -23,7 +23,7 @@ class TestUserModel(TestCase):
 class TestCustomerProfileModel(TestCase):
     def setUp(self):
         self.customer = Customer.objects.create(phone_number="09102098929")
-        self.profile = baker.make(CustomerProfile, customer=self.customer)
+        self.profile = CustomerProfile.objects.get(customer=self.customer)
 
     def test_model_str(self):
         self.assertEqual(str(self.profile), "09102098929")
