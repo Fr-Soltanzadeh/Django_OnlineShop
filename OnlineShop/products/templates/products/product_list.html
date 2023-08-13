@@ -37,7 +37,7 @@
                         <div class="shop-bottom-area">
                             <div class="tab-content jump">
                                 <div id="shop-1" class="tab-pane active">
-                                    <form action="{% url 'cart' %}">
+                                    <form action="javascript:void(0)">
                                         {% csrf_token %}
                                     <div class="row" id="products_data">
 
@@ -163,30 +163,31 @@
             });                    
         }
         function add_to_cart(product_id){
-            const url = '/api/v1/cart/add/'
-            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            fetch(url,{
-                method:'POST',
-                body:JSON.stringify({ product_id: product_id }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,
-                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`,
-                }
-            })
-            .then(
-                response=>{
-                    if (response.ok){
-                        return response.json();
-                    }
-                    else  {
-                        throw new Error('not connected');
-                    }
-                }
-            )
-            .catch(function(error) {
-                console.log(error);
-            });
+    console.log(product_id)
+    const url = '/api/v1/cart/add/'
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    fetch(url,{
+        method:'POST',
+        body:JSON.stringify({ product_id: product_id }),
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+            'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`,
         }
+    })
+    .then(
+        response=>{
+            if (response.ok){
+                window.location.href="/cart/";
+            }
+            else  {
+                throw new Error('not connected');
+            }
+        }
+    )
+    .catch(function(error) {
+        console.log(error);
+    });
+} 
     </script>
         {% endblock %}

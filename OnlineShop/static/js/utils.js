@@ -31,4 +31,32 @@ function refresh_token(fail_url, success_function){
 function delete_token(){
     window.localStorage.removeItem("access_token");
     window.localStorage.removeItem("refresh_token");
+    }
+
+function add_to_cart(product_id){
+    console.log(product_id)
+    const url = '/api/v1/cart/add/'
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    fetch(url,{
+        method:'POST',
+        body:JSON.stringify({ product_id: product_id }),
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+            'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`,
+        }
+    })
+    .then(
+        response=>{
+            if (response.ok){
+                return response.json();
+            }
+            else  {
+                throw new Error('not connected');
+            }
+        }
+    )
+    .catch(function(error) {
+        console.log(error);
+    });
 }
