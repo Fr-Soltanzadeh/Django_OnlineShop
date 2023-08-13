@@ -68,31 +68,16 @@
                                                             <th>Date</th>
                                                             <th>Status</th>
                                                             <th>Total</th>
-                                                            <th>Action</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
-                                                        <tr>
+                                                    <tbody id="orders_body">
+                                                        <!-- <tr>
                                                             <td>1</td>
                                                             <td>Aug 22, 2018</td>
                                                             <td>Pending</td>
                                                             <td>$3000</td>
-                                                            <td><a href="cart.html" class="check-btn sqr-btn ">View</a></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>2</td>
-                                                            <td>July 22, 2018</td>
-                                                            <td>Approved</td>
-                                                            <td>$200</td>
-                                                            <td><a href="cart.html" class="check-btn sqr-btn ">View</a></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>3</td>
-                                                            <td>June 12, 2017</td>
-                                                            <td>On Hold</td>
-                                                            <td>$990</td>
-                                                            <td><a href="cart.html" class="check-btn sqr-btn ">View</a></td>
-                                                        </tr>
+                                                        </tr> -->
+                                                       
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -222,12 +207,43 @@
 
         <script>
             window.onload= function() {
-            const url ="/api/v1/accounts/profile/"
-            const token =`Bearer ${window.localStorage.getItem("access_token")}`
+            let url ="/api/v1/accounts/profile/"
+            fetch_get_authorization(url, load_profile, "/accounts/login/", Location.href)
+            let url2 ="/api/v1/orders/"
+            fetch_get_authorization(url2, load_orders, "/accounts/login/", Location.href)                  
+        }
+        function load_profile(data){
+            document.getElementById("fullname").innerHTML=`${data.first_name} ${data.last_name}`
+        }
+        function load_orders(data){
+
+            let orders_table = document.getElementById("orders_body")
+            let orders = data
+            let count = 0
+            orders.map(function(order) {
+                count+=1
+                let tr = document.createElement("tr")
+                let td1 = document.createElement("td")
+                td1.innerHTML=count
+                let td2 = document.createElement("td")
+                td2.innerHTML = order.created_at
+                let td3 = document.createElement("td")
+                td3.innerHTML = order.status
+                let td4 = document.createElement("td")
+                td4.innerHTML = `$${order.final_price}`
+                tr.appendChild(td1)
+                tr.appendChild(td2)
+                tr.appendChild(td3)
+                tr.appendChild(td4)
+                orders_table.appendChild(tr)
+            });  
+        }
+
+        function fetch_get_authorization(url, use_data, fail_url, success_function){
             fetch(url,{
                 method:'GET',
                 headers:{
-                    'Authorization':token
+                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`
                 }
             })
             .then(
@@ -237,7 +253,7 @@
                     }
                     else  {
                         if (response.status==401){
-                            refresh_token("/accounts/login/",Location.href)
+                            refresh_token(fail_url,success_function)
                         }else{
                             throw new Error('not connected');
                         }
@@ -246,12 +262,11 @@
                 }
             )
             .then((data) => {
-                document.getElementById("fullname").innerHTML=`${data.first_name} ${data.last_name}`
-                console.log(data)
+                use_data(data)
                 })
             .catch(function(error) {
                 console.log(error);
-            });                    
+            });    
         }
         </script>
         {% endblock %}

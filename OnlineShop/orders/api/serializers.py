@@ -33,4 +33,6 @@ class OrderSerializer(serializers.ModelSerializer):
             "receiver_fullname",
             "receiver_phone_number",
             "shipping",
+            "created_at",
+            "status"
         )
