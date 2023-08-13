@@ -5,6 +5,8 @@ from django.conf import settings
 from .models import Order
 import requests
 import json
+from orders.tasks import send_order_status_email
+
 
 
 class CheckoutView(View):
@@ -103,6 +105,13 @@ class VerifyOrderView(View):
 
                 for item in cart.cart_items.all():
                     item.delete()
+                    
+                if order.customer.email:
+                    mail= order.customer.email
+                    message = f"Transaction success.RefID:  {str(response['RefID'])}"
+                    mail_subject= "Order Confirmed Successfuly"
+                    send_order_status_email.delay(mail, message, mail_subject)
+
                 return HttpResponse(
                     f"Transaction success.RefID:  {str(response['RefID'])}, Status: {response['Status']}, order ID: {order_id}"
                 )
