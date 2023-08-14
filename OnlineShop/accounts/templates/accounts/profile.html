@@ -208,9 +208,9 @@
         <script>
             window.onload= function() {
             let url ="/api/v1/accounts/profile/"
-            fetch_get_authorization(url, load_profile, "/accounts/login/", Location.href)
+            fetch_get_authorization(url, load_profile, "/accounts/login/", Location.reload)
             let url2 ="/api/v1/orders/"
-            fetch_get_authorization(url2, load_orders, "/accounts/login/", Location.href)                  
+            fetch_get_authorization(url2, load_orders, "/accounts/login/", Location.reload)                  
         }
         function load_profile(data){
             document.getElementById("fullname").innerHTML=`${data.first_name} ${data.last_name}`
@@ -237,36 +237,6 @@
                 tr.appendChild(td4)
                 orders_table.appendChild(tr)
             });  
-        }
-
-        function fetch_get_authorization(url, use_data, fail_url, success_function){
-            fetch(url,{
-                method:'GET',
-                headers:{
-                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`
-                }
-            })
-            .then(
-                response=>{
-                    if (response.ok){
-                        return response.json();
-                    }
-                    else  {
-                        if (response.status==401){
-                            refresh_token(fail_url,success_function)
-                        }else{
-                            throw new Error('not connected');
-                        }
-                        
-                    }
-                }
-            )
-            .then((data) => {
-                use_data(data)
-                })
-            .catch(function(error) {
-                console.log(error);
-            });    
         }
         </script>
         {% endblock %}

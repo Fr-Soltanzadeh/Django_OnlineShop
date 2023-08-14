@@ -8,7 +8,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'OnlineShop.settings')
 app = Celery('OnlineShop')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.enable_utc = False
-# app.autodiscover_tasks(["orders", "products"])
 app.autodiscover_tasks()
 
 # CELERY BEAT SETTINGS

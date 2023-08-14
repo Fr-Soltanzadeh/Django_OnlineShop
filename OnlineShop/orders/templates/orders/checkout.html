@@ -189,36 +189,14 @@
         let phone_number =""; 
         window.onload=function(){
             const url ="/api/v1/cart/"
-            fetch(url,{
-                method:'GET',
-                headers:{
-                    'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`
-                }
-            })
-            .then(
-                response=>{
-                    if (response.ok){
-                        return response.json();
-                    }
-                    else  {
-                        if (response.status==401){
-                            refresh_token(location.href)
-                        }else{
-                            throw new Error('not connected');
-                        }
-                    }
-                }
-            )
-            .then((data) => {
-                fullname=`${data.customer.first_name} ${data.customer.last_name}`;
-                phone_number=data.customer.phone_number;
-                load_address(data.customer.addresses)
-                load_order(data)
-                })
-            .catch(function(error) {
-                console.log(error);
-            }); 
-        }  
+            fetch_get_authorization(url, load_data, "/accounts/login/", Location.reload)
+        }
+        function load_data(data){
+            fullname=`${data.customer.first_name} ${data.customer.last_name}`;
+            phone_number=data.customer.phone_number;
+            load_address(data.customer.addresses)
+            load_order(data)
+        }
         function load_address(data){
             addresses=document.getElementById('addresses')
             data.forEach(address => {

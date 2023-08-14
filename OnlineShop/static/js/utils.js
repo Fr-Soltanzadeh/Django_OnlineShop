@@ -28,6 +28,36 @@ function refresh_token(fail_url, success_function){
     )
     }
 
+function fetch_get_authorization(url, use_data, fail_url, success_function){
+    fetch(url,{
+        method:'GET',
+        headers:{
+            'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`
+        }
+    })
+    .then(
+        response=>{
+            if (response.ok){
+                return response.json();
+            }
+            else  {
+                if (response.status==401){
+                    refresh_token(fail_url,success_function)
+                }else{
+                    throw new Error('not connected');
+                }
+                
+            }
+        }
+    )
+    .then((data) => {
+        use_data(data)
+        })
+    .catch(function(error) {
+        console.log(error);
+    });    
+}
+
 function delete_token(){
     window.localStorage.removeItem("access_token");
     window.localStorage.removeItem("refresh_token");
