@@ -11,10 +11,10 @@ def send_ad_mails(self):
     message = "Hi. Visit our site for wonderful new products for your sweet child.\n "
     recipient_list = [customer.email for customer in Customer.objects.all()]
     send_mail(
-        subject = mail_subject,
+        subject=mail_subject,
         message=message,
         from_email=settings.EMAIL_HOST_USER,
         recipient_list=recipient_list,
         fail_silently=False,
-        )
+    )
     return "Done"

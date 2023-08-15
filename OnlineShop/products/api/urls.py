@@ -4,8 +4,8 @@ from rest_framework import routers
 
 
 router = routers.DefaultRouter()
-router.register('categories',views.CategoryViewSet)
-router.register('discounts',views.DiscountViewSet)
+router.register("categories", views.CategoryViewSet)
+router.register("discounts", views.DiscountViewSet)
 
 urlpatterns = [
     path("", include((router.urls))),
@@ -21,4 +21,3 @@ urlpatterns = [
         name="product_detail_api",
     ),
 ]
-

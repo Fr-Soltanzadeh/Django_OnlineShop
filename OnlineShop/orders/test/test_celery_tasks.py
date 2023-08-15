@@ -16,7 +16,7 @@
 #         mock_send_mail.assert_called_with('test@example.com', 'Test message', 'Test subject')
 
 #         self.assertTrue(mock_send_mail.called)
-#         self.assertTrue(mock_send_mail.send_order_status_email.called)        
+#         self.assertTrue(mock_send_mail.send_order_status_email.called)
 # from celery.contrib.testing.worker import start_worker
 # from django.core import mail
 # from django.test import TestCase
@@ -29,20 +29,20 @@
 #     def tearDown(self):
 #         self.worker.terminate()
 
-    # def test_send_order_status_email(self):
-    #     # Set up test data
-    #     target_mail = 'test@example.com'
-    #     message = 'Test email message'
-    #     mail_subject = 'Test email subject'
+# def test_send_order_status_email(self):
+#     # Set up test data
+#     target_mail = 'test@example.com'
+#     message = 'Test email message'
+#     mail_subject = 'Test email subject'
 
-    #     # Call the task
-    #     result = send_order_status_email.delay(target_mail, message, mail_subject)
-    #     result.get()  # Wait for the task to complete
+#     # Call the task
+#     result = send_order_status_email.delay(target_mail, message, mail_subject)
+#     result.get()  # Wait for the task to complete
 
-    #     # Verify the email was sent
-    #     self.assertEqual(len(mail.outbox), 1)
-    #     sent_email = mail.outbox[0]
-    #     self.assertEqual(sent_email.subject, mail_subject)
-    #     self.assertEqual(sent_email.body, message)
-    #     self.assertEqual(sent_email.from_email, settings.EMAIL_HOST_USER)
-    #     self.assertEqual(sent_email.to, [target_mail])
+#     # Verify the email was sent
+#     self.assertEqual(len(mail.outbox), 1)
+#     sent_email = mail.outbox[0]
+#     self.assertEqual(sent_email.subject, mail_subject)
+#     self.assertEqual(sent_email.body, message)
+#     self.assertEqual(sent_email.from_email, settings.EMAIL_HOST_USER)
+#     self.assertEqual(sent_email.to, [target_mail])

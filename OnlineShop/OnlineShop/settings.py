@@ -46,12 +46,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "rest_framework",
     "ckeditor",
     "corsheaders",
-    'django_celery_results',
-    'django_celery_beat',    
+    "django_celery_results",
+    "django_celery_beat",
     # apps
     "accounts.apps.AccountsConfig",
     "core.apps.CoreConfig",
@@ -216,15 +215,15 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = "f.soltanzade72@gmail.com"
 EMAIL_HOST_PASSWORD = getenv("EMAIL_HOST_PASSWORD")
 # DEFAULT_FROM_EMAIL = '<Noora_Toy_Shop>'
-DEFAULT_FROM_EMAIL = 'f.soltanzade72@gmail.com'
+DEFAULT_FROM_EMAIL = "f.soltanzade72@gmail.com"
 
 # CELERY SETTINGS
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
-CELERY_ACCEPT_CONTENT = {'application/json'}
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Asia/Tehran'
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_ACCEPT_CONTENT = {"application/json"}
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TASK_SERIALIZER = "json"
+CELERY_TIMEZONE = "Asia/Tehran"
+CELERY_RESULT_BACKEND = "django-db"
 
-#BEAT SETTINGS
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+# BEAT SETTINGS
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"

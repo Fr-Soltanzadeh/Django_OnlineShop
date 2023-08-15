@@ -28,7 +28,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "slug",
             "category",
             "wish_count",
-            "orders_count"
+            "orders_count",
         )
 
     def get_discounted_price(self, product):
@@ -37,10 +37,11 @@ class ProductSerializer(serializers.ModelSerializer):
             * (100 - (product.discount.percent if product.discount else 0))
             / 100
         )
+
     def get_category(self, product):
         return product.category.name
 
-    def get_wish_count(self,product):
+    def get_wish_count(self, product):
         return product.wish_list.count()
 
     def get_orders_count(self, product):

@@ -10,6 +10,7 @@ from django.views.decorators.cache import cache_page
 from accounts.permissions import IsAdminUserOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 
+
 class ProductListByCategoryApiView(mixins.ListModelMixin, generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
     authentication_classes = []
