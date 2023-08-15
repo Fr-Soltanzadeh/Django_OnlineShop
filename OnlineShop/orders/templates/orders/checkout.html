@@ -192,6 +192,9 @@
             fetch_get_authorization(url, load_data, "/accounts/login/", Location.reload)
         }
         function load_data(data){
+            if (!data.customer){
+                location.href="/accounts/login/"
+            }
             fullname=`${data.customer.first_name} ${data.customer.last_name}`;
             phone_number=data.customer.phone_number;
             load_address(data.customer.addresses)

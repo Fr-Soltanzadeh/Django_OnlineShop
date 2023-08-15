@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from .serializers import CartItemSerializer, CartSerializer
 from django.db import IntegrityError
 from decimal import Decimal
-from ..utils import calculate_grand_price
+from cart.utils import calculate_total_price_with_discount
 from rest_framework import permissions
 from accounts.authentication import LoginAuthentication
 
@@ -34,7 +34,7 @@ class CartApiView(APIView):
                 cart = {
                     "customer": None,
                     "cart_items": [],
-                    "grand_price": "0",
+                    "total_price_with_discount": "0",
                     "total_price": "0",
                 }
                 request.session["cart"] = cart
@@ -49,13 +49,13 @@ class CartApiView(APIView):
         else:
             try:
                 request.session["cart"]["cart_items"] = []
-                request.session["cart"]["grand_price"] = 0
+                request.session["cart"]["total_price_with_discount"] = 0
                 request.session["cart"]["total_price"] = 0
             except KeyError:
                 request.session["cart"] = {
                     "customer": None,
                     "cart_items": [],
-                    "grand_price": "0",
+                    "total_price_with_discount": "0",
                     "total_price": "0",
                 }
             request.session.save()
@@ -89,11 +89,11 @@ class CartApiView(APIView):
                 request.session["cart"] = {
                     "customer": None,
                     "cart_items": [],
-                    "grand_price": "0",
+                    "total_price_with_discount": "0",
                     "total_price": "0",
                 }
             request.session.save()
-            calculate_grand_price(request)
+            calculate_total_price_with_discount(request)
             return Response(request.session["cart"])
 
 
@@ -132,12 +132,12 @@ class AddToCartApiView(APIView):
                     request.session["cart"] = {
                         "customer": None,
                         "cart_items": [],
-                        "grand_price": "0",
+                        "total_price_with_discount": "0",
                         "total_price": "0",
                     }
                 request.session["cart"]["cart_items"].append(
                     {"quantity": 1, "product": product}
                 )
             request.session.save()
-            calculate_grand_price(request)
+            calculate_total_price_with_discount(request)
             return Response(request.session["cart"])

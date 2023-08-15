@@ -4,7 +4,7 @@ from products.models import Product
 from django.db import IntegrityError
 
 
-def calculate_grand_price(request):
+def calculate_total_price_with_discount(request):
     cart = request.session["cart"]
     request.session["cart"]["total_price"] = str(
         sum(
@@ -14,7 +14,7 @@ def calculate_grand_price(request):
             ]
         )
     )
-    request.session["cart"]["grand_price"] = str(
+    request.session["cart"]["total_price_with_discount"] = str(
         sum(
             [
                 Decimal(item["product"]["discounted_price"]) * Decimal(item["quantity"])
