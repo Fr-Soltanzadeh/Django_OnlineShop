@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Product, ProductImage, Category
+from ..models import Product, ProductImage, Category, Discount
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -51,3 +51,9 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ("name", "image", "slug")
+
+
+class DiscountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Discount
+        excludes = ("created_at", "updated_at", "is_deleted")
