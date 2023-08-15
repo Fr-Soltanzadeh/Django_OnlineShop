@@ -9,13 +9,14 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from accounts.permissions import IsAdminUserOrReadOnly
 from rest_framework.viewsets import ModelViewSet
-
+from products.pagination import ProductPagination
 
 class ProductListByCategoryApiView(mixins.ListModelMixin, generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
     authentication_classes = []
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    pagination_class = ProductPagination
 
     @method_decorator(cache_page(180))
     def get(self, request, *args, **kwargs):
@@ -27,6 +28,7 @@ class ProductListByCategoryApiView(mixins.ListModelMixin, generics.GenericAPIVie
 class ProductListApiView(mixins.ListModelMixin, generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
     authentication_classes = []
+    pagination_class = ProductPagination
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
