@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Product, ProductImage, Category
+from ..models import Product, ProductImage, Category, Discount
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -11,6 +11,9 @@ class ProductImageSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     discounted_price = serializers.SerializerMethodField()
+    category = serializers.SerializerMethodField()
+    wish_count = serializers.SerializerMethodField()
+    orders_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -23,6 +26,9 @@ class ProductSerializer(serializers.ModelSerializer):
             "id",
             "discounted_price",
             "slug",
+            "category",
+            "wish_count",
+            "orders_count",
         )
 
     def get_discounted_price(self, product):
@@ -32,8 +38,23 @@ class ProductSerializer(serializers.ModelSerializer):
             / 100
         )
 
+    def get_category(self, product):
+        return product.category.name
+
+    def get_wish_count(self, product):
+        return product.wish_list.count()
+
+    def get_orders_count(self, product):
+        return product.orders.count()
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ("name", "image", "slug")
+
+
+class DiscountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Discount
+        excludes = ("created_at", "updated_at", "is_deleted")

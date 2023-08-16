@@ -28,7 +28,72 @@ function refresh_token(fail_url, success_function){
     )
     }
 
+function fetch_get_authorization(url, use_data, fail_url, success_function){
+    fetch(url,{
+        method:'GET',
+        headers:{
+            'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`
+        }
+    })
+    .then(
+        response=>{
+            if (response.ok){
+                return response.json();
+            }
+            else  {
+                if (response.status==401){
+                    refresh_token(fail_url,success_function)
+                }else{
+                    throw new Error('not connected');
+                }
+                
+            }
+        }
+    )
+    .then((data) => {
+        use_data(data)
+        })
+    .catch(function(error) {
+        console.log(error);
+    });    
+}
+
 function delete_token(){
     window.localStorage.removeItem("access_token");
     window.localStorage.removeItem("refresh_token");
-}
+    }
+function add_to_cart(product_id){
+    console.log(product_id)
+    const url = '/api/v1/cart/add/'
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    fetch(url,{
+        method:'POST',
+        body:JSON.stringify({ product_id: product_id }),
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+            'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`,
+        }
+        })
+        .then(
+            response=>{
+                console.log(response.status)
+                if (response.ok){
+                    
+                    window.location.href="/cart/";
+                }
+                else  {
+                    console.log("refresh")
+                    if (response.status==401){
+                        
+                        refresh_token("/login/",`${add_to_cart(product_id)}`);
+                    }else{
+                        throw new Error('not connected');
+                    }
+                }
+            }
+            )
+            .catch(function(error) {
+                console.log(error);
+            });
+        } 

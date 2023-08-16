@@ -1,37 +1,31 @@
-from ..models import Product, Category
-from .serializers import ProductSerializer, CategorySerializer
-from rest_framework.views import APIView
+from ..models import Product, Category, Discount, Comment
+from .serializers import ProductSerializer, CategorySerializer, DiscountSerializer
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework import permissions
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from accounts.permissions import IsAdminUserOrReadOnly
+from rest_framework.viewsets import ModelViewSet
+from products.pagination import ProductPagination
 
 
-class ProductListByCategoryApiView(mixins.ListModelMixin, generics.GenericAPIView):
-    permission_classes = [permissions.AllowAny]
+class ProductListCreateView(generics.ListCreateAPIView):
     authentication_classes = []
-    queryset = Product.objects.all()
+    permission_classes = [permissions.AllowAny]
     serializer_class = ProductSerializer
+    pagination_class = ProductPagination
 
     @method_decorator(cache_page(180))
     def get(self, request, *args, **kwargs):
-        category = Category.objects.get(slug=kwargs["slug"])
-        self.queryset = self.queryset.filter(category=category)
-        return self.list(request, *args, **kwargs)
+        self.queryset = Product.objects.all()
+        if category := self.request.GET.get("category"):
+            print(category)
+            category = Category.objects.get(slug=category)
 
-
-class ProductListApiView(mixins.ListModelMixin, generics.GenericAPIView):
-    permission_classes = [permissions.AllowAny]
-    authentication_classes = []
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-    @method_decorator(cache_page(180))
-    def get(self, request, *args, **kwargs):
-        search_phrase = request.GET.get("search")
-        if search_phrase:
+            self.queryset = self.queryset.filter(category=category)
+        if search_phrase := self.request.GET.get("search"):
             self.queryset = self.queryset.filter(title__icontains=search_phrase)
         return self.list(request, *args, **kwargs)
 
@@ -44,30 +38,21 @@ class ProductDetailApiView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = "slug"
 
 
-class CategoryApiView(APIView):
-    permission_classes = [permissions.AllowAny]
+class CategoryViewSet(ModelViewSet):
+    permission_classes = [IsAdminUserOrReadOnly]
     authentication_classes = []
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    lookup_field = "slug"
 
-    def get(self, request):
-        categories = Category.objects.all()
-        serializer = CategorySerializer(categories, many=True)
+    def list(self, request):
+        queryset = Category.objects.filter(parent_category__isnull=True)
+        serializer = CategorySerializer(queryset, many=True)
         return Response(serializer.data)
 
 
-# class ProductListByCategoryApiView(APIView):
-#     def get(self, request, slug, format=None):
-#         category = Category.objects.get(slug=slug)
-#         products = Product.objects.filter(category=category)
-#         serializer = ProductSerializer(products, many=True)
-#         return Response(serializer.data)
-
-
-# class ProductListApiView(APIView):
-#     def get(self, request, format=None):
-#         search_phrase = request.GET.get("search")
-#         if not search_phrase:
-#             products = Product.objects.all()
-#         else:
-#             products = Product.objects.filter(title__icontains = search_phrase)
-#         serializer = ProductSerializer(products, many=True)
-#         return Response(serializer.data)
+class DiscountViewSet(ModelViewSet):
+    permission_classes = [permissions.IsAdminUser]
+    authentication_classes = []
+    queryset = Discount.objects.all()
+    serializer_class = DiscountSerializer

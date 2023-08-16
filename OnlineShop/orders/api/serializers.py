@@ -17,6 +17,8 @@ class OrderItemSerilizer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     orderItems = OrderItemSerilizer(many=True, read_only=True)
     customer = CustomerSerializer(read_only=True)
+    status = serializers.SerializerMethodField()
+    created_at = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
@@ -33,4 +35,12 @@ class OrderSerializer(serializers.ModelSerializer):
             "receiver_fullname",
             "receiver_phone_number",
             "shipping",
+            "created_at",
+            "status",
         )
+
+    def get_status(self, order):
+        return order.get_status_display()
+
+    def get_created_at(self, order):
+        return order.created_at.date()

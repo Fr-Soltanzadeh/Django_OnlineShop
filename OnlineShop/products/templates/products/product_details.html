@@ -29,13 +29,13 @@
                             <div class="pro-dec-big-img-slider">
                                 <div class="easyzoom-style">
                                     <div class="easyzoom easyzoom--overlay">
-                                        <a href="assets/images/product-details/b-large-1.jpg">
-                                            <img src="assets/images/product-details/large-1.jpg" alt="">
+                                        <a href="">
+                                            <img src="" alt="" id="main_pic">
                                         </a>
                                     </div>
-                                    <a class="easyzoom-pop-up img-popup" href="assets/images/product-details/b-large-1.jpg"><i class="icon-size-fullscreen"></i></a>
+                                    <!-- <a class="easyzoom-pop-up img-popup" href="assets/images/product-details/b-large-1.jpg"><i class="icon-size-fullscreen"></i></a> -->
                                 </div>
-                                <div class="easyzoom-style">
+                                <!-- <div class="easyzoom-style">
                                     <div class="easyzoom easyzoom--overlay">
                                         <a href="assets/images/product-details/b-large-2.jpg">
                                             <img src="assets/images/product-details/large-2.jpg" alt="">
@@ -50,8 +50,8 @@
                                         </a>
                                     </div>
                                     <a class="easyzoom-pop-up img-popup" href="assets/images/product-details/b-large-3.jpg"><i class="icon-size-fullscreen"></i></a>
-                                </div>
-                                <div class="easyzoom-style">
+                                </div> -->
+                                <!-- <div class="easyzoom-style">
                                     <div class="easyzoom easyzoom--overlay">
                                         <a href="assets/images/product-details/b-large-4.jpg">
                                             <img src="assets/images/product-details/large-4.jpg" alt="">
@@ -66,11 +66,11 @@
                                         </a>
                                     </div>
                                     <a class="easyzoom-pop-up img-popup" href="assets/images/product-details/b-large-2.jpg"><i class="icon-size-fullscreen"></i></a>
-                                </div>
+                                </div> -->
                             </div>
-                            <div class="product-dec-slider-small product-dec-small-style1">
+                            <!-- <div class="product-dec-slider-small product-dec-small-style1">
                                 <div class="product-dec-small active">
-                                    <img src="assets/images/product-details/small-1.jpg" alt="">
+                                    <img src="" alt="" id="main_pic">
                                 </div>
                                 <div class="product-dec-small">
                                     <img src="assets/images/product-details/small-2.jpg" alt="">
@@ -84,12 +84,12 @@
                                 <div class="product-dec-small">
                                     <img src="assets/images/product-details/small-2.jpg" alt="">
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <div class="product-details-content pro-details-content-mrg">
-                            <h2>Simple Black T-Shirt</h2>
+                            <h2 id="title"></h2>
                             <div class="product-ratting-review-wrap">
                                 <div class="product-ratting-digit-wrap">
                                     <div class="product-ratting">
@@ -104,65 +104,38 @@
                                     </div>
                                 </div>
                                 <div class="product-review-order">
-                                    <span>62 Reviews</span>
-                                    <span>242 orders</span>
+                                    <span id="wish_count"></span>
+                                    <span id="orders"></span>
                                 </div>
                             </div>
-                            <p>Seamlessly predominate enterprise metrics without performance based process improvements.</p>
+                            <p id="description"></p>
                             <div class="pro-details-price">
-                                <span class="new-price">$75.72</span>
-                                <span class="old-price">$95.72</span>
-                            </div>
-                            <div class="pro-details-color-wrap">
-                                <span>Color:</span>
-                                <div class="pro-details-color-content">
-                                    <ul>
-                                        <li><a class="dolly" href="#">dolly</a></li>
-                                        <li><a class="white" href="#">white</a></li>
-                                        <li><a class="azalea" href="#">azalea</a></li>
-                                        <li><a class="peach-orange" href="#">Orange</a></li>
-                                        <li><a class="mona-lisa active" href="#">lisa</a></li>
-                                        <li><a class="cupid" href="#">cupid</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="pro-details-size">
-                                <span>Size:</span>
-                                <div class="pro-details-size-content">
-                                    <ul>
-                                        <li><a href="#">XS</a></li>
-                                        <li><a href="#">S</a></li>
-                                        <li><a href="#">M</a></li>
-                                        <li><a href="#">L</a></li>
-                                        <li><a href="#">XL</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="pro-details-quality">
-                                <span>Quantity:</span>
-                                <div class="cart-plus-minus">
-                                    <input class="cart-plus-minus-box" type="text" name="qtybutton" value="1">
-                                </div>
+                                <span class="new-price" id="new-price"></span>
+                                <span class="old-price" id="old-price"></span>
                             </div>
                             <div class="product-details-meta">
                                 <ul>
-                                    <li><span>Categories:</span> <a href="#">Woman,</a> <a href="#">Dress,</a> <a href="#">T-Shirt</a></li>
-                                    <li><span>Tag: </span> <a href="#">Fashion,</a> <a href="#">Mentone</a> , <a href="#">Texas</a></li>
+                                    <li><span>Category :</span><span id="category"></span></li>
                                 </ul>
                             </div>
+                            
+                        
                             <div class="pro-details-action-wrap">
                                 <div class="pro-details-add-to-cart">
-                                    <a title="Add to Cart" href="#">Add To Cart </a>
+                                    <form action="javascript:void(0)">
+                                    {% csrf_token %}
+                                    <a title="Add to Cart" id="add_to_cart" href="javascript:void(0)">Add To Cart </a>
+                                </form>
                                 </div>
                                 <div class="pro-details-action">
                                     <a title="Add to Wishlist" href="#"><i class="icon-heart"></i></a>
-                                    <a title="Add to Compare" href="#"><i class="icon-refresh"></i></a>
-                                    <a class="social" title="Social" href="#"><i class="icon-share"></i></a>
-                                    <div class="product-dec-social">
-                                        <a class="facebook" title="Facebook" href="#"><i class="icon-social-facebook"></i></a>
+                                    <!-- <a title="Add to Compare" href="#"><i class="icon-refresh"></i></a>
+                                    <a class="social" title="Social" href="#"><i class="icon-share"></i></a> -->
+                                    <!-- <div class="product-dec-social"> -->
+                                        <!-- <a class="facebook" title="Facebook" href="#"><i class="icon-social-facebook"></i></a>
                                         <a class="twitter" title="Twitter" href="#"><i class="icon-social-twitter"></i></a>
-                                        <a class="pinterest" title="Pinterest" href="#"><i class="icon-social-pinterest"></i></a>
-                                    </div>
+                                        <a class="pinterest" title="Pinterest" href="#"><i class="icon-social-pinterest"></i></a> -->
+                                    <!-- </div> -->
                                 </div>
                             </div>
                         </div>
@@ -170,7 +143,7 @@
                 </div>
             </div>
         </div>
-        <div class="description-review-wrapper pb-110">
+        <!-- <div class="description-review-wrapper pb-110">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
@@ -334,8 +307,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="related-product pb-115">
+        </div> -->
+        <!-- <div class="related-product pb-115">
             <div class="container">
                 <div class="section-title mb-45 text-center">
                     <h2>Related Product</h2>
@@ -535,7 +508,10 @@
                                     <span>$55.50</span>
                                 </div>
                                 <div class="pro-add-to-cart">
-                                    <button title="Add to Cart">Add To Cart</button>
+                                    <form action="javascript:void(0)">
+                                        {% csrf_token %}
+                                    <button title="Add to Cart" id="add_to_cart" action="javascript:void(0)">Add To Cart</button>
+                                </form>
                                 </div>
                             </div>
                         </div>
@@ -591,7 +567,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
@@ -716,6 +692,42 @@
     {% include 'footer.html' %}
 
     <script>
-
+            window.onload= function() {
+            let pathname = (new URL(document.location)).pathname;
+            const base_api_url = `/api/v1${pathname}`
+            fetch(base_api_url,{
+                method:'GET',
+            })
+            .then(
+                response=>{
+                    if (response.ok){
+                        return response.json();
+                    }
+                    else  {
+                        throw new Error('not connected');
+                    }
+                }
+            )
+            .then((data) => {
+                console.log(data)
+                document.getElementById("title").innerHTML = data.title
+                document.getElementById("description").innerHTML = data.info
+                document.getElementById("category").innerHTML = data.category
+                document.getElementById("main_pic").src = data.images[0].image
+                document.getElementById("wish_count").innerHTML = `${data.wish_count} wishes`
+                document.getElementById("orders").innerHTML = `${data.orders_count} orders`
+                add_button=document.getElementById("add_to_cart")
+                add_button.setAttribute("onclick",`add_to_cart(${data.id})`);
+                if (data.discount){
+                    document.getElementById("old-price").innerHTML=`$${data.price}`
+                    document.getElementById("new-price").innerHTML=`$${data.price*(100-data.discount)/100}`;
+                }else{
+                    document.getElementById("new-price").innerHTML=`$${data.price}`;
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+            });                    
+        }
     </script>
 {% endblock %}

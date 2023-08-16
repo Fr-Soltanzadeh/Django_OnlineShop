@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "ckeditor",
     "corsheaders",
+    "django_celery_results",
+    "django_celery_beat",
     # apps
     "accounts.apps.AccountsConfig",
     "core.apps.CoreConfig",
@@ -169,26 +171,22 @@ MESSAGE_TAGS = {
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("accounts.authentication.JWTAuthentication",),
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     # 'rest_framework.permissions.IsAuthenticated',
-    #     # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-    # ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 3,
 }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
-# CACHES = {
-#     "default": {
-#         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": "redis://127.0.0.1:6379/1",
-#         # "LOCATION": "redis://username:password@127.0.0.1:6379",
-#         "OPTIONS": {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#         },
-#     }
-# }
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        # "LOCATION": "redis://username:password@127.0.0.1:6379",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}
 
 # ZarinPal config: SANDBOX MODE
 MERCHANT = "00000000-0000-0000-0000-000000000000"
@@ -203,3 +201,25 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ORIGIN_WHITELIST = [
     "http://127.0.0.1",
 ]
+
+
+# SMTP SETTINGS
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "f.soltanzade72@gmail.com"
+EMAIL_HOST_PASSWORD = getenv("EMAIL_HOST_PASSWORD")
+# DEFAULT_FROM_EMAIL = '<Noora_Toy_Shop>'
+DEFAULT_FROM_EMAIL = "f.soltanzade72@gmail.com"
+
+# CELERY SETTINGS
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_ACCEPT_CONTENT = {"application/json"}
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TASK_SERIALIZER = "json"
+CELERY_TIMEZONE = "Asia/Tehran"
+CELERY_RESULT_BACKEND = "django-db"
+
+# BEAT SETTINGS
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"

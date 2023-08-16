@@ -40,7 +40,6 @@ class OrderApiView(APIView):
             receiver_phone_number=data["receiver_phone_number"],
             coupon=cart.coupon,
         )
-
         for item in cart.cart_items.all():
             OrderItem.objects.create(
                 product=item.product,
@@ -51,6 +50,12 @@ class OrderApiView(APIView):
         order.calculate_final_price()
         order.save()
         return HttpResponseRedirect(redirect_to=reverse("pay", args=(order.id,)))
+
+    def get(self, request):
+        user = request.user
+        orders = user.orders.all()
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data)
 
 
 class ApplyCoupon(APIView):
