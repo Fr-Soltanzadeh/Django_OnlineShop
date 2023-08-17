@@ -20,6 +20,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="cart-main-area pt-80 pb-120" >
             <div class="container" >
                 <h3 class="cart-page-title pb-3">Your cart items</h3>
@@ -28,7 +29,7 @@
                         <div id="empty_cart" class="text-center">
 
                         </div>
-                        <form action="" id="cart_form">
+                        <form action="javascript:void(0)" id="cart_form">
                             <div class="table-content table-responsive cart-table-content">
                                 <table >
                                     <thead >
@@ -286,10 +287,20 @@
                     'Authorization':`Bearer ${window.localStorage.getItem("access_token")}`,
                     'X-CSRFToken': csrftoken
                 }
-            })  
+            }).then(res => {
+                    if (res.status == 200){
+                        console.log("ok")
+                        location.reload();
+                    }else{
+                        throw new Error("Bad Server Response"); 
+                    }
+                    return res.text();
+                })
+            
             .catch(function(error) {
                 console.log(error);
             });
+
         }
     </script>
     {% endblock %}

@@ -29,6 +29,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "category",
             "wish_count",
             "orders_count",
+            "is_active",
         )
 
     def get_discounted_price(self, product):

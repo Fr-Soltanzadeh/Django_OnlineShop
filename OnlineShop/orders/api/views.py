@@ -16,6 +16,12 @@ class OrderApiView(APIView):
         cart = user.cart
         data = request.data
         address = Address.objects.get(id=int(data["address_id"]))
+        for item in cart.cart_items.all():
+            product=item.product
+            if product.quantity==0:
+                return Response({"message": f"Sorry, the item {product.title} in your cart is not available now."})
+            elif item.product.quantity< item.quantity:
+                return Response({"message": f"There are only {product.quantity} number of {product.title} available now."})
         order_data = {
             "customer": user,
             "province": address.province,

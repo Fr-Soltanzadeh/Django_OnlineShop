@@ -125,8 +125,10 @@
                                     <form action="javascript:void(0)">
                                     {% csrf_token %}
                                     <a title="Add to Cart" id="add_to_cart" href="javascript:void(0)">Add To Cart </a>
+                                    
                                 </form>
                                 </div>
+                                
                                 <div class="pro-details-action">
                                     <a title="Add to Wishlist" href="#"><i class="icon-heart"></i></a>
                                     <!-- <a title="Add to Compare" href="#"><i class="icon-refresh"></i></a>
@@ -717,7 +719,14 @@
                 document.getElementById("wish_count").innerHTML = `${data.wish_count} wishes`
                 document.getElementById("orders").innerHTML = `${data.orders_count} orders`
                 add_button=document.getElementById("add_to_cart")
-                add_button.setAttribute("onclick",`add_to_cart(${data.id})`);
+                if (data.is_active){
+                    add_button.setAttribute("onclick",`add_to_cart(${data.id})`);
+                }else{
+                    add_button.disabled = true
+                    add_button.classList.add("disable_button")
+                    add_button.innerHTML = "Not available"
+                }
+                
                 if (data.discount){
                     document.getElementById("old-price").innerHTML=`$${data.price}`
                     document.getElementById("new-price").innerHTML=`$${data.price*(100-data.discount)/100}`;
