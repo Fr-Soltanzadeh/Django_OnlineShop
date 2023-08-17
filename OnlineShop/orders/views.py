@@ -103,9 +103,9 @@ class VerifyOrderView(View):
                     cart.save()
 
                 for item in cart.cart_items.all():
-                    product= item.product
-                    product.quantity-=item.quantity
-                    if product.quantity==0:
+                    product = item.product
+                    product.quantity -= item.quantity
+                    if product.quantity == 0:
                         product.is_active = False
                     product.save()
                     item.delete()

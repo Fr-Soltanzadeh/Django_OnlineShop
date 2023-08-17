@@ -1,6 +1,6 @@
 from django.test import TestCase, RequestFactory, Client
 from django.urls import reverse
-from ..views import  ProductDetailView, ProductListView
+from ..views import ProductDetailView, ProductListView
 
 
 class TestProductDetailView(TestCase):

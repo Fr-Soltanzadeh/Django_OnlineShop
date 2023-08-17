@@ -53,16 +53,23 @@ class ProductListCreateView(TestCase):
         self.category1 = Category.objects.create(name="dolls", slug="dolls")
         self.category2 = Category.objects.create(name="books", slug="books")
         self.product1 = baker.make(
-            Product, title="Product 1", info="", category=self.category1, price=Decimal(10.00), discount=None, slug="product-1")
+            Product,
+            title="Product 1",
+            info="",
+            category=self.category1,
+            price=Decimal(10.00),
+            discount=None,
+            slug="product-1",
+        )
 
     def test_ProductList_GET(self):
         response = self.client.get(reverse("products_api"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
-        print(response.data['results'])
+        print(response.data["results"])
         print(serializer.data)
-        self.assertEqual(response.data['results'], serializer.data)
+        self.assertEqual(response.data["results"], serializer.data)
 
 
 class CategoryApiViewTest(APITestCase):

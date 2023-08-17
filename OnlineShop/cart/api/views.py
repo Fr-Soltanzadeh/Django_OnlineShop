@@ -69,16 +69,30 @@ class CartApiView(APIView):
             user = request.user
             user_cart_items = user.cart.cart_items.all()
             for item in user_cart_items:
-                product=item.product
+                product = item.product
                 if str(product.id) not in cart_items.keys():
                     item.delete()
                 else:
-                    if product.quantity==0:
-                        messages.error(request, f"Sorry, the item {product.title} in your cart is not available now.")
-                        return Response({"message": f"Sorry, the item {product.title} in your cart is not available now."})
-                    elif product.quantity< int(cart_items[str(item.product.id)]):
-                        messages.error(request, f"There are only {product.quantity} number of {product.title} available now.")
-                        return Response({"message": f"There are only {product.quantity} number of {product.title} available now."})
+                    if product.quantity == 0:
+                        messages.error(
+                            request,
+                            f"Sorry, the item {product.title} in your cart is not available now.",
+                        )
+                        return Response(
+                            {
+                                "message": f"Sorry, the item {product.title} in your cart is not available now."
+                            }
+                        )
+                    elif product.quantity < int(cart_items[str(item.product.id)]):
+                        messages.error(
+                            request,
+                            f"There are only {product.quantity} number of {product.title} available now.",
+                        )
+                        return Response(
+                            {
+                                "message": f"There are only {product.quantity} number of {product.title} available now."
+                            }
+                        )
                     item.quantity = cart_items[str(item.product.id)]
                     item.save()
             serializer = CartSerializer(user.cart)
@@ -90,13 +104,27 @@ class CartApiView(APIView):
                     if str(item["product"]["id"]) not in cart_items.keys():
                         request.session["cart"]["cart_items"].pop(index)
                     else:
-                        product=Product.objects.get(id=item["product"]["id"])
-                        if product.quantity==0:
-                            messages.error(request, f"Sorry, the item {product.title} in your cart is not available now.")
-                            return Response({"message": f"Sorry, the item {product.title} in your cart is not available now."})
+                        product = Product.objects.get(id=item["product"]["id"])
+                        if product.quantity == 0:
+                            messages.error(
+                                request,
+                                f"Sorry, the item {product.title} in your cart is not available now.",
+                            )
+                            return Response(
+                                {
+                                    "message": f"Sorry, the item {product.title} in your cart is not available now."
+                                }
+                            )
                         elif product.quantity < int(cart_items[str(item.product.id)]):
-                            messages.error(request, f"There are only {product.quantity} number of {product.title} available now.")
-                            return Response({"message": f"There are only {product.quantity} number of {product.title} available now."})
+                            messages.error(
+                                request,
+                                f"There are only {product.quantity} number of {product.title} available now.",
+                            )
+                            return Response(
+                                {
+                                    "message": f"There are only {product.quantity} number of {product.title} available now."
+                                }
+                            )
                         request.session["cart"]["cart_items"][index][
                             "quantity"
                         ] = cart_items[str(item["product"]["id"])]
@@ -120,7 +148,7 @@ class AddToCartApiView(APIView):
         product_id = request.data.get("product_id")
         product = Product.objects.get(id=int(product_id))
         if not product.is_active:
-            return Response({'message': 'Product is not available'})
+            return Response({"message": "Product is not available"})
         if request.user.is_authenticated:
             user = request.user
             try:

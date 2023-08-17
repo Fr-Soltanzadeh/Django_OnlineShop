@@ -12,8 +12,10 @@ from decimal import Decimal
 
 class TestAddToCartApiView(APITestCase):
     def setUp(self):
-        self.category=baker.make(Category)
-        self.product = baker.make(Product, info="", price=Decimal(10.00), category=self.category)
+        self.category = baker.make(Category)
+        self.product = baker.make(
+            Product, info="", price=Decimal(10.00), category=self.category
+        )
         self.url = reverse("add_to_cart_api")
 
     def test_add_to_cart_authenticated(self):
@@ -45,7 +47,7 @@ class TestAddToCartApiView(APITestCase):
 
 class TestCartApiView(APITestCase):
     def setUp(self):
-        self.category=baker.make(Category)
+        self.category = baker.make(Category)
         self.product = baker.make(Product, info="", category=self.category)
         self.user = User.objects.create(phone_number="09102098929", role=1)
         self.cart = Cart.objects.create(customer=self.user)
