@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "ckeditor",
     "corsheaders",
-    "django_celery_results",
     "django_celery_beat",
     # apps
     "accounts.apps.AccountsConfig",

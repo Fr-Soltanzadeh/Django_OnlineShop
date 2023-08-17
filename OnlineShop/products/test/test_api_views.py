@@ -12,25 +12,6 @@ from model_bakery import baker
 from rest_framework.test import APIClient, APITestCase
 
 
-# class TestProductListByCategoryView(APITestCase):
-#     def setUp(self):
-#         self.client = Client()
-#         self.category = Category.objects.create(name="dolls", slug="dolls")
-#         self.product1 = baker.make(
-#             Product, title="Product 1", info="", category=self.category
-#         )
-#         self.product2 = baker.make(
-#             Product, title="Product 2", info="", category=self.category
-#         )
-
-#     def test_ProductListByCategory_GET(self):
-#         response = self.client.get(reverse("products_by_category_api", args=("dolls",)))
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         products = Product.objects.filter(category=self.category)
-#         serializer = ProductSerializer(products, many=True)
-#         self.assertEqual(response.data["results"], serializer.data)
-
-
 class TestProductDetailView(APITestCase):
     def setUp(self):
         self.client = Client()
@@ -69,10 +50,19 @@ class TestProductDetailView(APITestCase):
 class ProductListCreateView(TestCase):
     def setUp(self):
         self.client = Client()
+        self.category1 = Category.objects.create(name="dolls", slug="dolls")
+        self.category2 = Category.objects.create(name="books", slug="books")
+        self.product1 = baker.make(
+            Product, title="Product 1", info="", category=self.category1, price=Decimal(10.00), discount=None, slug="product-1")
 
     def test_ProductList_GET(self):
-        response = self.client.get(reverse("products"))
+        response = self.client.get(reverse("products_api"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        print(response.data['results'])
+        print(serializer.data)
+        self.assertEqual(response.data['results'], serializer.data)
 
 
 class CategoryApiViewTest(APITestCase):
