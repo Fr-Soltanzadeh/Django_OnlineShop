@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from products.models import Product
+from products.models import Product, Category
 from cart.api.serializers import CartSerializer
 from products.api.serializers import ProductSerializer
 from ..models import CartItem, Cart
@@ -12,7 +12,8 @@ from decimal import Decimal
 
 class TestAddToCartApiView(APITestCase):
     def setUp(self):
-        self.product = baker.make(Product, info="", price=Decimal(10.00))
+        self.category=baker.make(Category)
+        self.product = baker.make(Product, info="", price=Decimal(10.00), category=self.category)
         self.url = reverse("add_to_cart_api")
 
     def test_add_to_cart_authenticated(self):
@@ -36,7 +37,7 @@ class TestAddToCartApiView(APITestCase):
         expected_cart_data = {
             "customer": None,
             "cart_items": [{"quantity": 1, "product": product_data}],
-            "grand_price": "10.00",
+            "total_price_with_discount": "10.00",
             "total_price": "10.00",
         }
         self.assertEqual(response.data, expected_cart_data)
@@ -44,7 +45,8 @@ class TestAddToCartApiView(APITestCase):
 
 class TestCartApiView(APITestCase):
     def setUp(self):
-        self.product = baker.make(Product, info="")
+        self.category=baker.make(Category)
+        self.product = baker.make(Product, info="", category=self.category)
         self.user = User.objects.create(phone_number="09102098929", role=1)
         self.cart = Cart.objects.create(customer=self.user)
         self.cart_item = CartItem.objects.create(
@@ -78,7 +80,7 @@ class TestCartApiView(APITestCase):
         expected_data = {
             "customer": None,
             "cart_items": [],
-            "grand_price": "0",
+            "total_price_with_discount": "0",
             "total_price": "0",
         }
         self.assertEqual(response.data, expected_data)
@@ -90,7 +92,7 @@ class TestCartApiView(APITestCase):
         expected_data = {
             "customer": None,
             "cart_items": [],
-            "grand_price": "0",
+            "total_price_with_discount": "0",
             "total_price": "0",
         }
         self.assertEqual(response.data, expected_data)
