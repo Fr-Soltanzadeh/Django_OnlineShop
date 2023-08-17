@@ -1,16 +1,6 @@
 from django.test import TestCase, RequestFactory, Client
 from django.urls import reverse
-from ..views import ProductListByCategoryView, ProductDetailView, ProductListView
-
-
-class TestProductListByCategoryView(TestCase):
-    def setUp(self):
-        self.client = Client()
-
-    def test_ProductListByCategory_GET(self):
-        response = self.client.get(reverse("products_by_category", args=("dolls",)))
-        self.assertTemplateUsed(response, "products/product_list_by_category.html")
-        self.assertEqual(response.status_code, 200)
+from ..views import  ProductDetailView, ProductListView
 
 
 class TestProductDetailView(TestCase):
