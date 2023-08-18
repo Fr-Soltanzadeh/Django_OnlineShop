@@ -2,8 +2,7 @@ from django.test import TestCase, RequestFactory, Client
 from django.urls import reverse
 from products.api.views import (
     ProductDetailApiView,
-    ProductListApiView,
-    ProductListByCategoryApiView,
+    ProductListCreateView,
 )
 from ..models import Category, Product
 from rest_framework import status
@@ -11,25 +10,6 @@ from products.api.serializers import ProductSerializer, CategorySerializer
 from decimal import Decimal
 from model_bakery import baker
 from rest_framework.test import APIClient, APITestCase
-
-
-class TestProductListByCategoryView(APITestCase):
-    def setUp(self):
-        self.client = Client()
-        self.category = Category.objects.create(name="dolls", slug="dolls")
-        self.product1 = baker.make(
-            Product, title="Product 1", info="", category=self.category
-        )
-        self.product2 = baker.make(
-            Product, title="Product 2", info="", category=self.category
-        )
-
-    def test_ProductListByCategory_GET(self):
-        response = self.client.get(reverse("products_by_category_api", args=("dolls",)))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        products = Product.objects.filter(category=self.category)
-        serializer = ProductSerializer(products, many=True)
-        self.assertEqual(response.data["results"], serializer.data)
 
 
 class TestProductDetailView(APITestCase):
@@ -67,19 +47,35 @@ class TestProductDetailView(APITestCase):
         self.assertEqual(response.data["title"], data["title"])
 
 
-class TestProductListView(TestCase):
+class ProductListCreateView(TestCase):
     def setUp(self):
         self.client = Client()
+        self.category1 = Category.objects.create(name="dolls", slug="dolls")
+        self.category2 = Category.objects.create(name="books", slug="books")
+        self.product1 = baker.make(
+            Product,
+            title="Product 1",
+            info="",
+            category=self.category1,
+            price=Decimal(10.00),
+            discount=None,
+            slug="product-1",
+        )
 
     def test_ProductList_GET(self):
-        response = self.client.get(reverse("products"))
+        response = self.client.get(reverse("products_api"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        print(response.data["results"])
+        print(serializer.data)
+        self.assertEqual(response.data["results"], serializer.data)
 
 
 class CategoryApiViewTest(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.url = reverse("category_api")
+        self.url = "/api/v1/products/categories/"
         Category.objects.create(name="Category 1", slug="Category1")
         Category.objects.create(name="Category 2", slug="Category2")
         Category.objects.create(name="Category 3", slug="Category3")

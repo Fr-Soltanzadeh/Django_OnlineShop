@@ -135,7 +135,7 @@
                     div3.classList.add("product-content-wrap2", "text-center");
                     let title=document.createElement('h3');
                     let a=document.createElement('a');
-                    a.href=`${base_url}${product.slug}`;
+                    a.href=`/products/${product.slug}`;
                     a.innerHTML=product.title;
                     title.appendChild(a);
                     div3.appendChild(title);
@@ -150,12 +150,20 @@
                     let div5=document.createElement('div');
                     div5.classList.add("pro-add-to-cart");
                     let button= document.createElement('button');
-                    button.innerHTML="Add To Cart";
-                    button.title="Add to Cart";
-                    button.setAttribute("onclick",`add_to_cart(${product.id})`);
-                    div5.appendChild(button);
-                    div3.appendChild(div5);
-                    
+                        
+                    if (product.is_active ==true){
+                        console.log("yes")
+                        button.innerHTML="Add To Cart";
+                        button.title="Add to Cart";
+                        button.setAttribute("onclick",`add_to_cart(${product.id})`);
+                        
+                    }else{
+                    button.disabled = true
+                    button.classList.add("disable_button")
+                    button.innerHTML = "Not available"
+                }
+                div5.appendChild(button);
+                div3.appendChild(div5);
                     div2.appendChild(div3);
                     div1.appendChild(div2);
                     main_div.appendChild(div1);

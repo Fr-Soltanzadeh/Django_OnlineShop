@@ -6,10 +6,11 @@ from accounts.models import Customer
 
 @shared_task(bind=True)
 def send_ad_mails(self):
-    recipient_list = target_mails
     mail_subject = "Long time no see!"
     message = "Hi. Visit our site for wonderful new products for your sweet child.\n "
-    recipient_list = [customer.email for customer in Customer.objects.all()]
+    recipient_list = [
+        customer.email for customer in Customer.objects.all() if customer.email
+    ]
     send_mail(
         subject=mail_subject,
         message=message,
