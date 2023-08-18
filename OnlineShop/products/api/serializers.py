@@ -58,4 +58,4 @@ class CategorySerializer(serializers.ModelSerializer):
 class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
-        excludes = ("created_at", "updated_at", "is_deleted")
+        exclude = ("created_at", "updated_at", "is_deleted")
