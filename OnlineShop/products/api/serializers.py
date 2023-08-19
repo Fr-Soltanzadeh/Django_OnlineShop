@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Product, ProductImage, Category, Discount
+from ..models import Product, ProductImage, Category, Discount, Comment
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -59,3 +59,14 @@ class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
         exclude = ("created_at", "updated_at", "is_deleted")
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    customer = serializers.SerializerMethodField
+    class Meta:
+        model = Comment
+        fields = ('product', 'customer', 'parent_comment', 'rate', 'status', 'content')
+    
+    def get_customer(self, comment):
+        return comment.customer.fullname
+
