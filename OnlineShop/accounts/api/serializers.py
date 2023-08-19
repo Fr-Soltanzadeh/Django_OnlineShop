@@ -39,4 +39,18 @@ class CustomerSerializer(serializers.ModelSerializer):
             "role",
             "profile",
             "addresses",
+            "email",
         )
+
+class CustomerAbstractSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = (
+            "phone_number",
+            "first_name",
+            "last_name",
+            "national_code",
+            "email",
+        )
+        read_only_fields = ("phone_number",)
+

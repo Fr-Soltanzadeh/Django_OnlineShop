@@ -10,7 +10,8 @@ urlpatterns = [
         views.VerifyCodeApiView.as_view(),
         name="verify_code_api",
     ),
-    path("profile/", views.CustomerApiView.as_view(), name="profile_api"),
+    path("customer/", views.CustomerApiView.as_view(), name="customeer_api"),
+    path("customer_abstract/", views.CustomerAbstractAPIView.as_view(), name="customeer_abstract_api"),
     path(
         "refresh_token/",
         views.RefreshTokenApiView.as_view(),
@@ -26,6 +27,7 @@ urlpatterns = [
         views.CustomerAddressDetailAPIView.as_view(),
         name="user_address_api",
     ),
+    path("profile/",views.CustomerProfileAPIView.as_view(), name="profile_api")
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
