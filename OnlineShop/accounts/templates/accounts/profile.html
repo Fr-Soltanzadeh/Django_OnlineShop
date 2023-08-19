@@ -208,9 +208,9 @@
         <script>
             window.onload= function() {
             let url ="/api/v1/accounts/profile/"
-            fetch_get_authorization(url, load_profile, "/accounts/login/", Location.reload)
+            fetch_get_authorization(url, load_profile, "/accounts/login/", refresh_page)
             let url2 ="/api/v1/orders/"
-            fetch_get_authorization(url2, load_orders, "/accounts/login/", Location.reload)                  
+            fetch_get_authorization(url2, load_orders, "/accounts/login/", refresh_page)                  
         }
         function load_profile(data){
             document.getElementById("fullname").innerHTML=`${data.first_name} ${data.last_name}`

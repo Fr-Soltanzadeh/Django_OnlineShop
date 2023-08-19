@@ -62,6 +62,12 @@ function delete_token(){
     window.localStorage.removeItem("access_token");
     window.localStorage.removeItem("refresh_token");
     }
+
+function refresh_page(){
+    location.reload()
+    }
+
+
 function add_to_cart(product_id){
     console.log(product_id)
     const url = '/api/v1/cart/add/'
@@ -97,3 +103,4 @@ function add_to_cart(product_id){
                 console.log(error);
             });
         } 
+
