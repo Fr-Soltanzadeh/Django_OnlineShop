@@ -19,6 +19,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [
         OrderItemInline,
     ]
+    readonly_fields = ('customer','transaction_id', 'total_price', 'final_price')
     list_per_page = 10
 
 

@@ -18,12 +18,12 @@ urlpatterns = [
     ),
     path(
         "user_address/",
-        views.CustomerAddressListAPIView.as_view(),
+        views.CustomerAddressListCreateAPIView.as_view(),
         name="user_addresses_api",
     ),
     path(
         "user_address/<int:pk>/",
-        views.CustomerAddressAPIView.as_view(),
+        views.CustomerAddressDetailAPIView.as_view(),
         name="user_address_api",
     ),
 ]
