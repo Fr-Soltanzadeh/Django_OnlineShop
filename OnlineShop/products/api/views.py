@@ -13,7 +13,7 @@ from products.pagination import ProductPagination
 
 class ProductListCreateView(generics.ListCreateAPIView):
     authentication_classes = []
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAdminUserOrReadOnly]
     serializer_class = ProductSerializer
     pagination_class = ProductPagination
 
@@ -31,7 +31,7 @@ class ProductListCreateView(generics.ListCreateAPIView):
 
 
 class ProductDetailApiView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAdminUserOrReadOnly]
     authentication_classes = []
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -53,6 +53,5 @@ class CategoryViewSet(ModelViewSet):
 
 class DiscountViewSet(ModelViewSet):
     permission_classes = [permissions.IsAdminUser]
-    authentication_classes = []
     queryset = Discount.objects.all()
     serializer_class = DiscountSerializer

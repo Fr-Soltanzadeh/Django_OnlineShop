@@ -14,9 +14,10 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from cart.utils import add_session_to_user_cart
 from rest_framework import views, permissions, status
-from .serializers import CustomerSerializer, AddressSerializer
+from .serializers import CustomerSerializer, AddressSerializer#, CustomerAbstractSerializer
 from rest_framework import generics
 from rest_framework import mixins
+from accounts.permissions import IsOwnerOrReadOnly
 
 
 User = get_user_model()
@@ -130,12 +131,20 @@ class RefreshTokenApiView(APIView):
 
 
 class CustomerApiView(APIView):
+    permission_classes = [permissions.AllowAny]
     def get(self, request, format=None):
         serializer = CustomerSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class CustomerAddressListAPIView(APIView):
+# class CustomerProfileAPIView(APIView):
+
+#     serializer_class = CustomerAbstractSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+
+
+class CustomerAddressListCreateAPIView(APIView):
+    permission_classes = [IsOwnerOrReadOnly]
     def get(self, request, format=None):
         addresses = Address.objects.filter(user=request.user)
         serializer = AddressSerializer(addresses, many=True)
@@ -152,9 +161,9 @@ class CustomerAddressListAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CustomerAddressAPIView(generics.RetrieveUpdateDestroyAPIView):
+class CustomerAddressDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = AddressSerializer
-
+    permission_classes = [IsOwnerOrReadOnly]
     def get_queryset(self):
         return Address.objects.filter(user=self.request.user)
