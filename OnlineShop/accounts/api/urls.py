@@ -18,15 +18,16 @@ urlpatterns = [
         name="refresh_token_api",
     ),
     path(
-        "user_address/",
-        views.CustomerAddressListCreateAPIView.as_view(),
-        name="user_addresses_api",
-    ),
-    path(
-        "user_address/<int:pk>/",
+        "user_addresses/<int:pk>/",
         views.CustomerAddressDetailAPIView.as_view(),
         name="user_address_api",
     ),
+    path(
+        "user_addresses/",
+        views.CustomerAddressListCreateAPIView.as_view(),
+        name="user_addresses_api",
+    ),
+
     path("profile/",views.CustomerProfileAPIView.as_view(), name="profile_api")
 ]
 

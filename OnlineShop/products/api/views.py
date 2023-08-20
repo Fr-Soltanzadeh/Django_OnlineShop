@@ -1,14 +1,15 @@
 from ..models import Product, Category, Discount, Comment
 from .serializers import ProductSerializer, CategorySerializer, DiscountSerializer, CommentSerializer
 from rest_framework.response import Response
-from rest_framework import generics
-from rest_framework import mixins
-from rest_framework import permissions
+from rest_framework import generics, mixins
+from rest_framework.views import APIView
+from rest_framework import permissions, status
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from accounts.permissions import IsAdminUserOrReadOnly, IsOwnerOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 from products.pagination import ProductPagination
+from accounts.authentication import LoginAuthentication
 
 
 class ProductListCreateView(generics.ListCreateAPIView):
@@ -17,7 +18,7 @@ class ProductListCreateView(generics.ListCreateAPIView):
     serializer_class = ProductSerializer
     pagination_class = ProductPagination
 
-    # @method_decorator(cache_page(180))
+    @method_decorator(cache_page(180))
     def get(self, request, *args, **kwargs):
         self.queryset = Product.objects.all()
         if category := self.request.GET.get("category"):
@@ -37,19 +38,28 @@ class ProductDetailApiView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProductSerializer
     lookup_field = "slug"
 
-class CommentListCreateView(generics.ListCreateAPIView):
-    authentication_classes = []
+    
+class CommentListCreateAPIView(APIView):
+    authentication_classes = [LoginAuthentication]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    serializer_class = CommentSerializer
 
-    # @method_decorator(cache_page(180))
     def get(self, request, *args, **kwargs):
-        self.queryset = Comment.objects.filter(product=kwargs.get('product_pk'))
-        return self.list(request, *args, **kwargs)
+        comments = Comment.objects.filter(product=request.GET.get('product_pk'))
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request, format=None, *args, **kwargs):
+        data=request.data.copy()
+        data['customer']=request.user.id
+        serializer = CommentSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CommentDetailApiView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOwnerOrReadOnly]
-    authentication_classes = []
+    authentication_classes = [LoginAuthentication]
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
@@ -60,7 +70,7 @@ class CategoryViewSet(ModelViewSet):
     serializer_class = CategorySerializer
     lookup_field = "slug"
 
-    # @method_decorator(cache_page(180))
+    @method_decorator(cache_page(180))
     def list(self, request):
         queryset = Category.objects.filter(parent_category__isnull=True)
         serializer = CategorySerializer(queryset, many=True)

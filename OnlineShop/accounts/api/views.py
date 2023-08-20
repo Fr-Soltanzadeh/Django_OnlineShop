@@ -169,6 +169,7 @@ class CustomerProfileAPIView(APIView):
 
 class CustomerAddressListCreateAPIView(APIView):
     permission_classes = [IsOwnerOrReadOnly]
+
     def get(self, request, format=None):
         addresses = Address.objects.filter(user=request.user)
         serializer = AddressSerializer(addresses, many=True)
