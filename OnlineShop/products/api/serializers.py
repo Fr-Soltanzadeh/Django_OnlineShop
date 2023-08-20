@@ -62,11 +62,7 @@ class DiscountSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    customer = serializers.SerializerMethodField
     class Meta:
         model = Comment
         fields = ('product', 'customer', 'parent_comment', 'rate', 'status', 'content')
     
-    def get_customer(self, comment):
-        return comment.customer.fullname
-
