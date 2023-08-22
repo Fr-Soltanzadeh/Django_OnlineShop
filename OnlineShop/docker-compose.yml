@@ -25,10 +25,12 @@ services:
 
   celery_worker:
     container_name: celery_worker
-    command: "celery -A OnlineShop worker -l INFO"
+    command: "celery -A OnlineShop worker -l INFO --logfile=logs/celery.log"
     depends_on:
       - redis
-    build: .
+      - djangoonlineshop
+      - db
+    image: onlineshop-djangoonlineshop
     environment:
       - C_FORCE_ROOT="true"
     networks:
@@ -37,7 +39,7 @@ services:
 
   djangoonlineshop:
     build: .
-    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && gunicorn OnlineShop.wsgi -b 0.0.0.0:8000"
     container_name: djangoonlineshop
     volumes: 
       - .:/djangoonlineshop

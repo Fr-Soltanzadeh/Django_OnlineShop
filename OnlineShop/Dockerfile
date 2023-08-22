@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.10.8
 LABEL Maintainer="f.soltanzade72@gmail.com"
 LABEL Owner="Farzaneh Soltanzadeh"
 LABEL version="v1"
