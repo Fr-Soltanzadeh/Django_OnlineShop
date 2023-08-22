@@ -1,6 +1,6 @@
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APIClient, APITestCase
 from products.models import Product, Category
 from cart.api.serializers import CartSerializer
 from products.api.serializers import ProductSerializer
@@ -17,6 +17,7 @@ class TestAddToCartApiView(APITestCase):
             Product, info="", price=Decimal(10.00), category=self.category
         )
         self.url = reverse("add_to_cart_api")
+        self.client = APIClient()
 
     def test_add_to_cart_authenticated(self):
         self.user = User.objects.create(phone_number="09102098929", role=1)
@@ -44,9 +45,16 @@ class TestAddToCartApiView(APITestCase):
         }
         self.assertEqual(response.data, expected_cart_data)
 
+    def test_add_to_cart_inactive_product(self):
+        self.product.is_active=False
+        self.product.save()
+        response = self.client.post(self.url, data={"product_id": self.product.id})
+        self.assertEqual(response.data, {"message": "Product is not available"})
+
 
 class TestCartApiView(APITestCase):
     def setUp(self):
+        self.client = APIClient()
         self.category = baker.make(Category)
         self.product = baker.make(Product, info="", category=self.category)
         self.user = User.objects.create(phone_number="09102098929", role=1)
@@ -62,18 +70,18 @@ class TestCartApiView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         expected_data = CartSerializer(self.cart).data
         self.assertEqual(response.data, expected_data)
-
+    
+    def test_put_cart_authenticated(self):
+        self.client.force_authenticate(user=self.user)
+        data = {"cart_items": [{"product_id": str(self.product.id), "quantity": 3},]}
+        response = self.client.put(self.url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
     def test_delete_cart_authenticated(self):
         self.client.force_authenticate(user=self.user)
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(CartItem.objects.count(), 0)
-
-    def test_put_cart_authenticated(self):
-        self.client.force_authenticate(user=self.user)
-        data = {"cart_items": [{"product_id": self.product.id, "quantity": 3}]}
-        response = self.client.put(self.url, data=data, content_type="application/json")
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete_cart_unauthenticated(self):
         self.client.logout()
@@ -98,3 +106,10 @@ class TestCartApiView(APITestCase):
             "total_price": "0",
         }
         self.assertEqual(response.data, expected_data)
+
+    def test_put_cart_unauthenticated(self):
+        self.client.logout()
+        data = {"cart_items": [{"product_id": str(self.product.id), "quantity": 3},]}
+        response = self.client.put(self.url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
