@@ -35,7 +35,22 @@ services:
       - C_FORCE_ROOT="true"
     networks:
       - main_net
-    restart: on-failure  
+    restart: on-failure
+
+  celery_beat:
+    container_name: celery_beat
+    command: "celery -A OnlineShop beat -l info --logfile=logs/celery.beat.log"
+    depends_on:
+      - celery_worker
+      - redis
+      - djangoonlineshop
+      - db
+    image: onlineshop-djangoonlineshop
+    environment:
+      - C_FORCE_ROOT="true"
+    networks:
+      - main_net
+    restart: on-failure
 
   djangoonlineshop:
     build: .
