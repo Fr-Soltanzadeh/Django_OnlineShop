@@ -70,6 +70,7 @@ class OrderApiView(APIView):
     def get(self, request):
         user = request.user
         orders = user.orders.all()
+        orders=orders.order_by("created_at")
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data)
 
