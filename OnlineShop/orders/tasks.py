@@ -12,6 +12,8 @@ def send_order_status_email(self, target_mail, message, mail_subject):
         subject=mail_subject,
         message=message,
         from_email=settings.EMAIL_HOST_USER,
+        auth_password=settings.EMAIL_HOST_PASSWORD,
+        auth_user=settings.EMAIL_HOST_USER,
         recipient_list=[target_mail],
         fail_silently=False,
     )

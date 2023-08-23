@@ -1,11 +1,20 @@
 services:
+  redis:
+    container_name: redis
+    image: redis:latest
+    networks:
+      - main_net
+    ports:
+      - "6379:6379"
+    restart: on-failure
+
   db:
     container_name: postgres
     image: postgres:latest
     environment:
       - POSTGRES_DB=online_shop
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=Farzaneh72
     networks:
       - main_net
     ports:
@@ -13,15 +22,45 @@ services:
     restart: on-failure
     volumes:
       - postgres_data:/var/lib/postgresql/postgres_data
-    
+
+  celery_worker:
+    container_name: celery_worker
+    command: "celery -A OnlineShop worker -l INFO --logfile=logs/celery.log"
+    depends_on:
+      - redis
+      - djangoonlineshop
+      - db
+    image: onlineshop-djangoonlineshop
+    environment:
+      - C_FORCE_ROOT="true"
+    networks:
+      - main_net
+    restart: on-failure
+
+  celery_beat:
+    container_name: celery_beat
+    command: "celery -A OnlineShop beat -l info --logfile=logs/celery.beat.log"
+    depends_on:
+      - celery_worker
+      - redis
+      - djangoonlineshop
+      - db
+    image: onlineshop-djangoonlineshop
+    environment:
+      - C_FORCE_ROOT="true"
+    networks:
+      - main_net
+    restart: on-failure
+
   djangoonlineshop:
     build: .
-    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && gunicorn OnlineShop.wsgi -b 0.0.0.0:8000"
     container_name: djangoonlineshop
     volumes: 
       - .:/djangoonlineshop
     depends_on:
       - db
+      - redis
     expose:
       - "8000"
     networks:
@@ -29,6 +68,20 @@ services:
     ports:
       - "8000:8000"
     restart: on-failure
+
+  nginx:
+    container_name: nginx
+    command: nginx -g 'daemon off;'
+    depends_on:
+      - djangoonlineshop
+    image: nginx:latest
+    networks:
+      - main_net
+    ports:
+      - "80:80"
+    restart: on-failure
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
 
 volumes:
   postgres_data:

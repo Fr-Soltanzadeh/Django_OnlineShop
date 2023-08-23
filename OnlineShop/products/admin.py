@@ -12,6 +12,11 @@ class ProductImageInline(admin.TabularInline):
     extra = 3
 
 
+class CommentInline(admin.TabularInline):
+    model = Comment
+    extra = 3
+
+
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
     list_per_page = 10
@@ -27,7 +32,7 @@ class ProductAdmin(admin.ModelAdmin):
     autocomplete_fields = ("category",)
     list_filter = ("category", "is_active")
     prepopulated_fields = {"slug": ("title",)}
-    inlines = [ProductImageInline]
+    inlines = [ProductImageInline, CommentInline]
     list_per_page = 10
 
 

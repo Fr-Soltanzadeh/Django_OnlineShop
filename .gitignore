@@ -2,8 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
-assets
-media
+#assets
+#media
 # C extensions
 *.so
 

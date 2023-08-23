@@ -190,7 +190,7 @@
         let phone_number =""; 
         window.onload=function(){
             const url ="/api/v1/cart/"
-            fetch_get_authorization(url, load_data, "/accounts/login/", Location.reload)
+            fetch_get_authorization(url, load_data, "/accounts/login/", refresh_page)
         }
         function load_data(data){
             if (!data.customer){

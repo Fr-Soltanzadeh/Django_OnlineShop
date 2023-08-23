@@ -1,10 +1,12 @@
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response
 from django.shortcuts import reverse
 from rest_framework import views, permissions, status
 from .serializers import OrderSerializer
 from ..models import Order, OrderItem, Coupon
 from accounts.models import Address
+from accounts.permissions import IsAdminUserOrReadOnly
 from django.http import HttpResponseRedirect
 from datetime import datetime
 import pytz
@@ -68,6 +70,7 @@ class OrderApiView(APIView):
     def get(self, request):
         user = request.user
         orders = user.orders.all()
+        orders=orders.order_by("created_at")
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data)
 
@@ -85,3 +88,9 @@ class ApplyCoupon(APIView):
                 cart.save()
                 return Response(data={"is_valid": True})
         return Response(data={"is_valid": False})
+
+
+class OrderDetailApiView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUserOrReadOnly]
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer

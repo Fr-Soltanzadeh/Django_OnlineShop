@@ -3,7 +3,7 @@ from django.urls import reverse, resolve
 from ..views import LoginOrRegisterView, LogoutView, ProfileView, VerifyCodeView
 from accounts.api.views import (
     LoginOrRegisterApiView,
-    CustomerApiView,
+    CustomerProfileAPIView,
     VerifyCodeApiView,
 )
 
@@ -35,4 +35,4 @@ class TestUrls(SimpleTestCase):
 
     def test_profile(self):
         url = reverse("profile_api")
-        self.assertEqual(resolve(url).func.view_class, CustomerApiView)
+        self.assertEqual(resolve(url).func.view_class, CustomerProfileAPIView)
