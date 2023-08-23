@@ -6,10 +6,10 @@ from core.utils import get_phonenumber_regex
 from orders.models import Coupon
 import pytz
 from datetime import datetime
+from django.db.models import Sum, F
 
 
 class Cart(BaseModel):
-
     customer = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
     coupon = models.OneToOneField(
         Coupon, on_delete=models.SET_NULL, related_name="cart", null=True, blank=True
@@ -22,40 +22,27 @@ class Cart(BaseModel):
         return f"customer{self.customer.id} {self.customer.fullname}"
 
     def calculate_final_price_without_shipping(self):
+        cart_items = self.cart_items.select_related("product")
+        total_price = sum(
+            item.product.discounted_price * item.quantity for item in cart_items
+        )
         if (
             self.coupon
             and self.coupon.is_active
             and self.coupon.end_time > datetime.now().replace(tzinfo=pytz.utc)
         ):
-            return (
-                sum(
-                    (
-                        item.product.discounted_price * item.quantity
-                        for item in self.cart_items.all()
-                    )
-                )
-                * (100 - self.coupon.percent)
-                / 100
-            )
-        return sum(
-            (
-                item.product.discounted_price * item.quantity
-                for item in self.cart_items.all()
-            )
-        )
+            return total_price * (1 - self.coupon.percent / 100)
+        return total_price
 
     def calculate_total_discounted_price(self):
-        return sum(
-            (
-                item.product.discounted_price * item.quantity
-                for item in self.cart_items.all()
-            )
-        )
+        cart_items = self.cart_items.select_related("product")
+        return sum(item.product.discounted_price * item.quantity for item in cart_items)
 
     def calculate_total_price(self):
-        return sum(
-            (item.product.price * item.quantity for item in self.cart_items.all())
-        )
+        cart_items = self.cart_items.select_related("product")
+        return cart_items.aggregate(
+            total_price=Sum(F("product__price") * F("quantity"))
+        )["total_price"]
 
 
 class CartItem(BaseModel):

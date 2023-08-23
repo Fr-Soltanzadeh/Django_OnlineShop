@@ -7,7 +7,6 @@ from decimal import Decimal
 
 
 class Coupon(BaseModel):
-
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     title = models.CharField(max_length=100)
@@ -65,28 +64,16 @@ class Order(BaseModel):
         return f"order id:{self.id}"
 
     def calculate_final_price(self):
+        order_items = self.orderItems.select_related("product")
+        final_price = sum(
+            item.product.discounted_price * item.quantity for item in order_items
+        )
         if self.coupon:
-            self.final_price = (
-                sum(
-                    (
-                        item.product.discounted_price * item.quantity
-                        for item in self.orderItems.all()
-                    )
-                )
-                * (100 - self.coupon.percent)
-                / 100
-                + self.shipping
+            self.final_price = self.shipping + final_price * (
+                1 - self.coupon.percent / 100
             )
         else:
-            self.final_price = (
-                sum(
-                    (
-                        item.product.discounted_price * item.quantity
-                        for item in self.orderItems.all()
-                    )
-                )
-                + self.shipping
-            )
+            self.final_price = self.shipping + final_price
 
 
 class OrderItem(BaseModel):

@@ -5,6 +5,7 @@ from django.conf import settings
 from .models import Order
 import requests
 import json
+from django.contrib.auth.mixins import LoginRequiredMixin
 from orders.tasks import send_order_status_email
 
 
@@ -29,7 +30,7 @@ description = "توضیحات مربوط به تراکنش را در این قس
 CallbackURL = "http://127.0.0.1:8000/orders/verify_order/"
 
 
-class OrderPayView(View):
+class OrderPayView(LoginRequiredMixin, View):
     def get(self, request, order_id):
         order = Order.objects.get(id=order_id)
         request.session["order_pay"] = {
@@ -72,7 +73,6 @@ class OrderPayView(View):
 
 class VerifyOrderView(View):
     def get(self, request):
-
         order_id = request.session["order_pay"]["order_id"]
         order = Order.objects.get(id=int(order_id))
         data = {
