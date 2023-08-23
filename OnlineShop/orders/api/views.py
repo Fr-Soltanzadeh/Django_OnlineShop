@@ -18,7 +18,8 @@ class OrderApiView(APIView):
         cart = user.cart
         data = request.data
         address = Address.objects.get(id=int(data["address_id"]))
-        for item in cart.cart_items.all():
+        cart_items=cart.cart_items.select_related("product")
+        for item in cart_items:
             product = item.product
             if product.quantity == 0:
                 return Response(
@@ -26,7 +27,7 @@ class OrderApiView(APIView):
                         "message": f"Sorry, the item {product.title} in your cart is not available now."
                     }
                 )
-            elif item.product.quantity < item.quantity:
+            elif product.quantity < item.quantity:
                 return Response(
                     {
                         "message": f"There are only {product.quantity} number of {product.title} available now."
@@ -56,7 +57,7 @@ class OrderApiView(APIView):
             receiver_phone_number=data["receiver_phone_number"],
             coupon=cart.coupon,
         )
-        for item in cart.cart_items.all():
+        for item in cart_items:
             OrderItem.objects.create(
                 product=item.product,
                 quantity=item.quantity,
@@ -69,8 +70,7 @@ class OrderApiView(APIView):
 
     def get(self, request):
         user = request.user
-        orders = user.orders.all()
-        orders=orders.order_by("created_at")
+        orders = user.orders.prefetch_related("orderItems").select_related("customer").order_by("created_at")
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data)
 
@@ -92,5 +92,5 @@ class ApplyCoupon(APIView):
 
 class OrderDetailApiView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUserOrReadOnly]
-    queryset = Order.objects.all()
+    queryset = Order.objects.prefetch_related("orderItems").select_related("customer")
     serializer_class = OrderSerializer

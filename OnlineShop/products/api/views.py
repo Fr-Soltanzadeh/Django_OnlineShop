@@ -22,9 +22,7 @@ class ProductListCreateView(generics.ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         self.queryset = Product.objects.all()
         if category := self.request.GET.get("category"):
-            print(category)
             category = Category.objects.get(slug=category)
-
             self.queryset = self.queryset.filter(category=category)
         if search_phrase := self.request.GET.get("search"):
             self.queryset = self.queryset.filter(title__icontains=search_phrase)

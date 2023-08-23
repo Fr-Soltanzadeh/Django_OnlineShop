@@ -9,19 +9,21 @@ python -m venv venv
 pip install -r requirements.txt
 -run redis and celery
 Redis:
+sudo service redis-server start
 redis-cli
 Celery:
-celery -A OnlineShop worker -l info
+windows: celery -A OnlineShop worker -l info -P solo 
+linux:  celery -A OnlineShop worker -l info
 
-commands:
+-commands:
 python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 
-Coverage Test:
+-Coverage Test:
 coverage run --source='.' manage.py test .
 coverage report
 
-Deploy:
+-Deploy:
 docker-compose up --build
 
