@@ -19,9 +19,11 @@ from .serializers import CustomerAbstractSerializer, CustomerProfileSerializer
 from rest_framework import generics
 from rest_framework import mixins
 from accounts.permissions import IsOwnerOrReadOnly
+import logging
 
 
 User = get_user_model()
+logger=logging.getLogger('online_shop')
 
 
 class LoginOrRegisterApiView(APIView):
@@ -67,6 +69,7 @@ class VerifyCodeApiView(APIView):
                     user = User.objects.get(phone_number=phone_number)
                 redirect_to = request.session["login_info"]["redirect_to"]
                 login(request, user)
+                logger.info(f"User with phone_number:{user.phone_number} signed in.")
                 add_session_to_user_cart(request)
                 access_token = generate_access_token(user)
                 refresh_token = generate_refresh_token(user)

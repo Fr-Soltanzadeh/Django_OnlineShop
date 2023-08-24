@@ -5,6 +5,9 @@ from .forms import LoginForm, VerifyCodeForm
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
 )
+import logging
+
+logger = logging.getLogger("online_shop")
 
 
 class LoginOrRegisterView(View):
@@ -35,7 +38,9 @@ class VerifyCodeView(View):
 
 class LogoutView(View):
     def get(self, request):
+        phone_number = request.user.phone_number
         logout(request)
+        logger.info(f"User with phone_number:{phone_number} signed out.")
         return redirect("login")
 
 
