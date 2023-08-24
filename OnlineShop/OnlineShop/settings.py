@@ -225,11 +225,11 @@ CELERY_RESULT_BACKEND = f"redis://{getenv('redis')}:6379"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
+    "version": 1,
+    "disable_existing_loggers": False,
     "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
-    'handlers': {
-         "mail_admins": {
+    "handlers": {
+        "mail_admins": {
             "level": "ERROR",
             "filters": ["require_debug_false"],
             "class": "django.utils.log.AdminEmailHandler",
@@ -239,34 +239,33 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR/ 'logs/app.log',
+        "file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/app.log",
             "formatter": "verbose",
         },
     },
-    'formatters': {
-                'verbose': {
-                'format': '{ "time": "%(asctime)s", "level": "%(levelname)s", "logger": "%(name)s", "message": "%(message)s" }'
-                },
-                },
-    'loggers': {
-        'django': {
-            'handlers': ['file','console'],
-            'level': 'INFO',
-            'propagate': False,
+    "formatters": {
+        "verbose": {
+            "format": '{ "time": "%(asctime)s", "level": "%(levelname)s", "logger": "%(name)s", "message": "%(message)s" }'
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file", "console"],
+            "level": "INFO",
+            "propagate": False,
         },
         "django.request": {
             "handlers": ["mail_admins"],
             "level": "ERROR",
             "propagate": True,
         },
-        'online_shop': {
-            'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': False,
-            },
+        "online_shop": {
+            "handlers": ["file"],
+            "level": "INFO",
+            "propagate": False,
+        },
     },
-    
 }

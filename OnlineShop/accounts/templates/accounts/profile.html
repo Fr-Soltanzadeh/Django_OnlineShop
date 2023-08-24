@@ -2,242 +2,386 @@
 {% load static %}
 
 {% block title %}
- Profile
+Profile
 {% endblock %}
 
 {% block content %}
-{% include 'header.html' %}    
+{% include 'header.html' %}
 
-   
-    <div class="breadcrumb-area bg-gray">
-        <div class="container">
-            <div class="breadcrumb-content text-center">
-                <ul>
-                    <li>
-                        <a href="{% url 'home' %}">Home</a>
-                    </li>
-                    <li class="active">My Profile</li>
-                </ul>
-            </div>
+
+<div class="breadcrumb-area bg-gray">
+    <div class="container">
+        <div class="breadcrumb-content text-center">
+            <ul>
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="active">My Profile</li>
+            </ul>
         </div>
     </div>
-    <div class="my-account-wrapper pt-50 pb-90">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <!-- My Account Page Start -->
-                    <div class="myaccount-page-wrapper">
-                        <!-- My Account Tab Menu Start -->
-                        <div class="row">
-                            <div class="col-lg-3 col-md-4">
-                                <div class="myaccount-tab-menu nav" role="tablist">
-                                    <a href="#dashboad" class="active" data-toggle="tab"><i class="fa fa-dashboard"></i>
-                                        Dashboard</a>
-                                    <a href="#orders" data-toggle="tab"><i class="fa fa-cart-arrow-down"></i> Orders</a>
-                                    <a href="#payment-method" data-toggle="tab"><i class="fa fa-credit-card"></i> Wishlist</a>
-                                    <a href="#address-edit" data-toggle="tab"><i class="fa fa-map-marker"></i> Address</a>
-                                    <a href="#account-info" data-toggle="tab"><i class="fa fa-user"></i> Account Details</a>
-                                    <a href="{% url 'logout' %}" onclick="delete_token()"><i class="fa fa-sign-out"></i> Logout</a>
-                                </div>
+</div>
+<div class="my-account-wrapper pt-50 pb-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- My Account Page Start -->
+                <div class="myaccount-page-wrapper">
+                    <!-- My Account Tab Menu Start -->
+                    <div class="row">
+                        <div class="col-lg-3 col-md-4">
+                            <div class="myaccount-tab-menu nav" role="tablist">
+                                <a href="#dashboad" class="active" data-toggle="tab"><i class="fa fa-dashboard"></i>
+                                    Dashboard</a>
+                                <a href="#orders" data-toggle="tab"><i class="fa fa-cart-arrow-down"></i> Orders</a>
+                                <a href="#payment-method" data-toggle="tab"><i class="fa fa-credit-card"></i>
+                                    Wishlist</a>
+                                <a href="#address-edit" data-toggle="tab"><i class="fa fa-map-marker"></i> Addresses</a>
+                                <a href="#account-info" data-toggle="tab"><i class="fa fa-user"></i> Account Details</a>
+                                <a href="{% url 'logout' %}" onclick="delete_token()"><i class="fa fa-sign-out"></i>
+                                    Logout</a>
                             </div>
-                            <!-- My Account Tab Menu End -->
-                            <!-- My Account Tab Content Start -->
-                            <div class="col-lg-9 col-md-8">
-                                <div class="tab-content" id="myaccountContent">
-                                    <!-- Single Tab Content Start -->
-                                    <div class="tab-pane fade show active" id="dashboad" role="tabpanel">
-                                        <div class="myaccount-content">
-                                            <h3>Dashboard</h3>
-                                            <div class="welcome">
-                                                <p>Hello, <strong id="fullname"></strong> </p>
-                                            </div>
-
-                                            <p class="mb-0">From your account dashboard. you can easily check & view your recent orders, view your wishlist, and manage your addresses and account details.</p>
+                        </div>
+                        <!-- My Account Tab Menu End -->
+                        <!-- My Account Tab Content Start -->
+                        <div class="col-lg-9 col-md-8">
+                            <div class="tab-content" id="myaccountContent">
+                                <!-- Single Tab Content Start -->
+                                <div class="tab-pane fade show active" id="dashboad" role="tabpanel">
+                                    <div class="myaccount-content">
+                                        <h3>Dashboard</h3>
+                                        <div class="welcome">
+                                            <p>Hello, <strong id="fullname"></strong> </p>
                                         </div>
+
+                                        <p class="mb-0">From your account dashboard. you can easily check & view your
+                                            recent orders, view your wishlist, and manage your addresses and account
+                                            details.</p>
                                     </div>
-                                    <!-- Single Tab Content End -->
-                                    <!-- Single Tab Content Start -->
-                                    <div class="tab-pane fade" id="orders" role="tabpanel">
-                                        <div class="myaccount-content">
-                                            <h3>Orders</h3>
-                                            <div class="myaccount-table table-responsive text-center">
-                                                <table class="table table-bordered">
-                                                    <thead class="thead-light">
-                                                        <tr>
-                                                            <th>Order</th>
-                                                            <th>Date</th>
-                                                            <th>Status</th>
-                                                            <th>Total</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="orders_body">
-                                                        <!-- <tr>
+                                </div>
+                                <!-- Single Tab Content End -->
+                                <!-- Single Tab Content Start -->
+                                <div class="tab-pane fade" id="orders" role="tabpanel">
+                                    <div class="myaccount-content">
+                                        <h3>Orders</h3>
+                                        <div class="myaccount-table table-responsive text-center">
+                                            <table class="table table-bordered">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Order</th>
+                                                        <th>Date</th>
+                                                        <th>Status</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="orders_body">
+                                                    <!-- <tr>
                                                             <td>1</td>
                                                             <td>Aug 22, 2018</td>
                                                             <td>Pending</td>
                                                             <td>$3000</td>
                                                         </tr> -->
-                                                       
-                                                    </tbody>
-                                                </table>
-                                            </div>
+
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
-                                    <!-- Single Tab Content End -->
-                                    <!-- Single Tab Content Start -->
-                                    <div class="tab-pane fade" id="download" role="tabpanel">
-                                        <div class="myaccount-content">
-                                            <h3>Downloads</h3>
-                                            <div class="myaccount-table table-responsive text-center">
-                                                <table class="table table-bordered">
-                                                    <thead class="thead-light">
-                                                        <tr>
-                                                            <th>Product</th>
-                                                            <th>Date</th>
-                                                            <th>Expire</th>
-                                                            <th>Download</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Haven - Free Real Estate PSD Template</td>
-                                                            <td>Aug 22, 2018</td>
-                                                            <td>Yes</td>
-                                                            <td><a href="#" class="check-btn sqr-btn "><i class="fa fa-cloud-download"></i> Download File</a></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>HasTech - Profolio Business Template</td>
-                                                            <td>Sep 12, 2018</td>
-                                                            <td>Never</td>
-                                                            <td><a href="#" class="check-btn sqr-btn "><i class="fa fa-cloud-download"></i> Download File</a></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                </div>
+                                <!-- Single Tab Content End -->
+                                <!-- Single Tab Content Start -->
+                                <div class="tab-pane fade" id="download" role="tabpanel">
+                                    <div class="myaccount-content">
+                                        <h3>Downloads</h3>
+                                        <div class="myaccount-table table-responsive text-center">
+                                            <table class="table table-bordered">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Product</th>
+                                                        <th>Date</th>
+                                                        <th>Expire</th>
+                                                        <th>Download</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Haven - Free Real Estate PSD Template</td>
+                                                        <td>Aug 22, 2018</td>
+                                                        <td>Yes</td>
+                                                        <td><a href="#" class="check-btn sqr-btn "><i
+                                                                    class="fa fa-cloud-download"></i> Download File</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>HasTech - Profolio Business Template</td>
+                                                        <td>Sep 12, 2018</td>
+                                                        <td>Never</td>
+                                                        <td><a href="#" class="check-btn sqr-btn "><i
+                                                                    class="fa fa-cloud-download"></i> Download File</a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
-                                    <!-- Single Tab Content End -->
-                                    <!-- Single Tab Content Start -->
-                                    <div class="tab-pane fade" id="payment-method" role="tabpanel">
-                                        <div class="myaccount-content">
-                                            <h3>Payment Method</h3>
-                                            <p class="saved-message">You Can't Saved Your Payment Method yet.</p>
-                                        </div>
+                                </div>
+                                <!-- Single Tab Content End -->
+                                <!-- Single Tab Content Start -->
+                                <div class="tab-pane fade" id="payment-method" role="tabpanel">
+                                    <div class="myaccount-content">
+                                        <h3>Payment Method</h3>
+                                        <p class="saved-message">You Can't Saved Your Payment Method yet.</p>
                                     </div>
-                                    <!-- Single Tab Content End -->
-                                    <!-- Single Tab Content Start -->
-                                    <div class="tab-pane fade" id="address-edit" role="tabpanel">
-                                        <div class="myaccount-content">
-                                            <h3>Billing Address</h3>
-                                            <address>
-                                                <p><strong>Alex Tuntuni</strong></p>
-                                                <p>1355 Market St, Suite 900 <br>
-                                            San Francisco, CA 94103</p>
-                                                <p>Mobile: (123) 456-7890</p>
-                                            </address>
-                                            <a href="#" class="check-btn sqr-btn "><i class="fa fa-edit"></i> Edit Address</a>
-                                        </div>
-                                    </div>
-                                    <!-- Single Tab Content End -->
-                                    <!-- Single Tab Content Start -->
-                                    <div class="tab-pane fade" id="account-info" role="tabpanel">
-                                        <div class="myaccount-content">
-                                            <h3>Account Details</h3>
-                                            <div class="account-details-form">
-                                                <form action="#">
+                                </div>
+                                <!-- Single Tab Content End -->
+                                <!-- Single Tab Content Start -->
+                                <div class="tab-pane fade" id="address-edit" role="tabpanel">
+                                    <div class="myaccount-content">
+                                        <div class="billing-info-wrap mr-50">
+                                            <h3>Addresses</h3>
+                                            <form action="javascript: void(0)" class="mt-5">
+                                                {% csrf_token %}
+                                                <ul id="addresses" style="list-style-type: square;">
+
+                                                </ul>
+                                                <div class="open-toggle2 mt-20" style="display: none;"
+                                                    id="edit_address">
+
                                                     <div class="row">
-                                                        <div class="col-lg-6">
-                                                            <div class="single-input-item">
-                                                                <label for="first-name" class="required">First Name</label>
-                                                                <input type="text" id="first-name" />
+                                                        <div class="col-lg-6 col-md-6">
+                                                            <div class="billing-info mb-20">
+                                                                <label>Province</label>
+                                                                <input type="text" name="province" required>
                                                             </div>
                                                         </div>
-                                                        <div class="col-lg-6">
-                                                            <div class="single-input-item">
-                                                                <label for="last-name" class="required">Last Name</label>
-                                                                <input type="text" id="last-name" />
+                                                        <div class="col-lg-6 col-md-6">
+                                                            <div class="billing-info mb-20">
+                                                                <label>City / Town</label>
+                                                                <input type="text" name="city" required>
                                                             </div>
                                                         </div>
+                                                        <div class="col-lg-6 col-md-6">
+                                                            <div class="billing-info mb-20">
+                                                                <label>Street</label>
+                                                                <input type="text" name="street" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6">
+                                                            <div class="billing-info mb-20">
+                                                                <label>Postcode</label>
+                                                                <input type="text" name="postal_code" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <div class="billing-info mb-20">
+                                                                <label>Address detail</label>
+                                                                <input type="text" name="detail" required>
+                                                            </div>
+                                                        </div>
+                                                        <input type="submit" value="Save address">
                                                     </div>
-                                                    <div class="single-input-item">
-                                                        <label for="display-name" class="required">Display Name</label>
-                                                        <input type="text" id="display-name" />
-                                                    </div>
-                                                    <div class="single-input-item">
-                                                        <label for="email" class="required">Email Addres</label>
-                                                        <input type="email" id="email" />
-                                                    </div>
-                                                    <fieldset>
-                                                        <legend>Password change</legend>
-                                                        <div class="single-input-item">
-                                                            <label for="current-pwd" class="required">Current Password</label>
-                                                            <input type="password" id="current-pwd" />
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                <div class="single-input-item">
-                                                                    <label for="new-pwd" class="required">New Password</label>
-                                                                    <input type="password" id="new-pwd" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <div class="single-input-item">
-                                                                    <label for="confirm-pwd" class="required">Confirm Password</label>
-                                                                    <input type="password" id="confirm-pwd" />
-                                                                </div>
+                                                </div>
+                                            </form>
+                                            <div class="checkout-account mt-30">
+                                                <input class="checkout-toggle" type="checkbox" name="flexRadioDefault">
+                                                <span>Add a new address?</span>
+                                            </div>
+                                            <div class="different-address open-toggle mt-20">
+                                                <form action="javascript: void(0)" method="post" style="width:  100%;"
+                                                    onsubmit="post_address()" id="add_address">
+                                                    {% csrf_token %}
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6">
+                                                            <div class="billing-info mb-20">
+                                                                <label>Province</label>
+                                                                <input type="text" name="province" required>
                                                             </div>
                                                         </div>
-                                                    </fieldset>
-                                                    <div class="single-input-item">
-                                                        <button class="check-btn sqr-btn ">Save Changes</button>
+                                                        <div class="col-lg-6 col-md-6">
+                                                            <div class="billing-info mb-20">
+                                                                <label>City / Town</label>
+                                                                <input type="text" name="city" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6">
+                                                            <div class="billing-info mb-20">
+                                                                <label>Street</label>
+                                                                <input type="text" name="street" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6">
+                                                            <div class="billing-info mb-20">
+                                                                <label>Postcode</label>
+                                                                <input type="text" name="postal_code" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <div class="billing-info mb-20">
+                                                                <label>Address detail</label>
+                                                                <input type="text" name="detail" required>
+                                                            </div>
+                                                        </div>
+                                                        <input type="submit" value="Place address">
                                                     </div>
                                                 </form>
                                             </div>
                                         </div>
-                                    </div> <!-- Single Tab Content End -->
+                                    </div>
                                 </div>
-                            </div> <!-- My Account Tab Content End -->
-                        </div>
-                    </div> <!-- My Account Page End -->
-                </div>
+                                <!-- Single Tab Content End -->
+                                <!-- Single Tab Content Start -->
+                                <div class="tab-pane fade" id="account-info" role="tabpanel">
+                                    <div class="myaccount-content">
+                                        <h3>Account Details</h3>
+                                        <div class="account-details-form">
+                                            <form action="#">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="single-input-item">
+                                                            <label for="first-name" class="required">First Name</label>
+                                                            <input type="text" id="first-name" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="single-input-item">
+                                                            <label for="last-name" class="required">Last Name</label>
+                                                            <input type="text" id="last-name" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="single-input-item">
+                                                    <label for="display-name" class="required">Display Name</label>
+                                                    <input type="text" id="display-name" />
+                                                </div>
+                                                <div class="single-input-item">
+                                                    <label for="email" class="required">Email Addres</label>
+                                                    <input type="email" id="email" />
+                                                </div>
+                                                <fieldset>
+                                                    <legend>Password change</legend>
+                                                    <div class="single-input-item">
+                                                        <label for="current-pwd" class="required">Current
+                                                            Password</label>
+                                                        <input type="password" id="current-pwd" />
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="single-input-item">
+                                                                <label for="new-pwd" class="required">New
+                                                                    Password</label>
+                                                                <input type="password" id="new-pwd" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="single-input-item">
+                                                                <label for="confirm-pwd" class="required">Confirm
+                                                                    Password</label>
+                                                                <input type="password" id="confirm-pwd" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                <div class="single-input-item">
+                                                    <button class="check-btn sqr-btn ">Save Changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div> <!-- Single Tab Content End -->
+                            </div>
+                        </div> <!-- My Account Tab Content End -->
+                    </div>
+                </div> <!-- My Account Page End -->
             </div>
         </div>
     </div>
-        {% include 'footer.html' %}
+</div>
+{% include 'footer.html' %}
 
-        <script>
-            window.onload= function() {
-            let url ="/api/v1/accounts/customer/"
-            fetch_get_authorization(url, load_profile, "/accounts/login/", refresh_page)
-            let url2 ="/api/v1/orders/"
-            fetch_get_authorization(url2, load_orders, "/accounts/login/", refresh_page)                  
-        }
-        function load_profile(data){
-            document.getElementById("fullname").innerHTML=`${data.first_name} ${data.last_name}`
-        }
-        function load_orders(data){
+<script>
+    window.onload = function () {
+        let url = "/api/v1/accounts/customer/"
+        fetch_get_authorization(url, load_profile, "/accounts/login/", refresh_page)
+        let url2 = "/api/v1/orders/"
+        fetch_get_authorization(url2, load_orders, "/accounts/login/", refresh_page)
+    }
+    function load_profile(data) {
+        document.getElementById("fullname").innerHTML = `${data.first_name} ${data.last_name}`
+        load_address(data.addresses)
 
-            let orders_table = document.getElementById("orders_body")
-            let orders = data
-            let count = 0
-            orders.map(function(order) {
-                count+=1
-                let tr = document.createElement("tr")
-                let td1 = document.createElement("td")
-                td1.innerHTML=count
-                let td2 = document.createElement("td")
-                td2.innerHTML = order.created_at
-                let td3 = document.createElement("td")
-                td3.innerHTML = order.status
-                let td4 = document.createElement("td")
-                td4.innerHTML = `$${order.final_price}`
-                tr.appendChild(td1)
-                tr.appendChild(td2)
-                tr.appendChild(td3)
-                tr.appendChild(td4)
-                orders_table.appendChild(tr)
-            });  
-        }
-        </script>
-        {% endblock %}
-    
+    }
+    function load_orders(data) {
+
+        let orders_table = document.getElementById("orders_body")
+        let orders = data
+        let count = 0
+        orders.map(function (order) {
+            count += 1
+            let tr = document.createElement("tr")
+            let td1 = document.createElement("td")
+            td1.innerHTML = count
+            let td2 = document.createElement("td")
+            td2.innerHTML = order.created_at
+            let td3 = document.createElement("td")
+            td3.innerHTML = order.status
+            let td4 = document.createElement("td")
+            td4.innerHTML = `$${order.final_price}`
+            tr.appendChild(td1)
+            tr.appendChild(td2)
+            tr.appendChild(td3)
+            tr.appendChild(td4)
+            orders_table.appendChild(tr)
+        });
+    }
+
+    function load_address(data) {
+        addresses = document.getElementById('addresses')
+        data.forEach(address => {
+            let li = document.createElement('li')
+            li.classList.add("mt-3")
+            let span = document.createElement('span')
+            span.innerText = `${address.province}, ${address.city}, ${address.street}, ${address.detail}, ${address.postal_code}`
+            delete_btn = document.createElement('button')
+            delete_btn.innerHTML = 'delete'
+            delete_btn.setAttribute('onclick', `delete_address(${address.id})`)
+            delete_btn.classList.add("ml-3")
+            delete_btn.style.width = "60px"
+            span.appendChild(delete_btn)
+            edit_btn = document.createElement('button')
+            edit_btn.innerHTML = 'edit'
+            edit_btn.classList.add("ml-3", "profile-toggle")
+            edit_btn.style.width = "60px"
+
+            edit_btn.addEventListener('click', function () {
+                edit_address = document.getElementById("edit_address")
+                edit_address.style.display = edit_address.style.display === 'none' ? 'block' : 'none';
+            });
+            span.appendChild(edit_btn)
+            li.appendChild(span)
+            addresses.appendChild(li)
+        });
+    }
+
+    function delete_address(id) {
+        const url = `/api/v1/accounts/user_addresses/${id}`
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Authorization': `Bearer ${window.localStorage.getItem("access_token")}`,
+            }
+        }).then(res => {
+            if (res.status == 204) {
+                console.log("ok")
+                location.reload();
+            } else {
+                throw new Error("Bad Server Response");
+            }
+            return res.text();
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+</script>
+{% endblock %}
