@@ -19,6 +19,8 @@ class AddressSerializer(serializers.ModelSerializer):
 
 
 class CustomerProfileSerializer(serializers.ModelSerializer):
+    gender = serializers.CharField(source="get_gender_display")
+
     class Meta:
         model = CustomerProfile
         fields = ("gender", "shaba_number", "birthday")
@@ -42,6 +44,7 @@ class CustomerSerializer(serializers.ModelSerializer):
             "email",
         )
 
+
 class CustomerAbstractSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
@@ -53,4 +56,3 @@ class CustomerAbstractSerializer(serializers.ModelSerializer):
             "email",
         )
         read_only_fields = ("phone_number",)
-

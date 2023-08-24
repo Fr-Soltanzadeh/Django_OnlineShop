@@ -38,9 +38,9 @@ class VerifyCodeView(View):
 
 class LogoutView(View):
     def get(self, request):
-        user=request.user
+        phone_number = request.user.phone_number
         logout(request)
-        logger.info(f"User with phone_number:{user.phone_number} signed out.")
+        logger.info(f"User with phone_number:{phone_number} signed out.")
         return redirect("login")
 
 
