@@ -1,6 +1,6 @@
 <div align="center">
   
-<img src="OnlineShop/static/images/Noora-logo.png" alt="Logo" width="80" height="80">
+<img src="OnlineShop/static/images/Noora-logo.png" alt="Logo" width="40" height="40">
 
   <h3 align="center">>Django Online Shop</h3>
 
@@ -9,7 +9,7 @@
   </p>
 </div>
 <p>initialization:
-- creaate virtual enviroment and activate it 
+- create virtual enviroment and activate it 
 `python -m venv venv`
 `./venv/Scripts/activate.bat`
 - install requirements
@@ -19,8 +19,10 @@ Redis:
 `sudo service redis-server start`
 `redis-cli`
 Celery:
-windows: `celery -A OnlineShop worker -l info -P solo` 
-linux:  `celery -A OnlineShop worker -l info`
+windows: 
+`celery -A OnlineShop worker -l info -P solo` 
+linux:  
+`celery -A OnlineShop worker -l info`
 
 -commands:
 `python manage.py makemigrations`
