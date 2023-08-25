@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework import permissions, status
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+# from django.core.cache import cache
 from accounts.permissions import IsAdminUserOrReadOnly, IsOwnerOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 from products.pagination import ProductPagination
@@ -79,3 +80,5 @@ class DiscountViewSet(ModelViewSet):
     permission_classes = [permissions.IsAdminUser]
     queryset = Discount.objects.all()
     serializer_class = DiscountSerializer
+
+#todo cashe in which redis db
