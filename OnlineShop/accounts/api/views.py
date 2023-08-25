@@ -164,9 +164,13 @@ class CustomerProfileAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
-        serializer = CustomerProfileSerializer(data=request.data)
+        data = request.data.copy()
+        gender_display = data.get("gender")
+        if gender_display:
+            data["gender"] = CustomerProfile.GenderChoices[gender_display.upper()].value
+        serializer = CustomerProfileSerializer(data=data, partial=True)
         if serializer.is_valid():
-            CustomerProfile.objects.update_or_create(serializer.data)
+            CustomerProfile.objects.update_or_create(serializer.data, customer=self.request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
