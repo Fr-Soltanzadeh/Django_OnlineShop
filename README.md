@@ -1,9 +1,6 @@
 <div align="center">
-  
 <img src="OnlineShop/static/images/Noora-logo.png" alt="Logo" width="40" height="40">
-
-  <h3 align="center">>Django Online Shop</h3>
-
+  <h3 align="center">Django Online Shop</h3>
   <p align="center">
     Welcome to My Online Shop Project
   </p>
