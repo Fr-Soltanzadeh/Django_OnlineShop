@@ -235,18 +235,18 @@ Profile
                                     <div class="myaccount-content">
                                         <h3>Account Details</h3>
                                         <div class="account-details-form">
-                                            <form action="#">
+                                            <form action="javascript:void(0)" method="post" id="customer_form">
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="single-input-item">
                                                             <label for="first-name" class="required">First Name</label>
-                                                            <input type="text" id="first-name" />
+                                                            <input type="text" id="first-name" name="first_name" />
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <div class="single-input-item">
                                                             <label for="last-name" class="required">Last Name</label>
-                                                            <input type="text" id="last-name" />
+                                                            <input type="text" id="last-name" name="last_name" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -254,47 +254,55 @@ Profile
                                                     <div class="col-lg-6">
                                                         <div class="single-input-item">
                                                             <label for="email" class="required">Email Address</label>
-                                                            <input type="text" id="email" />
+                                                            <input type="text" id="email" name="" email />
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <div class="single-input-item">
                                                             <label for="national-code" class="required">National
                                                                 Code</label>
-                                                            <input type="text" id="national-code" />
+                                                            <input type="text" id="national-code"
+                                                                name="national_code" />
                                                         </div>
                                                     </div>
                                                     <div class="single-input-item">
-                                                        <button class="check-btn sqr-btn ">Save Changes</button>
+                                                        <button class="check-btn sqr-btn "
+                                                            onclick="change_customer_detail()">Save Changes</button>
                                                     </div>
                                                 </div>
+                                            </form>
 
-
-                                                <fieldset>
-                                                    <legend>More Details</legend>
+                                            <fieldset>
+                                                <legend>More Details</legend>
+                                                <form action="javascript:void(0)" id="profile_form">
                                                     <div class="single-input-item">
                                                         <label for="shaba-number" class="required">Shaba Number</label>
-                                                        <input type="text" id="shaba-number" />
+                                                        <input type="text" id="shaba-number" name="shaba_number" />
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-lg-6">
                                                             <div class="single-input-item">
                                                                 <label for="gender" class="required">Gender</label>
-                                                                <input type="text" id="gender" />
+                                                                <select name="gender" id="gender">
+                                                                    <option value="MALE">Male</option>
+                                                                    <option value="FEMALE">Female</option>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-6">
                                                             <div class="single-input-item">
                                                                 <label for="birth-day" class="required">Birth
                                                                     Day</label>
-                                                                <input type="text" id="birth-day" />
+                                                                <input type="text" id="birth-day" name="birthday" />
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </fieldset>
-                                                <div class="single-input-item">
-                                                    <button class="check-btn sqr-btn ">Save Changes</button>
-                                                </div>
+                                            </fieldset>
+                                            <div class="single-input-item">
+                                                <button class="check-btn sqr-btn "
+                                                    onclick="change_profile_detail()">Save Changes</button>
+                                            </div>
+
                                             </form>
                                         </div>
                                     </div>
@@ -432,7 +440,79 @@ Profile
                     }
                     else {
                         if (response.status == 401) {
-                            refresh_token("/accounts/login/", post_address)
+                            refresh_token("/accounts/login/", change_address)
+                        } else {
+                            throw new Error('not connected');
+                        }
+                    }
+                }
+            )
+            .then((data) => {
+
+                location.reload()
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+    function change_profile_detail() {
+
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const form = document.getElementById("profile_form");
+        const formData = new FormData(form);
+        const url = `/api/v1/accounts/profile/`
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Authorization': `Bearer ${window.localStorage.getItem("access_token")}`,
+            }
+        })
+            .then(
+                response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    else {
+                        if (response.status == 401) {
+                            refresh_token("/accounts/login/", change_profile_detail)
+                        } else {
+                            throw new Error('not connected');
+                        }
+                    }
+                }
+            )
+            .then((data) => {
+
+                location.reload()
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+    function change_customer_detail() {
+
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const form = document.getElementById("customer_form");
+        const formData = new FormData(form);
+        const url = `/api/v1/accounts/customer_abstract/`
+        fetch(url, {
+            method: 'PATCH',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Authorization': `Bearer ${window.localStorage.getItem("access_token")}`,
+            }
+        })
+            .then(
+                response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    else {
+                        if (response.status == 401) {
+                            refresh_token("/accounts/login/", change_customer_detail)
                         } else {
                             throw new Error('not connected');
                         }
