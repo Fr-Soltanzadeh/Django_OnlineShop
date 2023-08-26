@@ -8,7 +8,7 @@ This is my first comprehensive django project. This Django-based web application
 If you have any questions, suggestions, or issues regarding the project, please feel free to reach out to me.
 
 - [f.soltanzade72@gmail.com](mailto:f.soltanzade72@gmail.com)
-- [Farzaneh Soltanzadeh](https://www.linkedin.com/in/farzaneh-soltanzadeh-28a193280/)
+- ![Farzaneh Soltanzadeh](static/images/linkedin_logo.svg)(https://www.linkedin.com/in/farzaneh-soltanzadeh-28a193280/)
 
 ## Technologies Used
 
