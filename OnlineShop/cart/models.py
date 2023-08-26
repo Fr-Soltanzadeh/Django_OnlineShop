@@ -20,8 +20,9 @@ class Cart(BaseModel):
 
     def __str__(self):
         return f"customer{self.customer.id} {self.customer.fullname}"
-
-    def calculate_final_price_without_shipping(self):
+    
+    @property
+    def final_price_without_shipping(self):
         cart_items = self.cart_items.select_related("product")
         total_price = sum(
             item.product.discounted_price * item.quantity for item in cart_items
@@ -33,12 +34,14 @@ class Cart(BaseModel):
         ):
             return total_price * (1 - self.coupon.percent / 100)
         return total_price
-
-    def calculate_total_discounted_price(self):
+    
+    @property
+    def total_price_with_discount(self):
         cart_items = self.cart_items.select_related("product")
         return sum(item.product.discounted_price * item.quantity for item in cart_items)
-
-    def calculate_total_price(self):
+    
+    @property
+    def total_price(self):
         cart_items = self.cart_items.select_related("product")
         return cart_items.aggregate(
             total_price=Sum(F("product__price") * F("quantity"))

@@ -61,9 +61,15 @@ class Product(BaseModel):
 
     @property
     def discounted_price(self):
-        if self.discount:
-            return self.price * (100 - self.discount.percent) / 100
-        return self.price
+        return self.price * (100 - self.discount.percent) / 100 if self.discount else self.price
+    
+    @property
+    def orders_count(self):
+        return self.orders.count()
+    
+    @property
+    def wish_count(self):
+        return self.wish_list.count()
 
 
 class ProductImage(BaseModel):

@@ -4,14 +4,10 @@ from accounts.api.serializers import CustomerSerializer
 
 
 class OrderItemSerilizer(serializers.ModelSerializer):
-    product = serializers.SerializerMethodField()
-
+    product = serializers.CharField(source="product.title")
     class Meta:
         model = OrderItem
         fields = ("price", "quantity", "product")
-
-    def get_product(self, order_item):
-        return order_item.product.title
 
 
 class OrderSerializer(serializers.ModelSerializer):
