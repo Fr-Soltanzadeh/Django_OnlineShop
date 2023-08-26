@@ -4,7 +4,11 @@ Welcome to the Django Online Shop project!
 
 ## About project
 
-This is my first comprehensive django project.
+This is my first comprehensive django project. This Django-based web application provides a seamless online shopping experience. It aims to be a feature-rich, user-friendly, and secure e-commerce platform.
+If you have any questions, suggestions, or issues regarding the project, please feel free to reach out to me.
+
+- [f.soltanzade72@gmail.com](mailto:f.soltanzade72@gmail.com)
+- [Farzaneh Soltanzadeh](https://www.linkedin.com/in/farzaneh-soltanzadeh-28a193280/)
 
 ## Technologies Used
 
@@ -15,14 +19,8 @@ This is my first comprehensive django project.
 - Docker: Used for containerization and deployment of the project.
 - Gunicorn: A Python WSGI HTTP server used for serving the Django application.
 - Nginx: A web server used as a reverse proxy and for serving static files.
+- HTML5, CSS, and JavaScript: The trio of technologies employed for front-end development, providing structure, styling, and interactivity to the web pages.
 - Yasg: Swagger library used for API documentation.
-
-## Contact
-
-If you have any questions, suggestions, or issues regarding the project, please feel free to reach out to me.
-
-- [f.soltanzade72@gmail.com](mailto:f.soltanzade72@gmail.com)
-- [Farzaneh Soltanzadeh](https://www.linkedin.com/in/farzaneh-soltanzadeh-28a193280/)
 
 ## Initialization
 
@@ -102,7 +100,7 @@ docker-compose up --build
 
 ## API Documentation
 
-API documentation for the project is available through Swagger. You can access the API documentation using the following URL: `/swagger`
+API documentation for the project is available through Swagger.
 
 
 ## Contributing
