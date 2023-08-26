@@ -2,7 +2,7 @@
 
 Welcome to the Django Online Shop project!
 
-##About project
+## About project
 
 This is my first comprehensive django project.
 
@@ -19,12 +19,10 @@ This is my first comprehensive django project.
 
 ## Contact
 
-If you have any questions, suggestions, or issues regarding the project, please feel free to reach out to us. You can contact the project maintainers at:
+If you have any questions, suggestions, or issues regarding the project, please feel free to reach out to me.
 
 - [f.soltanzade72@gmail.com](mailto:f.soltanzade72@gmail.com)
 - [Farzaneh Soltanzadeh](https://www.linkedin.com/in/farzaneh-soltanzadeh-28a193280/)
-
-I appreciate your feedback and contributions!
 
 ## Initialization
 
@@ -92,7 +90,7 @@ coverage report
 
 ````
 
-The coverage report will provide information about the test coverage achieved by the project.
+The coverage report will provide information about the test coverage achieved by the project which covers more than 90% of the codebase.
 
 ## Deployment
 
