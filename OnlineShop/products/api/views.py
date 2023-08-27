@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 from rest_framework import permissions, status
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django.contrib.postgres.search import TrigramSimilarity
 
 # from django.core.cache import cache
 from accounts.permissions import IsAdminUserOrReadOnly, IsOwnerOrReadOnly
@@ -34,7 +35,14 @@ class ProductListCreateView(generics.ListCreateAPIView):
             category = Category.objects.get(slug=category)
             self.queryset = self.queryset.filter(category=category)
         if search_phrase := self.request.GET.get("search"):
-            self.queryset = self.queryset.filter(title__icontains=search_phrase)
+            self.queryset = (
+                self.queryset.annotate(
+                    similarity=TrigramSimilarity("title", search_phrase)
+                )
+                .filter(similarity__gt=0.1)
+                .order_by("-similarity")
+            )
+            # self.queryset = self.queryset.filter(title__icontains=search_phrase)
         return self.list(request, *args, **kwargs)
 
 
