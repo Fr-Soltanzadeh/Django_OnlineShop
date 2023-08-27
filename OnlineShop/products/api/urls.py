@@ -9,7 +9,7 @@ router.register("discounts", views.DiscountViewSet)
 
 urlpatterns = [
     path("", views.ProductListCreateView.as_view(), name="products_api"),
-    path("offers/", views.OfferedProductListView.as_view(), name="offer_list_api"),
+    path("offer/", views.OfferedProductListView.as_view(), name="offer_list_api"),
     path(
         "comments/<int:pk>/", views.CommentDetailApiView.as_view(), name="comment_api"
     ),

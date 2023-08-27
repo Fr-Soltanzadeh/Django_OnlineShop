@@ -16,3 +16,10 @@ class ProductDetailView(View):
 
     def get(self, request, slug):
         return render(request, self.template_name, context={"slug": slug})
+
+
+class OfferedProductListView(View):
+    template_name = "products/offer.html"
+
+    def get(self, request):
+        return render(request, self.template_name)
