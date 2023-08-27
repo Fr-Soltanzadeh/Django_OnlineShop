@@ -57,7 +57,7 @@ class OrderApiViewTest(TestCase):
         self.assertEqual(order.city, self.address.city)
         self.assertEqual(order.address_detail, self.address.detail)
         self.assertEqual(order.street, self.address.street)
-        self.assertEqual(order.total_price, self.cart.calculate_total_price())
+        self.assertEqual(order.total_price, self.cart.total_price)
         self.assertEqual(order.receiver_fullname, "Farzaneh Soltanzadeh")
         self.assertEqual(order.receiver_phone_number, "091020989290")
 

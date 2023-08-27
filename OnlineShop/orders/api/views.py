@@ -18,7 +18,7 @@ class OrderApiView(APIView):
         cart = user.cart
         data = request.data
         address = Address.objects.get(id=int(data["address_id"]))
-        cart_items=cart.cart_items.select_related("product")
+        cart_items = cart.cart_items.select_related("product")
         for item in cart_items:
             product = item.product
             if product.quantity == 0:
@@ -33,18 +33,6 @@ class OrderApiView(APIView):
                         "message": f"There are only {product.quantity} number of {product.title} available now."
                     }
                 )
-        order_data = {
-            "customer": user,
-            "province": address.province,
-            "postal_code": address.postal_code,
-            "city": address.city,
-            "address_detail": address.detail,
-            "street": address.street,
-            "total_price": cart.calculate_total_price(),
-            "receiver_fullname": data["receiver_fullname"],
-            "receiver_phone_number": data["receiver_phone_number"],
-            "coupon": cart.coupon,
-        }
         order = Order.objects.create(
             customer=user,
             province=address.province,
@@ -52,7 +40,7 @@ class OrderApiView(APIView):
             city=address.city,
             address_detail=address.detail,
             street=address.street,
-            total_price=cart.calculate_total_price(),
+            total_price=cart.total_price,
             receiver_fullname=data["receiver_fullname"],
             receiver_phone_number=data["receiver_phone_number"],
             coupon=cart.coupon,
@@ -70,7 +58,11 @@ class OrderApiView(APIView):
 
     def get(self, request):
         user = request.user
-        orders = user.orders.prefetch_related("orderItems").select_related("customer").order_by("created_at")
+        orders = (
+            user.orders.prefetch_related("orderItems")
+            .select_related("customer")
+            .order_by("created_at")
+        )
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data)
 

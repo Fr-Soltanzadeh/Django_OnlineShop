@@ -6,7 +6,12 @@ from products.api.views import (
 )
 from ..models import Category, Product, Comment, Discount
 from rest_framework import status
-from products.api.serializers import ProductSerializer, CategorySerializer, CommentSerializer, DiscountSerializer
+from products.api.serializers import (
+    ProductSerializer,
+    CategorySerializer,
+    CommentSerializer,
+    DiscountSerializer,
+)
 from decimal import Decimal
 from model_bakery import baker
 from rest_framework.test import APIClient, APITestCase
@@ -17,9 +22,7 @@ class TestProductDetailView(APITestCase):
     def setUp(self):
         self.client = APIClient()
         self.admin_user = User.objects.create_superuser(
-            phone_number="09102098929",
-            password="123",
-            email="admin@example.com"
+            phone_number="09102098929", password="123", email="admin@example.com"
         )
         category = Category.objects.create(name="dolls")
         self.product = Product.objects.create(
@@ -28,7 +31,7 @@ class TestProductDetailView(APITestCase):
             slug="girl-doll",
             price=Decimal(20.00),
             quantity=10,
-            info="a"
+            info="a",
         )
 
     def test_ProductDetail_GET(self):
@@ -41,13 +44,15 @@ class TestProductDetailView(APITestCase):
     def test_ProductDetail_UPDATE(self):
         self.client.force_authenticate(user=self.admin_user)
         url = reverse("product_detail_api", args=(self.product.slug,))
-        data = {"title": "doll", "price": self.product.price, "slug":self.product.slug, "info":self.product.info}
-        response = self.client.put(
-            url, data, partial=True
-        )
+        data = {
+            "title": "doll",
+            "price": self.product.price,
+            "slug": self.product.slug,
+            "info": self.product.info,
+        }
+        response = self.client.put(url, data, partial=True)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["title"], data["title"])
-
 
     def test_ProductDetail_DELETE(self):
         self.client.force_authenticate(user=self.admin_user)
@@ -56,7 +61,6 @@ class TestProductDetailView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Product.objects.filter(slug=self.product.slug).exists())
 
-    
 
 class ProductListCreateView(TestCase):
     def setUp(self):
@@ -88,7 +92,9 @@ class ProductListCreateView(TestCase):
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         self.assertEqual(len(response.data["results"]), len(serializer.data))
-        self.assertEqual(response.data["results"][0]["title"], serializer.data[0]["title"])
+        self.assertEqual(
+            response.data["results"][0]["title"], serializer.data[0]["title"]
+        )
 
 
 class CategoryApiViewTest(APITestCase):
@@ -105,6 +111,7 @@ class CategoryApiViewTest(APITestCase):
         expected_data = CategorySerializer(Category.objects.all(), many=True).data
         self.assertEqual(response.data, expected_data)
 
+
 class CommentApiViewTest(APITestCase):
     def setUp(self):
         self.client = APIClient()
@@ -116,16 +123,18 @@ class CommentApiViewTest(APITestCase):
             price=Decimal(20.00),
             quantity=10,
             info="a",
-            id=1
+            id=1,
         )
         self.url = "/api/v1/products/comments/?product_pk=1"
-        comment1= baker.make(Comment, product=self.product)
-        comment2= baker.make(Comment, product=self.product)
+        comment1 = baker.make(Comment, product=self.product)
+        comment2 = baker.make(Comment, product=self.product)
 
     def test_get_comments(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        expected_data = CommentSerializer(Comment.objects.filter(product=self.product), many=True).data
+        expected_data = CommentSerializer(
+            Comment.objects.filter(product=self.product), many=True
+        ).data
         self.assertEqual(response.data, expected_data)
 
 
@@ -133,17 +142,14 @@ class DiscountApiViewTest(APITestCase):
     def setUp(self):
         self.client = APIClient()
         self.admin_user = User.objects.create_superuser(
-            phone_number="09102098929",
-            password="123",
-            email="admin@example.com"
-        )        
+            phone_number="09102098929", password="123", email="admin@example.com"
+        )
         self.url = "/api/v1/products/discounts/"
-        discount1= baker.make(Discount)
+        discount1 = baker.make(Discount)
         self.client.force_authenticate(user=self.admin_user)
-
 
     def test_get_discounts(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         expected_data = DiscountSerializer(Discount.objects.all(), many=True).data
-        self.assertEqual(response.data['results'], expected_data)
+        self.assertEqual(response.data["results"], expected_data)

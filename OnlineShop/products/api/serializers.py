@@ -10,7 +10,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
-    category = serializers.CharField(source="category.name")
+    category = serializers.CharField(source="category.name", read_only=True)
 
     class Meta:
         model = Product
@@ -45,5 +45,4 @@ class DiscountSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('product', 'customer', 'parent_comment', 'rate', 'status', 'content')
-    
+        fields = ("product", "customer", "parent_comment", "rate", "status", "content")

@@ -4,7 +4,8 @@ from accounts.api.serializers import CustomerSerializer
 
 
 class OrderItemSerilizer(serializers.ModelSerializer):
-    product = serializers.CharField(source="product.title")
+    product = serializers.CharField(source="product.title", read_only=True)
+
     class Meta:
         model = OrderItem
         fields = ("price", "quantity", "product")
