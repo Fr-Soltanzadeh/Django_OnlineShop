@@ -29,7 +29,7 @@ class ProductListCreateView(generics.ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         self.queryset = Product.objects.select_related(
             "category", "discount"
-        ).prefetch_related("images")
+        ).prefetch_related("images", "comments")
         if category := self.request.GET.get("category"):
             category = Category.objects.get(slug=category)
             self.queryset = self.queryset.filter(category=category)
@@ -47,7 +47,7 @@ class OfferedProductListView(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         self.queryset = (
             Product.objects.select_related("category", "discount")
-            .prefetch_related("images")
+            .prefetch_related("images", "comments")
             .filter(is_active=True, discount__isnull=False, discount__is_active=True)
         )
         return self.list(request, *args, **kwargs)
@@ -57,7 +57,7 @@ class ProductDetailApiView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUserOrReadOnly]
     authentication_classes = []
     queryset = Product.objects.select_related("category", "discount").prefetch_related(
-        "images"
+        "images", "comments"
     )
     serializer_class = ProductSerializer
     lookup_field = "slug"

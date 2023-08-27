@@ -27,6 +27,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "wish_count",
             "orders_count",
             "is_active",
+            "rate",
         )
 
 

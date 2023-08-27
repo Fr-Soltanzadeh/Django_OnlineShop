@@ -27,7 +27,6 @@ class Category(BaseModel):
 
 
 class Product(BaseModel):
-
     title = models.CharField(max_length=150)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     category = models.ForeignKey(
@@ -61,15 +60,27 @@ class Product(BaseModel):
 
     @property
     def discounted_price(self):
-        return self.price * (100 - self.discount.percent) / 100 if self.discount else self.price
-    
+        return (
+            self.price * (100 - self.discount.percent) / 100
+            if self.discount
+            else self.price
+        )
+
     @property
     def orders_count(self):
         return self.orders.count()
-    
+
     @property
     def wish_count(self):
         return self.wish_list.count()
+
+    @property
+    def rate(self):
+        return (
+            self.comments.aggregate(models.Avg("rate"))["rate__avg"]
+            if self.comments.exists()
+            else None
+        )
 
 
 class ProductImage(BaseModel):
@@ -125,7 +136,6 @@ class Comment(BaseModel):
 
 
 class Discount(BaseModel):
-
     percent = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
     start_time = models.DateTimeField()
