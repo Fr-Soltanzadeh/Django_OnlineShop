@@ -53,7 +53,7 @@ Checkout
                         </div>
                         <div class="different-address open-toggle mt-20">
                             <form action="javascript: void(0)" method="post" style="width:  100%;"
-                                onsubmit="post_address()" id="add_address">
+                                onsubmit="post_address(add_address)" id="add_address">
                                 {% csrf_token %}
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6">
@@ -357,6 +357,23 @@ Checkout
                 console.log(error);
             });
 
+    }
+    function add_address(address) {
+        addresses = document.getElementById('addresses')
+        let div = document.createElement('div')
+        div.classList.add("mt-3", "form-check")
+        let input = document.createElement('input')
+        input.classList.add("form-check-input")
+        input.type = "radio"
+        input.name = "flexRadioDefault2"
+        input.value = address.id
+        input.checked = "checked"
+        let span = document.createElement('span')
+        span.innerText = `${address.province}, ${address.city}, ${address.street}, ${address.detail}, ${address.postal_code}`
+        div.appendChild(input)
+        div.appendChild(span)
+        addresses.appendChild(div)
+        $('.open-toggle').slideUp(1000);
     }
 </script>
 {% endblock %}
