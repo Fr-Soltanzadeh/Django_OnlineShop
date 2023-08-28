@@ -62,7 +62,7 @@ class TestProductDetailView(APITestCase):
         self.assertFalse(Product.objects.filter(slug=self.product.slug).exists())
 
 
-class ProductListCreateView(TestCase):
+class TestProductListCreateView(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.category1 = Category.objects.create(name="dolls", slug="dolls")
@@ -97,7 +97,7 @@ class ProductListCreateView(TestCase):
         )
 
 
-class CategoryApiViewTest(APITestCase):
+class TestCategoryApiView(APITestCase):
     def setUp(self):
         self.client = APIClient()
         self.url = "/api/v1/products/categories/"
@@ -112,7 +112,7 @@ class CategoryApiViewTest(APITestCase):
         self.assertEqual(response.data, expected_data)
 
 
-class CommentApiViewTest(APITestCase):
+class TestCommentApiView(APITestCase):
     def setUp(self):
         self.client = APIClient()
         category = Category.objects.create(name="dolls")
@@ -138,7 +138,7 @@ class CommentApiViewTest(APITestCase):
         self.assertEqual(response.data, expected_data)
 
 
-class DiscountApiViewTest(APITestCase):
+class TestDiscountApiView(APITestCase):
     def setUp(self):
         self.client = APIClient()
         self.admin_user = User.objects.create_superuser(

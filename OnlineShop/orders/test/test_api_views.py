@@ -84,48 +84,32 @@ class ApplyCouponViewTest(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = User.objects.create(phone_number="09102098929")
-
         self.url = reverse("apply_coupon_api")
-
-        # Create a cart for the user
         self.cart = Cart.objects.create(customer=self.user)
-
-    def test_valid_coupon(self):
-        self.client.force_authenticate(user=self.user)
-        coupon = baker.make(
+        self.coupon = baker.make(
             Coupon,
             coupon_code=1234,
             is_active=True,
             end_time=datetime.now() + timedelta(days=1),
         )
+
+    def test_valid_coupon(self):
+        self.client.force_authenticate(user=self.user)
         data = {"coupon_code": 1234}
-
         response = self.client.post(self.url, data)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, {"is_valid": True})
-        self.assertEqual(self.cart.coupon, coupon)
+        self.assertEqual(self.cart.coupon, self.coupon)
 
     def test_invalid_coupon(self):
         self.client.force_authenticate(user=self.user)
-
         data = {"coupon_code": 5678}
-
         response = self.client.post(self.url, data)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, {"is_valid": False})
         self.assertIsNone(self.cart.coupon)
 
     def test_unauthenticated_user(self):
-        coupon = baker.make(
-            Coupon,
-            coupon_code=1234,
-            is_active=True,
-            end_time=datetime.now() + timedelta(days=1),
-        )
         data = {"coupon_code": 1234}
-
         response = self.client.post(self.url, data)
-
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
