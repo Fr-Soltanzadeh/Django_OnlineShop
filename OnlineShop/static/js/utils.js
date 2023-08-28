@@ -135,9 +135,49 @@ function post_address() {
         )
         .then((data) => {
 
-            location.reload()
+            load_address(data)
         })
         .catch(function (error) {
             console.log(error);
         });
+}
+
+function load_address(data) {
+    addresses = document.getElementById('addresses')
+    data.forEach(address => {
+        let li = document.createElement('li')
+        li.classList.add("mt-3")
+        li.id = `li${address.id}`
+        let span = document.createElement('span')
+        span.innerText = `${address.province}, ${address.city}, ${address.street}, ${address.detail}, ${address.postal_code}`
+        li.appendChild(span)
+
+        edit_btn = document.createElement('button')
+        edit_btn.innerHTML = 'edit'
+        edit_btn.classList.add("ml-3", "profile-toggle")
+        edit_btn.style.width = "60px"
+        edit_btn.addEventListener('click', function () {
+            edit_address_form = document.getElementById("edit_address_form")
+            edit_address = document.getElementById("edit_address")
+            edit_address_form.querySelector('input[name="street"]').value = address.street;
+            edit_address_form.querySelector('input[name="city"]').value = address.city;
+            edit_address_form.querySelector('input[name="detail"]').value = address.detail;
+            edit_address_form.querySelector('input[name="postal_code"]').value = address.postal_code;
+            edit_address_form.querySelector('input[name="province"]').value = address.province;
+            edit_address_form.querySelector('input[name="id"]').value = address.id;
+            edit_address.style.display = edit_address.style.display === 'none' ? 'block' : 'none';
+
+        });
+
+        li.appendChild(edit_btn)
+
+        delete_btn = document.createElement('button')
+        delete_btn.innerHTML = 'delete'
+        delete_btn.setAttribute('onclick', `delete_address(${address.id})`)
+        delete_btn.classList.add("ml-3")
+        delete_btn.style.width = "60px"
+        li.appendChild(delete_btn)
+
+        addresses.appendChild(li)
+    });
 }
