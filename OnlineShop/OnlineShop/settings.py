@@ -32,7 +32,7 @@ SECRET_KEY = str(getenv("SECRET_KEY"))
 REFRESH_TOKEN_SECRET = str(getenv("SECRET_KEY"))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(getenv("DEBUG"))
 
 ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1"]
 
@@ -214,12 +214,12 @@ EMAIL_HOST_PASSWORD = getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = "f.soltanzade72@gmail.com"
 
 # CELERY SETTINGS
-CELERY_BROKER_URL = f"redis://{getenv('redis')}:6379"
+CELERY_BROKER_URL = f"redis://{getenv('redis')}:6379/0"
 CELERY_ACCEPT_CONTENT = {"application/json"}
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
 CELERY_TIMEZONE = "Asia/Tehran"
-CELERY_RESULT_BACKEND = f"redis://{getenv('redis')}:6379"
+CELERY_RESULT_BACKEND = f"redis://{getenv('redis')}:6379/1"
 
 # BEAT SETTINGS
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"

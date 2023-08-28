@@ -12,12 +12,12 @@ from rest_framework import permissions, status
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.contrib.postgres.search import TrigramSimilarity
-
-# from django.core.cache import cache
 from accounts.permissions import IsAdminUserOrReadOnly, IsOwnerOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 from products.pagination import ProductPagination
 from accounts.authentication import LoginAuthentication
+
+# from django.core.cache import cache
 
 
 class ProductListCreateView(generics.ListCreateAPIView):
