@@ -119,4 +119,15 @@ class DiscountViewSet(ModelViewSet):
     serializer_class = DiscountSerializer
 
 
-# todo cashe in which redis db
+class WishlistApiView(APIView):
+    def post(self, request, *args, **kwargs):
+        product = Product.objects.get(id=request.data.get("product_pk"))
+        product.wish_list.add(request.user)
+        return Response(status=status.HTTP_200_OK)
+
+    def get(self, request, *args, **kwargs):
+        products = request.user.wish_list.select_related(
+            "category", "discount"
+        ).prefetch_related("images", "comments")
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

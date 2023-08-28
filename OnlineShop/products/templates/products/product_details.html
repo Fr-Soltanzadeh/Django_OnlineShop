@@ -132,9 +132,9 @@ Product detail
                             </div>
 
                             <div class="pro-details-action">
-                                <a title="Add to Wishlist" href="#"><i class="icon-heart"></i></a>
-                                <!-- <a title="Add to Compare" href="#"><i class="icon-refresh"></i></a>
-                                    <a class="social" title="Social" href="#"><i class="icon-share"></i></a> -->
+                                <a title="Add to Wishlist" href="javascript:void(0)" id="add_wishlist"><i
+                                        class="icon-heart"></i></a>
+                                <!-- <a class="social" title="Social" href="#"><i class="icon-share"></i></a> -->
                                 <!-- <div class="product-dec-social"> -->
                                 <!-- <a class="facebook" title="Facebook" href="#"><i class="icon-social-facebook"></i></a>
                                         <a class="twitter" title="Twitter" href="#"><i class="icon-social-twitter"></i></a>
@@ -708,6 +708,9 @@ Product detail
 
 <script>
     window.onload = function () {
+        load_data()
+    }
+    function load_data() {
         let pathname = (new URL(document.location)).pathname;
         const base_api_url = `/api/v1${pathname}`
         fetch(base_api_url, {
@@ -749,10 +752,52 @@ Product detail
                 if (data.rate) {
                     document.getElementById("rate").innerHTML = data.rate.toFixed(1);
                 }
+                document.getElementById("add_wishlist").setAttribute("onclick", `add_to_wishlist(${data.id})`)
+                if (data.wish_list) {
+                    document.getElementById("add_wishlist").style.color = "#ffffff";
+                    document.getElementById("add_wishlist").style.background = "#ff2f2f";
+                }
             })
             .catch(function (error) {
                 console.log(error);
             });
+    }
+
+    function add_to_wishlist(product_pk) {
+        let url = "/api/v1/products/wishlist/"
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify({ product_pk: product_pk }),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+                'Authorization': `Bearer ${window.localStorage.getItem("access_token")}`,
+            }
+        })
+            .then(
+                response => {
+                    console.log(response.status)
+                    if (response.ok) {
+                        load_data()
+                        document.getElementById("add_wishlist").style.color = "#ffffff";
+                        document.getElementById("add_wishlist").style.background = "#ff2f2f";
+                    }
+                    else {
+                        console.log("refresh")
+                        if (response.status == 401) {
+
+                            refresh_token("/accounts/login/", `${add_to_wishlist(product_pk)}`);
+                        } else {
+                            throw new Error('not connected');
+                        }
+                    }
+                }
+            )
+            .catch(function (error) {
+                console.log(error);
+            });
+
     }
 </script>
 {% endblock %}

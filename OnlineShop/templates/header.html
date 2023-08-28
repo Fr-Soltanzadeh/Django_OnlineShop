@@ -7,7 +7,8 @@
                     <div class="row align-items-center d-flex justify-content-between">
                         <div class="col-xl-2 col-lg-2 ml-5">
                             <div class="logo">
-                                <a href="{% url 'home' %}"><img src="{% static 'images/Noora-logo.png' %}" alt="logo" style="height: 80px;"></a>
+                                <a href="{% url 'home' %}"><img src="{% static 'images/Noora-logo.png' %}" alt="logo"
+                                        style="height: 80px;"></a>
                             </div>
                         </div>
                         <div class="col-xl-5 col-lg-5 ">
@@ -21,16 +22,19 @@
                             </div>
                         </div>
                         <div class="col-xl-3 col-lg-3">
-                          
+
                             <div class="header-action header-action-flex">
-                                
-                                <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc ">
+
+                                <div
+                                    class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc ">
                                     <a href="{% url 'profile' %}"><i class="icon-user"></i></a>
                                 </div>
-                                <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc">
+                                <div
+                                    class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc">
                                     <a href="wishlist.html"><i class="icon-heart"></i></a>
                                 </div>
-                                <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc">
+                                <div
+                                    class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc">
                                     <a href="{% url 'cart'%}">
                                         <i class="icon-basket-loaded"></i>
                                     </a>
@@ -44,12 +48,13 @@
                 <div class="container">
                     <div class="row align-items-center">
                         <div class="col-12">
-                            <div class="main-menu main-menu-white main-menu-font-size-14 main-menu-padding-3 main-menu-lh-5 main-menu-hover-black">
+                            <div
+                                class="main-menu main-menu-white main-menu-font-size-14 main-menu-padding-3 main-menu-lh-5 main-menu-hover-black">
                                 <nav>
                                     <ul>
                                         <li><a href="{% url 'home' %}">HOME</a></li>
                                         <li><a href="{% url 'products' %}">SHOP</a></li>
-                                        <li><a href="{% url 'home' %}">OFFER </a></li>
+                                        <li><a href="{% url 'offer' %}">OFFER </a></li>
                                         {% if not user.is_authenticated %}
                                         <li><a href="{% url 'login' %}">LOGIN </a></li>
                                         {%else%}
@@ -79,9 +84,11 @@
                                 <a href="{% url 'login' %}"><i class="icon-user"></i></a>
                             </div>
                             <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc">
-                                <a href="{% url 'home' %}"><i class="icon-heart"></i><span class="pro-count black">03</span></a>
+                                <a href="{% url 'home' %}"><i class="icon-heart"></i><span
+                                        class="pro-count black">03</span></a>
                             </div>
-                            <div class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc header-cart">
+                            <div
+                                class="same-style-2 same-style-2-white same-style-2-hover-black same-style-2-font-inc header-cart">
                                 <a class="cart-active" href="{% url 'cart' %}">
                                     <i class="icon-basket-loaded"></i><span class="pro-count black">02</span>
                                 </a>
@@ -95,7 +102,7 @@
             </div>
         </div>
     </header>
-    
+
     <!-- Mobile menu start -->
     <div class="mobile-header-active mobile-header-wrapper-style">
         <div class="clickalbe-sidebar-wrap">
@@ -114,11 +121,11 @@
                             <li class="menu-item-has-children"><a href="{% url 'home' %}">Home</a>
                             </li>
                             <li><a href="shop.html">SHOP</a></li>
-                                        <li><a href="contact.html">OFFER </a></li>
-                                        <li><a href="contact.html">CONTACT </a></li>
-                                        <li><a href="shop.html">ABOUT </a></li>
-                                </ul>
-                            </li>
+                            <li><a href="contact.html">OFFER </a></li>
+                            <li><a href="contact.html">CONTACT </a></li>
+                            <li><a href="shop.html">ABOUT </a></li>
+                        </ul>
+                        </li>
                         </ul>
                     </nav>
                     <!-- mobile menu end -->

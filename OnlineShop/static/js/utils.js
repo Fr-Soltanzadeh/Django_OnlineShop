@@ -23,7 +23,10 @@ function refresh_token(fail_url, success_function) {
         .then((data) => {
             window.localStorage.setItem("access_token", data.access_token);
             window.localStorage.setItem("refresh_token", data.refresh_token);
-            success_function();
+            if (success_function) {
+                success_function();
+            }
+
         }
         )
 }
@@ -69,7 +72,6 @@ function refresh_page() {
 
 
 function add_to_cart(product_id) {
-    console.log(product_id)
     const url = '/api/v1/cart/add/'
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     fetch(url, {
@@ -92,7 +94,7 @@ function add_to_cart(product_id) {
                     console.log("refresh")
                     if (response.status == 401) {
 
-                        refresh_token("/login/", `${add_to_cart(product_id)}`);
+                        refresh_token("/accounts/login/", `${add_to_cart(product_id)}`);
                     } else {
                         throw new Error('not connected');
                     }
