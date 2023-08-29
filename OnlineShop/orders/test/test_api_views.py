@@ -103,6 +103,14 @@ class ApplyCouponViewTest(TestCase):
 
     def test_invalid_coupon(self):
         self.client.force_authenticate(user=self.user)
+        data = {"coupon_code": 11111}
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, {"is_valid": False})
+        self.assertIsNone(self.cart.coupon)
+
+    def test_coupon_not_exist(self):
+        self.client.force_authenticate(user=self.user)
         data = {"coupon_code": 5678}
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
