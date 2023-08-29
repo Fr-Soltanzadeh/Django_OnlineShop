@@ -11,6 +11,10 @@ class OrderItemSerilizer(serializers.ModelSerializer):
         fields = ("price", "quantity", "product")
 
 
+class CouponSerializer(serializers.Serializer):
+    coupon_code = serializers.IntegerField()
+
+
 class OrderSerializer(serializers.ModelSerializer):
     orderItems = OrderItemSerilizer(many=True, read_only=True)
     customer = CustomerSerializer(read_only=True)
