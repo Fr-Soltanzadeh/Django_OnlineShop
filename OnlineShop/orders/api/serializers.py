@@ -12,7 +12,7 @@ class OrderItemSerilizer(serializers.ModelSerializer):
 
 
 class CouponSerializer(serializers.Serializer):
-    coupon_code = serializers.IntegerField()
+    coupon_code = serializers.IntegerField(min_value=1000, max_value=9999)
 
 
 class OrderSerializer(serializers.ModelSerializer):

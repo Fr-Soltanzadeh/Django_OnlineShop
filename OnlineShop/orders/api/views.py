@@ -69,12 +69,11 @@ class OrderApiView(APIView):
 
 class ApplyCoupon(APIView):
     def post(self, request):
-        coupon_code = request.data.get("coupon_code")
-        serializer = CouponSerializer(data=coupon_code)
+        data = request.data
+        serializer = CouponSerializer(data=data)
         if serializer.is_valid():
-            if Coupon.objects.filter(
-                coupon_code=serializer.data["coupon_code"]
-            ).exists():
+            coupon_code = serializer.data["coupon_code"]
+            if Coupon.objects.filter(coupon_code=coupon_code).exists():
                 coupon = Coupon.objects.get(coupon_code=coupon_code)
                 if coupon.is_active and coupon.end_time > datetime.now().replace(
                     tzinfo=pytz.utc
