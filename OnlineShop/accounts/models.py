@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from .managers import UserManager, CustomerManager
 from core.utils import get_phonenumber_regex
 from core.models import BaseModel
-from django.urls import reverse
+from django.core.validators import RegexValidator
 
 
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
@@ -59,7 +59,14 @@ class CustomerProfile(BaseModel):
     customer = models.OneToOneField(
         "Customer", on_delete=models.CASCADE, related_name="profile"
     )
-    shaba_number = models.CharField(max_length=16, null=True, blank=True)
+    shaba_number = models.CharField(
+        max_length=16,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(regex=r"^[\d]+$", message=_("invalid shaba number"))
+        ],
+    )
 
     def __str__(self):
         return str(self.customer)
