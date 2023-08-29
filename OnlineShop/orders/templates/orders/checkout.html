@@ -113,6 +113,10 @@ Checkout
                             <input id="me" type="checkbox">
                             <span>Me</span>
                         </div>
+                        <div>
+                            <p id="error"></p>
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-lg-5">
@@ -158,7 +162,7 @@ Checkout
                                 </div>
                             </div>
                             <div>
-                                <p id="error"></p>
+
                             </div>
                             <div class="payment-method">
                                 <div class="pay-top sin-payment">
@@ -277,7 +281,8 @@ Checkout
                     if (response.redirected) {
                         window.location.href = response.url;
                     } else {
-                        if (response.ok) {
+
+                        if (response.ok | response.status == 400) {
                             return response.json();
                         }
                         else {
@@ -288,12 +293,13 @@ Checkout
                             }
                         }
                     }
+
                 }
             )
             .then((data) => {
                 if (data.message) {
                     let p = document.getElementById("error")
-                    p.style.color = red;
+                    p.style.color = 'red';
                     p.innerHTML = data.message;
                 }
                 console.log(data);

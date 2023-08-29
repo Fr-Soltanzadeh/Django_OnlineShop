@@ -33,28 +33,36 @@ class OrderApiView(APIView):
                         "message": f"There are only {product.quantity} number of {product.title} available now."
                     }
                 )
-        order = Order.objects.create(
-            customer=user,
-            province=address.province,
-            postal_code=address.postal_code,
-            city=address.city,
-            address_detail=address.detail,
-            street=address.street,
-            total_price=cart.total_price,
-            receiver_fullname=data["receiver_fullname"],
-            receiver_phone_number=data["receiver_phone_number"],
-            coupon=cart.coupon,
+        serializer = OrderSerializer(
+            data=data,
         )
-        for item in cart_items:
-            OrderItem.objects.create(
-                product=item.product,
-                quantity=item.quantity,
-                price=item.product.price,
-                order=order,
+        if serializer.is_valid():
+            order = Order.objects.create(
+                customer=user,
+                province=address.province,
+                postal_code=address.postal_code,
+                city=address.city,
+                address_detail=address.detail,
+                street=address.street,
+                total_price=cart.total_price,
+                receiver_fullname=serializer.data["receiver_fullname"],
+                receiver_phone_number=serializer.data["receiver_phone_number"],
+                coupon=cart.coupon,
             )
-        order.calculate_final_price()
-        order.save()
-        return HttpResponseRedirect(redirect_to=reverse("pay", args=(order.id,)))
+            for item in cart_items:
+                OrderItem.objects.create(
+                    product=item.product,
+                    quantity=item.quantity,
+                    price=item.product.price,
+                    order=order,
+                )
+            order.calculate_final_price()
+            order.save()
+            return HttpResponseRedirect(redirect_to=reverse("pay", args=(order.id,)))
+        else:
+            return Response(
+                {"message": "invalid reciever data"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
     def get(self, request):
         user = request.user
