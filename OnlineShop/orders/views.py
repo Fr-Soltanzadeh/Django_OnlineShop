@@ -74,7 +74,8 @@ class OrderPayView(LoginRequiredMixin, View):
 class VerifyOrderView(View):
     def get(self, request):
         order_id = request.session["order_pay"]["order_id"]
-        order = Order.objects.get(id=int(order_id))
+        order = Order.objects.select_related("customer").get(id=int(order_id))
+        cart = order.customer.cart
         data = {
             "MerchantID": settings.MERCHANT,
             "Amount": int(round(float(order.total_price))) * 1000,
@@ -88,39 +89,39 @@ class VerifyOrderView(View):
         }
 
         response = requests.post(ZP_API_VERIFY, data=data, headers=headers)
-        if response.status_code == 200:
-            response = response.json()
-            if response["Status"] == 100 or response["Status"] == 101:
-                order.status = 2
-                order.transaction_id = response["RefID"]
-                order.save()
-                cart = order.customer.cart
-                if cart.coupon:
-                    coupon = cart.coupon
-                    coupon.is_active = False
-                    coupon.save()
-                    cart.coupon = None
-                    cart.save()
+        
 
-                for item in cart.cart_items.all():
-                    product = item.product
-                    product.quantity -= item.quantity
-                    if product.quantity == 0:
-                        product.is_active = False
-                    product.save()
-                    item.delete()
+        if response.status_code == 200 and response.json()["Status"] in [100,101]:
+            order.status = 2
+            order.transaction_id = response["RefID"]
+            order.save()
+            
+            if cart.coupon:
+                coupon = cart.coupon
+                coupon.is_active = False
+                coupon.save()
+                cart.coupon = None
+                cart.save()
 
-                if order.customer.email:
-                    mail = order.customer.email
-                    message = f"Transaction success.RefID:  {str(response['RefID'])}"
-                    mail_subject = "Order Confirmed Successfuly"
-                    send_order_status_email.delay(mail, message, mail_subject)
+            for item in cart.cart_items.all():
+                item.delete()
 
-                return HttpResponse(
-                    f"Transaction success.RefID:  {str(response['RefID'])}, Status: {response['Status']}, order ID: {order_id}"
-                )
-            else:
-                order.status = 3
-                order.save()
-                return HttpResponse("Transaction failed, order ID:" + str(order_id))
-        return response
+            if order.customer.email:
+                mail = order.customer.email
+                message = f"Transaction success.RefID:  {str(response['RefID'])}"
+                mail_subject = "Order Confirmed Successfuly"
+                send_order_status_email.delay(mail, message, mail_subject)
+
+            return HttpResponse(
+                f"Transaction success.RefID:  {str(response['RefID'])}, Status: {response['Status']}, order ID: {order_id}"
+            )
+        else:
+            order.status = 3
+            order.save()
+            for item in cart.cart_items.select_related("product"):
+                product = item.product
+                product.quantity += item.quantity
+                if not product.is_active:
+                    product.is_active = True
+                product.save()
+            return HttpResponse("Transaction failed, order ID:" + str(order_id))

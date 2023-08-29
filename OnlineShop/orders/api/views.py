@@ -3,7 +3,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from django.shortcuts import reverse
 from rest_framework import views, permissions, status
-from .serializers import OrderSerializer, CouponSerializer
+from .serializers import OrderSerializer, CouponSerializer, RecieverSerializer
 from ..models import Order, OrderItem, Coupon
 from accounts.models import Address
 from accounts.permissions import IsAdminUserOrReadOnly
@@ -16,8 +16,6 @@ class OrderApiView(APIView):
     def post(self, request):
         user = request.user
         cart = user.cart
-        data = request.data
-        address = Address.objects.get(id=int(data["address_id"]))
         cart_items = cart.cart_items.select_related("product")
         for item in cart_items:
             product = item.product
@@ -33,8 +31,15 @@ class OrderApiView(APIView):
                         "message": f"There are only {product.quantity} number of {product.title} available now."
                     }
                 )
-        serializer = OrderSerializer(
-            data=data,
+            product.quantity -= item.quantity
+            if product.quantity == 0:
+                product.is_active = False
+            product.save()
+
+        data = request.data
+        address = Address.objects.get(id=int(data["address_id"])) 
+        serializer = RecieverSerializer(
+            data=data, partial=True
         )
         if serializer.is_valid():
             order = Order.objects.create(
