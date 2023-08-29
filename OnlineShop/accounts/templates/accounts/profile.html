@@ -233,7 +233,7 @@ Profile
                                 <!-- Single Tab Content Start -->
                                 <div class="tab-pane fade" id="account-info" role="tabpanel">
                                     <div class="myaccount-content">
-                                        <h3>Account Details</h3>
+                                        <h3>Account Details <small class="ml-3" id="error1" style="color: red;"></small></h3> 
                                         <div class="account-details-form">
                                             <form action="javascript:void(0)" method="post" id="customer_form">
                                                 <div class="row">
@@ -273,7 +273,7 @@ Profile
                                             </form>
 
                                             <fieldset>
-                                                <legend>More Details</legend>
+                                                <legend>More Details <small class="ml-5" id="error2" style="color: red;"></small></legend> 
                                                 <form action="javascript:void(0)" id="profile_form">
                                                     <div>
                                                         <label for="shaba-number" class="required">Shaba Number</label>
@@ -452,12 +452,24 @@ Profile
                         if (response.status == 401) {
                             refresh_token("/accounts/login/", change_profile_detail)
                         } else {
+                            if (response.status == 400) {
+                                return response.json();
+                        }else{
                             throw new Error('not connected');
+                        }
                         }
                     }
                 }
             )
             .then((data) => {
+                if (data.message){
+                    document.getElementById("error2").innerText =data.message;
+                }else{
+                    document.getElementById("error2").innerText ="";
+
+                }
+    
+                
 
             })
             .catch(function (error) {
@@ -487,13 +499,22 @@ Profile
                         if (response.status == 401) {
                             refresh_token("/accounts/login/", change_customer_detail)
                         } else {
+                            if (response.status == 400) {
+                                return response.json();
+                        }else{
                             throw new Error('not connected');
+                        }
                         }
                     }
                 }
             )
             .then((data) => {
-
+                if (data.message){
+                    document.getElementById("error1").innerText =data.message;
+                }else{
+                    document.getElementById("error1").innerText ="";
+                }
+                
             })
             .catch(function (error) {
                 console.log(error);
