@@ -23,3 +23,10 @@ class OfferedProductListView(View):
 
     def get(self, request):
         return render(request, self.template_name)
+
+
+class WishListProductView(View):
+    template_name = "products/wishlist.html"
+
+    def get(self, request):
+        return render(request, self.template_name)
