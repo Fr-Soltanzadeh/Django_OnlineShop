@@ -53,7 +53,7 @@ Checkout
                         </div>
                         <div class="different-address open-toggle mt-20">
                             <form action="javascript: void(0)" method="post" style="width:  100%;"
-                                onsubmit="post_address()" id="add_address">
+                                onsubmit="post_address(add_address)" id="add_address">
                                 {% csrf_token %}
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6">
@@ -113,6 +113,10 @@ Checkout
                             <input id="me" type="checkbox">
                             <span>Me</span>
                         </div>
+                        <div>
+                            <p id="error"></p>
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-lg-5">
@@ -158,7 +162,7 @@ Checkout
                                 </div>
                             </div>
                             <div>
-                                <p id="error"></p>
+
                             </div>
                             <div class="payment-method">
                                 <div class="pay-top sin-payment">
@@ -231,16 +235,16 @@ Checkout
         document.getElementById("Subtotal").innerHTML = `$${data.total_price.toFixed(2)}`
         const shipping = 2
         document.getElementById("Shipping").innerHTML = `$${shipping.toFixed(2)}`
-        const profit = (Number(data.total_price) - Number(data.total_price_with_discount_coupon)).toFixed(2)
+        const profit = (Number(data.total_price) - Number(data.final_price_without_shipping)).toFixed(2)
         if (Number(profit) > 0) {
             document.getElementById("profit_discount").innerHTML = `$${(Number(data.total_price) - Number(data.total_price_with_discount)).toFixed(2)}`
-            document.getElementById("profit_coupon").innerHTML = `$${((data.total_price_with_discount) - Number(data.total_price_with_discount_coupon)).toFixed(2)}`
+            document.getElementById("profit_coupon").innerHTML = `$${((data.total_price_with_discount) - Number(data.final_price_without_shipping)).toFixed(2)}`
         } else {
             document.getElementById("li_profit_discount").hidden = true
             document.getElementById("li_profit_coupon").hidden = true
         }
         document.getElementById("profit").innerHTML = `$${profit}`
-        document.getElementById("Total").innerHTML = `$${(Number(data.total_price_with_discount_coupon) + Number(shipping)).toFixed(2)}`
+        document.getElementById("Total").innerHTML = `$${(Number(data.final_price_without_shipping) + Number(shipping)).toFixed(2)}`
         const cartItems = data.cart_items
         let items = document.getElementById("items")
         cartItems.forEach(item => {
@@ -277,7 +281,8 @@ Checkout
                     if (response.redirected) {
                         window.location.href = response.url;
                     } else {
-                        if (response.ok) {
+
+                        if (response.ok | response.status == 400) {
                             return response.json();
                         }
                         else {
@@ -288,12 +293,13 @@ Checkout
                             }
                         }
                     }
+
                 }
             )
             .then((data) => {
                 if (data.message) {
                     let p = document.getElementById("error")
-                    p.style.color = red;
+                    p.style.color = 'red';
                     p.innerHTML = data.message;
                 }
                 console.log(data);
@@ -357,6 +363,23 @@ Checkout
                 console.log(error);
             });
 
+    }
+    function add_address(address) {
+        addresses = document.getElementById('addresses')
+        let div = document.createElement('div')
+        div.classList.add("mt-3", "form-check")
+        let input = document.createElement('input')
+        input.classList.add("form-check-input")
+        input.type = "radio"
+        input.name = "flexRadioDefault2"
+        input.value = address.id
+        input.checked = "checked"
+        let span = document.createElement('span')
+        span.innerText = `${address.province}, ${address.city}, ${address.street}, ${address.detail}, ${address.postal_code}`
+        div.appendChild(input)
+        div.appendChild(span)
+        addresses.appendChild(div)
+        $('.open-toggle').slideUp(1000);
     }
 </script>
 {% endblock %}

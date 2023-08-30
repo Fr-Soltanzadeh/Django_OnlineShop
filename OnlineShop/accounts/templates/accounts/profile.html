@@ -189,7 +189,7 @@ Profile
                                             </div>
                                             <div class="different-address open-toggle mt-20">
                                                 <form action="javascript: void(0)" method="post" style="width:  100%;"
-                                                    onsubmit="post_address()" id="add_address">
+                                                    onsubmit="post_address(add_address)" id="add_address">
                                                     {% csrf_token %}
                                                     <div class="row">
                                                         <div class="col-lg-6 col-md-6">
@@ -233,7 +233,7 @@ Profile
                                 <!-- Single Tab Content Start -->
                                 <div class="tab-pane fade" id="account-info" role="tabpanel">
                                     <div class="myaccount-content">
-                                        <h3>Account Details</h3>
+                                        <h3>Account Details <small class="ml-3" id="error1" style="color: red;"></small></h3> 
                                         <div class="account-details-form">
                                             <form action="javascript:void(0)" method="post" id="customer_form">
                                                 <div class="row">
@@ -273,11 +273,20 @@ Profile
                                             </form>
 
                                             <fieldset>
-                                                <legend>More Details</legend>
+                                                <legend>More Details <small class="ml-5" id="error2" style="color: red;"></small></legend> 
                                                 <form action="javascript:void(0)" id="profile_form">
-                                                    <div class="single-input-item">
+                                                    <div>
                                                         <label for="shaba-number" class="required">Shaba Number</label>
-                                                        <input type="text" id="shaba-number" name="shaba_number" />
+                                                        <div class="row">
+                                                            <div class=" single-input-item  col-lg-2">
+                                                                <input type="text" value="IR" disabled />
+                                                            </div>
+                                                            <div class=" single-input-item col-lg-10">
+                                                                <input type="text" id="shaba-number"
+                                                                    name="shaba_number" />
+                                                            </div>
+
+                                                        </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-lg-6">
@@ -360,41 +369,6 @@ Profile
         });
     }
 
-    function load_address(data) {
-        addresses = document.getElementById('addresses')
-        data.forEach(address => {
-            let li = document.createElement('li')
-            li.classList.add("mt-3")
-            let span = document.createElement('span')
-            span.innerText = `${address.province}, ${address.city}, ${address.street}, ${address.detail}, ${address.postal_code}`
-            delete_btn = document.createElement('button')
-            delete_btn.innerHTML = 'delete'
-            delete_btn.setAttribute('onclick', `delete_address(${address.id})`)
-            delete_btn.classList.add("ml-3")
-            delete_btn.style.width = "60px"
-            span.appendChild(delete_btn)
-            edit_btn = document.createElement('button')
-            edit_btn.innerHTML = 'edit'
-            edit_btn.classList.add("ml-3", "profile-toggle")
-            edit_btn.style.width = "60px"
-
-            edit_btn.addEventListener('click', function () {
-                edit_address_form = document.getElementById("edit_address_form")
-                edit_address = document.getElementById("edit_address")
-                edit_address_form.querySelector('input[name="street"]').value = address.street;
-                edit_address_form.querySelector('input[name="city"]').value = address.city;
-                edit_address_form.querySelector('input[name="detail"]').value = address.detail;
-                edit_address_form.querySelector('input[name="postal_code"]').value = address.postal_code;
-                edit_address_form.querySelector('input[name="province"]').value = address.province;
-                edit_address_form.querySelector('input[name="id"]').value = address.id;
-                edit_address.style.display = edit_address.style.display === 'none' ? 'block' : 'none';
-
-            });
-            span.appendChild(edit_btn)
-            li.appendChild(span)
-            addresses.appendChild(li)
-        });
-    }
 
     function delete_address(id) {
         const url = `/api/v1/accounts/user_addresses/${id}/`
@@ -408,7 +382,7 @@ Profile
         }).then(res => {
             if (res.status == 204) {
                 console.log("ok")
-                location.reload();
+                document.getElementById(`li${id}`).remove()
             } else {
                 throw new Error("Bad Server Response");
             }
@@ -448,8 +422,8 @@ Profile
                 }
             )
             .then((data) => {
-
-                location.reload()
+                document.querySelector(`#li${id} > span`).innerText = `${data.province}, ${data.city}, ${data.street}, ${data.detail}, ${data.postal_code}`
+                document.getElementById("edit_address").style.display = 'none';
             })
             .catch(function (error) {
                 console.log(error);
@@ -478,14 +452,25 @@ Profile
                         if (response.status == 401) {
                             refresh_token("/accounts/login/", change_profile_detail)
                         } else {
+                            if (response.status == 400) {
+                                return response.json();
+                        }else{
                             throw new Error('not connected');
+                        }
                         }
                     }
                 }
             )
             .then((data) => {
+                if (data.message){
+                    document.getElementById("error2").innerText =data.message;
+                }else{
+                    document.getElementById("error2").innerText ="";
 
-                location.reload()
+                }
+    
+                
+
             })
             .catch(function (error) {
                 console.log(error);
@@ -514,18 +499,102 @@ Profile
                         if (response.status == 401) {
                             refresh_token("/accounts/login/", change_customer_detail)
                         } else {
+                            if (response.status == 400) {
+                                return response.json();
+                        }else{
                             throw new Error('not connected');
+                        }
                         }
                     }
                 }
             )
             .then((data) => {
-
-                location.reload()
+                if (data.message){
+                    document.getElementById("error1").innerText =data.message;
+                }else{
+                    document.getElementById("error1").innerText ="";
+                }
+                
             })
             .catch(function (error) {
                 console.log(error);
             });
+    }
+    function load_address(data) {
+        addresses = document.getElementById('addresses')
+        data.forEach(address => {
+            let li = document.createElement('li')
+            li.classList.add("mt-3")
+            li.id = `li${address.id}`
+            let span = document.createElement('span')
+            span.innerText = `${address.province}, ${address.city}, ${address.street}, ${address.detail}, ${address.postal_code}`
+            li.appendChild(span)
+
+            edit_btn = document.createElement('button')
+            edit_btn.innerHTML = 'edit'
+            edit_btn.classList.add("ml-3", "profile-toggle")
+            edit_btn.style.width = "60px"
+            edit_btn.addEventListener('click', function () {
+                edit_address_form = document.getElementById("edit_address_form")
+                edit_address = document.getElementById("edit_address")
+                edit_address_form.querySelector('input[name="street"]').value = address.street;
+                edit_address_form.querySelector('input[name="city"]').value = address.city;
+                edit_address_form.querySelector('input[name="detail"]').value = address.detail;
+                edit_address_form.querySelector('input[name="postal_code"]').value = address.postal_code;
+                edit_address_form.querySelector('input[name="province"]').value = address.province;
+                edit_address_form.querySelector('input[name="id"]').value = address.id;
+                edit_address.style.display = edit_address.style.display === 'none' ? 'block' : 'none';
+
+            });
+
+            li.appendChild(edit_btn)
+
+            delete_btn = document.createElement('button')
+            delete_btn.innerHTML = 'delete'
+            delete_btn.setAttribute('onclick', `delete_address(${address.id})`)
+            delete_btn.classList.add("ml-3")
+            delete_btn.style.width = "60px"
+            li.appendChild(delete_btn)
+
+            addresses.appendChild(li)
+        });
+    }
+    function add_address(address) {
+        let li = document.createElement('li')
+        addresses = document.getElementById('addresses')
+        li.classList.add("mt-3")
+        li.id = `li${address.id}`
+        let span = document.createElement('span')
+        span.innerText = `${address.province}, ${address.city}, ${address.street}, ${address.detail}, ${address.postal_code}`
+        li.appendChild(span)
+        edit_btn = document.createElement('button')
+        edit_btn.innerHTML = 'edit'
+        edit_btn.classList.add("ml-3", "profile-toggle")
+        edit_btn.style.width = "60px"
+        edit_address = document.getElementById("edit_address")
+        edit_btn.addEventListener('click', function () {
+            edit_address_form = document.getElementById("edit_address_form")
+            edit_address_form.querySelector('input[name="street"]').value = address.street;
+            edit_address_form.querySelector('input[name="city"]').value = address.city;
+            edit_address_form.querySelector('input[name="detail"]').value = address.detail;
+            edit_address_form.querySelector('input[name="postal_code"]').value = address.postal_code;
+            edit_address_form.querySelector('input[name="province"]').value = address.province;
+            edit_address_form.querySelector('input[name="id"]').value = address.id;
+            edit_address.style.display = edit_address.style.display === 'none' ? 'block' : 'none';
+
+        });
+
+        li.appendChild(edit_btn)
+
+        delete_btn = document.createElement('button')
+        delete_btn.innerHTML = 'delete'
+        delete_btn.setAttribute('onclick', `delete_address(${address.id})`)
+        delete_btn.classList.add("ml-3")
+        delete_btn.style.width = "60px"
+        li.appendChild(delete_btn)
+        addresses.appendChild(li)
+        // edit_address.style.display = 'none';
+        $('.open-toggle').slideUp(1000);
     }
 </script>
 {% endblock %}

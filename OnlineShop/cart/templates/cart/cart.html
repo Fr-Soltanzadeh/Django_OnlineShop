@@ -101,6 +101,9 @@ Cart
 
 <script>
     window.onload = function () {
+        get_cart()
+    }
+    function get_cart() {
         const url = "/api/v1/cart/"
         fetch(url, {
             method: 'GET',
@@ -129,6 +132,7 @@ Cart
             .catch(function (error) {
                 console.log(error);
             });
+
     }
     function load_cart_data(data) {
         let cart = data.cart_items;
@@ -236,7 +240,8 @@ Cart
     function add_item(ItemId) {
         let quantity = document.getElementById(`q${ItemId}`)
         quantity.value = Number(quantity.value) + 1
-        update_button.style = "color:#fff; background-color: #ff2f2f;"
+        update_button.style.color = "#fff";
+        update_button.style.background = "#ff2f2f";
     }
     function decrease_item(ItemId) {
         let quantity = document.getElementById(`q${ItemId}`)
@@ -244,14 +249,15 @@ Cart
         if (quantity.value <= 0) {
             remove_item(ItemId)
         }
-        update_button.style = "color:#fff; background-color: #ff2f2f;"
+        update_button.style.color = "#fff";
+        update_button.style.background = "#ff2f2f";
 
     }
     function remove_item(ItemId) {
         let quantity = document.getElementById(`r${ItemId}`)
         quantity.remove()
-        update_button.style = "color:#fff; background-color: #ff2f2f;"
-
+        update_button.style.color = "#fff";
+        update_button.style.background = "#ff2f2f";
     }
 
     function clear_cart() {
@@ -266,7 +272,7 @@ Cart
         }).then(res => {
             if (res.status == 200) {
                 console.log("ok")
-                location.reload();
+                get_cart()
             } else {
                 throw new Error("Bad Server Response");
             }
@@ -298,7 +304,8 @@ Cart
         }).then(res => {
             if (res.status == 200) {
                 console.log("ok")
-                location.reload();
+                update_button.style.color = "#000000";
+                update_button.style.background = "#f2f2f2";
             } else {
                 throw new Error("Bad Server Response");
             }

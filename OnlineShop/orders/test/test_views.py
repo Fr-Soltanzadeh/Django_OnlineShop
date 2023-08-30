@@ -2,9 +2,10 @@ from django.test import TestCase, RequestFactory, Client
 from model_bakery import baker
 from django.urls import reverse
 from decimal import Decimal
-from accounts.models import User
+from accounts.models import User, Customer
 from ..models import Order
 from ..views import VerifyOrderView, OrderPayView
+from rest_framework import status
 
 
 class TestCheckoutView(TestCase):
@@ -41,10 +42,10 @@ class TestPayView(TestCase):
 class TestVerifyOrderView(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
-        self.user = User.objects.create(phone_number="09102098929")
+        self.customer = Customer.objects.create(phone_number="09102098929")
         self.order = baker.make(
             Order,
-            customer=self.user,
+            customer=self.customer,
             total_price=Decimal(10.00),
             final_price=Decimal(10.00),
         )
@@ -53,7 +54,7 @@ class TestVerifyOrderView(TestCase):
 
     def test_Verify_GET(self):
         request = self.factory.get(self.url)
-        request.user = self.user
+        request.user = self.customer
         request.session = {}
         request.session["order_pay"] = {
             "order_id": self.order.id,
@@ -61,4 +62,4 @@ class TestVerifyOrderView(TestCase):
         request.GET = request.GET.copy()
         request.GET["Authority"] = "abcdefg123"
         response = self.view(request)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

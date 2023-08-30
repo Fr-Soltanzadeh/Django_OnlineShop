@@ -14,7 +14,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from cart.utils import add_session_to_user_cart
 from rest_framework import views, permissions, status
-from .serializers import CustomerSerializer, AddressSerializer 
+from .serializers import CustomerSerializer, AddressSerializer
 from .serializers import CustomerAbstractSerializer, CustomerProfileSerializer
 from rest_framework import generics
 from rest_framework import mixins
@@ -23,7 +23,7 @@ import logging
 
 
 User = get_user_model()
-logger=logging.getLogger('online_shop')
+logger = logging.getLogger("online_shop")
 
 
 class LoginOrRegisterApiView(APIView):
@@ -31,7 +31,6 @@ class LoginOrRegisterApiView(APIView):
     authentication_classes = []
 
     def post(self, request, *args, **kwargs):
-
         serializer = LoginSerializer(data=request.data, partial=True)
         if serializer.is_valid():
             phone_number = serializer.data["phone_number"]
@@ -94,7 +93,6 @@ class VerifyCodeApiView(APIView):
 
 
 class RefreshTokenApiView(APIView):
-
     authentication_classes = []
     permission_classes = [permissions.AllowAny]
 
@@ -102,29 +100,34 @@ class RefreshTokenApiView(APIView):
         refresh_token = request.headers.get("Authorization")
         if refresh_token is None or refresh_token == "Bearer null":
             return Response({"message": "invalid token"}, status.HTTP_401_UNAUTHORIZED)
-            raise exceptions.AuthenticationFailed(
-                "Authentication credentials were not provided."
-            )
+            # raise exceptions.AuthenticationFailed(
+            #     "Authentication credentials were not provided."
+            # )
         refresh_token = refresh_token.replace("Bearer", "").replace(" ", "")
         try:
             payload = jwt.decode(
                 refresh_token, settings.REFRESH_TOKEN_SECRET, algorithms=["HS256"]
             )
         except jwt.ExpiredSignatureError:
-            raise exceptions.AuthenticationFailed(
-                "expired refresh token, please login again."
-            )
+            return Response({"message": "expired refresh token, please login again."}, status.HTTP_401_UNAUTHORIZED)
+            # raise exceptions.AuthenticationFailed(
+            #     "expired refresh token, please login again."
+            # )
         except:
-            raise exceptions.AuthenticationFailed(
-                "Couldn't parse token, please login again."
-            )
+            return Response({"message": "Couldn't parse token, please login again."}, status.HTTP_401_UNAUTHORIZED)
+            
+            # raise exceptions.AuthenticationFailed(
+            #     "Couldn't parse token, please login again."
+            # )
 
         user = User.objects.filter(id=payload.get("user_id")).first()
         if user is None:
-            raise exceptions.AuthenticationFailed("User not found")
+            return Response({"message": "User not found"}, status.HTTP_401_UNAUTHORIZED)
+            # raise exceptions.AuthenticationFailed("User not found")
 
         if not user.is_active:
-            raise exceptions.AuthenticationFailed("user is inactive")
+            return Response({"message": "user is inactive"}, status.HTTP_401_UNAUTHORIZED)
+            # raise exceptions.AuthenticationFailed("user is inactive")
 
         access_token = generate_access_token(user)
         refresh_token = generate_refresh_token(user)
@@ -136,30 +139,37 @@ class RefreshTokenApiView(APIView):
 
 class CustomerApiView(APIView):
     permission_classes = [permissions.AllowAny]
+
     def get(self, request, format=None):
         serializer = CustomerSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class CustomerAbstractAPIView(APIView):
 
+class CustomerAbstractAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, format=None):
         serializer = CustomerAbstractSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, format=None):
-        serializer = CustomerAbstractSerializer(request.user, data=request.data, partial=True)
+        serializer = CustomerAbstractSerializer(
+            request.user, data=request.data, partial=True
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"m":"done"})
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message":"Invalid input data"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class CustomerProfileAPIView(APIView):
-
     permission_classes = [IsOwnerOrReadOnly]
+
     def get(self, request, format=None):
-        customer_profile = CustomerProfile.objects.get_or_create(customer=self.request.user)
+        customer_profile = CustomerProfile.objects.get_or_create(
+            customer=self.request.user
+        )[0]
         serializer = CustomerProfileSerializer(customer_profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -170,9 +180,13 @@ class CustomerProfileAPIView(APIView):
             data["gender"] = CustomerProfile.GenderChoices[gender_display.upper()].value
         serializer = CustomerProfileSerializer(data=data, partial=True)
         if serializer.is_valid():
-            CustomerProfile.objects.update_or_create(serializer.data, customer=self.request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            CustomerProfile.objects.update_or_create(
+                serializer.data, customer=self.request.user
+            )
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message":"Invalid input data"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class CustomerAddressListCreateAPIView(APIView):
     permission_classes = [IsOwnerOrReadOnly]
@@ -190,12 +204,13 @@ class CustomerAddressListCreateAPIView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message":"Invalid input data"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CustomerAddressDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-
     serializer_class = AddressSerializer
     permission_classes = [IsOwnerOrReadOnly]
+
     def get_queryset(self):
         return Address.objects.filter(user=self.request.user)
