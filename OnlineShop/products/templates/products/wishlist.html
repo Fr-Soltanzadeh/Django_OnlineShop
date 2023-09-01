@@ -28,9 +28,9 @@ Wish list
                     <div class="shop-topbar-left">
                         <div class="view-mode nav">
                             <a class="active" href="#shop-1" data-toggle="tab"><i class="icon-grid"></i></a>
-                            <a href="#shop-2" data-toggle="tab"><i class="icon-menu"></i></a>
+                            <!-- <a href="#shop-2" data-toggle="tab"><i class="icon-menu"></i></a> -->
                         </div>
-                        <p>Showing 1 - 3 of 6 results </p>
+                        <p id="page_data"></p>
                     </div>
 
                 </div>
@@ -106,7 +106,9 @@ Wish list
                 }
             )
             .then((data) => {
-                let products = data;
+
+                let products =data;
+                document.getElementById("page_data").innerHTML=`Showing ${data.length} results` 
                 let main_div = document.getElementById("products_data");
                 products.map(function (product) {
                     let div1 = document.createElement('div');
