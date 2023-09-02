@@ -54,7 +54,7 @@ services:
 
   djangoonlineshop:
     build: .
-    command: sh -c "python manage.py makemigrations && python manage.py migrate && gunicorn OnlineShop.wsgi -b 0.0.0.0:8000"
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && gunicorn OnlineShop.wsgi -b 0.0.0.0:8000 --reload"
     container_name: djangoonlineshop
     volumes: 
       - .:/djangoonlineshop
