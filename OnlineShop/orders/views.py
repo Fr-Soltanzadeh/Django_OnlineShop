@@ -93,6 +93,7 @@ class VerifyOrderView(View):
 
         if response.status_code == 200 and response.json()["Status"] in [100,101]:
             order.status = 2
+            response=response.json()
             order.transaction_id = response["RefID"]
             order.save()
             
