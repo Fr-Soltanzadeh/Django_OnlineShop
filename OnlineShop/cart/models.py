@@ -7,6 +7,7 @@ from orders.models import Coupon
 import pytz
 from datetime import datetime
 from django.db.models import Sum, F
+from decimal import Decimal
 
 
 class Cart(BaseModel):
@@ -32,7 +33,7 @@ class Cart(BaseModel):
             and self.coupon.is_active
             and self.coupon.end_time > datetime.now().replace(tzinfo=pytz.utc)
         ):
-            return total_price * (1 - self.coupon.percent / 100)
+            return total_price * Decimal(str(1 - self.coupon.percent / 100))
         return total_price
     
     @property
